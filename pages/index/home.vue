@@ -1,6 +1,14 @@
 <template>
 	<custom-pull-refresh ref="customPullrefresh" @pulldownRefresh="pulldownRefresh" @pullupRefresh="pullupRefresh">
-		<view class="overview-content"></view>
+		<view class="overview-content">
+			<view class="score-item">
+				<view class="title">体能评分</view>
+				<view class="date">今日 13:04</view>
+				<view class="chart"></view>
+				<view class="btn">数据报告</view>
+			</view>
+			<view class="bank-item"></view>
+		</view>
 		<view class="grid-content">
 			<view class="grid-item"></view>
 			<view class="grid-item"></view>
