@@ -1,0 +1,9 @@
+.list-content.data-v-0e046b82 {
+  margin: 4vw;
+}
+.list-content .list-item.data-v-0e046b82 {
+  height: 220rpx;
+  margin-bottom: 4vw;
+  background-color: #eee;
+}
+

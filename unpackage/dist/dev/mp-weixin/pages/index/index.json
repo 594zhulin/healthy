@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "custom-tabbar": "/components/custom-tabbar/custom-tabbar",
+    "home": "/pages/index/home",
+    "discover": "/pages/index/discover",
+    "mall": "/pages/index/mall",
+    "user": "/pages/index/user"
+  }
+}

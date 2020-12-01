@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "subPackages": [
+    {
+      "root": "pages/train/",
+      "pages": [
+        "plan",
+        "duration",
+        "list",
+        "detail",
+        "team",
+        "record",
+        "share"
+      ]
+    },
+    {
+      "root": "pages/diet/",
+      "pages": [
+        "index",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "result",
+        "list",
+        "detail"
+      ]
+    }
+  ],
+  "window": {
+    "navigationStyle": "default"
+  },
+  "usingComponents": {}
+}

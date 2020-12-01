@@ -1,0 +1,39 @@
+.overview-content.data-v-14a6ab35 {
+  width: 90.4vw;
+  height: 420rpx;
+  margin: 4vw 4.8vw;
+}
+.grid-content.data-v-14a6ab35 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
+}
+.grid-content .grid-item.data-v-14a6ab35 {
+  width: 44vw;
+  height: 320rpx;
+  margin-left: 4vw;
+  margin-bottom: 4vw;
+  background-color: #eee;
+  vertical-align: top;
+}
+.grid-content .grid-item.ranking.data-v-14a6ab35 {
+  height: 130rpx;
+  margin-bottom: 0;
+}
+.list-content.data-v-14a6ab35 {
+  margin: 4vw;
+}
+.list-content .list-title.data-v-14a6ab35 {
+  margin-bottom: 2vw;
+  padding-left: 4vw;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.list-content .list-item.data-v-14a6ab35 {
+  height: 210rpx;
+  padding: 4vw;
+  background-color: #eee;
+}
+

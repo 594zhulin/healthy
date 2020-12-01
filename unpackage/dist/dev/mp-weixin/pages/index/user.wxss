@@ -1,0 +1,33 @@
+.component-user.data-v-21bf4c21 {
+  padding-bottom: 128rpx;
+}
+.component-user .user-content.data-v-21bf4c21 {
+  height: 210rpx;
+  background-color: #eee;
+}
+.component-user .chart-content.data-v-21bf4c21 {
+  height: 260rpx;
+  margin: 4vw;
+  background-color: #eee;
+}
+.component-user .risk-content.data-v-21bf4c21 {
+  height: 210rpx;
+  margin: 4vw;
+  background-color: #eee;
+}
+.component-user .step-content.data-v-21bf4c21 {
+  height: 210rpx;
+  margin: 4vw;
+  background-color: #eee;
+}
+.component-user .address-content.data-v-21bf4c21 {
+  height: 210rpx;
+  margin: 4vw;
+  background-color: #eee;
+}
+.component-user .order-content.data-v-21bf4c21 {
+  height: 210rpx;
+  margin: 4vw;
+  background-color: #eee;
+}
+

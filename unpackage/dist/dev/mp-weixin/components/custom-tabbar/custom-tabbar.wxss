@@ -1,0 +1,80 @@
+.custom-tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 128rpx;
+  z-index: 98;
+}
+.custom-tabbar__bg {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 128rpx;
+  z-index: -1;
+}
+.custom-tabbar__container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  height: 128rpx;
+}
+.custom-tabbar__item {
+  position: relative;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  height: 100rpx;
+  line-height: 100rpx;
+  margin-top: 28rpx;
+  font-size: 24rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #666666;
+  text-align: center;
+}
+.custom-tabbar__text {
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.custom-tabbar .active {
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: #333333;
+}
+.custom-tabbar__border {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24rpx;
+  width: 28rpx;
+  height: 6rpx;
+  margin: auto;
+  -webkit-border-radius: 4rpx;
+          border-radius: 4rpx;
+  background: #2a76ff;
+}
+.custom-tabbar__middle {
+  position: absolute;
+  top: -24rpx;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 114rpx;
+  height: 114rpx;
+  z-index: 100;
+}
+.custom-tabbar__middle .middle-bg {
+  width: 114rpx;
+  height: 114rpx;
+}
+
