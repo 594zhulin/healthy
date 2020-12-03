@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="666px" height="381px" viewBox="0 0 666 381" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61 (89581) - https://sketch.com -->
+    <title>bg</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#6BAAFC" offset="0%"></stop>
+            <stop stop-color="#0056FF" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="666" height="381" rx="8"></rect>
+        <radialGradient cx="50%" cy="50.5938556%" fx="50%" fy="50.5938556%" r="49.2293074%" id="radialGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.202059659" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.0771962413" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="84.6263841%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="84.6263841%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="84.6263841%" id="linearGradient-7">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="84.6263841%" id="linearGradient-8">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="91.1925351%" id="linearGradient-9">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="43.137639%" id="linearGradient-10">
+            <stop stop-color="#FFFFFF" stop-opacity="0.175808566" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="17.2407014%" x2="50%" y2="98.8043708%" id="linearGradient-11">
+            <stop stop-color="#FFFFFF" stop-opacity="0.241094843" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.137347028" offset="100%"></stop>
+        </linearGradient>
+        <path d="M0,271.523321 C142.849325,271.523321 211.322354,310.023321 312.248419,310.023321 C407.499833,310.023321 426.685501,298.384389 514.18915,298.384389 C573.88988,298.384389 626.428194,318.868795 666,318.868795 C666,333.274847 666,353.841902 666,380.569962 L0,380.569962 C0,326.335842 0,289.986961 0,271.523321 Z" id="path-12"></path>
+        <filter x="-2.7%" y="-11.0%" width="105.4%" height="133.0%" filterUnits="objectBoundingBox" id="filter-13">
+            <feOffset dx="0" dy="6" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0223198355   0 0 0 0 0.140327748   0 0 0 0 0.573907382  0 0 0 0.0601507867 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="0%" y1="78.6960514%" x2="100%" y2="21.3039486%" id="linearGradient-14">
+            <stop stop-color="#FFFFFF" stop-opacity="0.160757212" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="步数银行" transform="translate(-42.000000, -311.000000)">
+            <g id="bg" transform="translate(42.000000, 311.000000)">
+                <g id="椭圆形-+-椭圆形备份-+-椭圆形备份-2-+-路径-11-+-路径-11备份-+-路径-11备份-2-+-路径-11备份-3-+-路径-11备份-4-+-路径-11备份-5-+-路径备份-+-直线-+-直线备份-+-直线备份-2-+-直线备份-3-+-直线备份-4-蒙版">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="蒙版" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    <circle id="椭圆形" fill="url(#radialGradient-4)" mask="url(#mask-3)" cx="12.5" cy="4.5" r="31.5"></circle>
+                    <circle id="椭圆形备份" fill="url(#radialGradient-4)" mask="url(#mask-3)" cx="376.5" cy="165.5" r="7.5"></circle>
+                    <circle id="椭圆形备份-2" fill="url(#radialGradient-4)" mask="url(#mask-3)" cx="567" cy="-14" r="26"></circle>
+                    <path d="M54.0219696,264.148621 L24,317 L24,317 L91,317 L60.9780304,264.148621 C59.8868934,262.227758 57.4451848,261.555132 55.5243217,262.646269 C54.8972636,263.002466 54.3781669,263.521563 54.0219696,264.148621 Z" id="路径-11" fill="url(#linearGradient-5)" mask="url(#mask-3)"></path>
+                    <path d="M98.0188179,232.151215 L50,317 L50,317 L153,317 L104.981182,232.151215 C103.893115,230.228611 101.452484,229.552085 99.5298804,230.640152 C98.8984784,230.997484 98.3761498,231.519813 98.0188179,232.151215 Z" id="路径-11备份" fill="url(#linearGradient-6)" mask="url(#mask-3)"></path>
+                    <path d="M184.515391,268.182371 L157,317 L157,317 L219,317 L191.484609,268.182371 C190.399893,266.257874 187.960444,265.577098 186.035948,266.661814 C185.399802,267.020369 184.873946,267.546225 184.515391,268.182371 Z" id="路径-11备份-2" fill="url(#linearGradient-7)" mask="url(#mask-3)"></path>
+                    <path d="M464.012549,242.20843 L422,317 L422,317 L513,317 L470.987451,242.20843 C469.905525,240.282364 467.467066,239.598053 465.541,240.679979 C464.900902,241.03954 464.37211,241.568333 464.012549,242.20843 Z" id="路径-11备份-3" fill="url(#linearGradient-8)" mask="url(#mask-3)"></path>
+                    <path d="M552.014431,196.19115 L484,317 L484,317 L627,317 L558.985569,196.19115 C557.901794,194.266124 555.462679,193.584155 553.537652,194.667929 C552.900173,195.026825 552.373327,195.553672 552.014431,196.19115 Z" id="路径-11备份-4" fill="url(#linearGradient-9)" mask="url(#mask-3)"></path>
+                    <path d="M644.511089,216.221892 L588,317 L588,317 L708,317 L651.488911,216.221892 C650.408422,214.29502 647.970474,213.60889 646.043601,214.68938 C645.401468,215.049454 644.871163,215.579759 644.511089,216.221892 Z" id="路径-11备份-5" fill="url(#linearGradient-10)" mask="url(#mask-3)"></path>
+                    <g id="路径备份" mask="url(#mask-3)" transform="translate(333.000000, 326.046641) scale(-1, 1) translate(-333.000000, -326.046641) ">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-13)" xlink:href="#path-12"></use>
+                        <use fill="url(#linearGradient-11)" fill-rule="evenodd" xlink:href="#path-12"></use>
+                    </g>
+                    <line x1="513.5" y1="35.5" x2="415.5" y2="109.5" id="直线" stroke="url(#linearGradient-14)" stroke-linecap="square" mask="url(#mask-3)"></line>
+                    <line x1="372" y1="79" x2="274" y2="153" id="直线备份" stroke="url(#linearGradient-14)" stroke-linecap="square" mask="url(#mask-3)"></line>
+                    <line x1="642" y1="84" x2="544" y2="158" id="直线备份-2" stroke="url(#linearGradient-14)" stroke-linecap="square" mask="url(#mask-3)"></line>
+                    <line x1="134" y1="116" x2="36" y2="190" id="直线备份-3" stroke="url(#linearGradient-14)" stroke-linecap="square" mask="url(#mask-3)"></line>
+                    <line x1="708" y1="-37" x2="610" y2="37" id="直线备份-4" stroke="url(#linearGradient-14)" stroke-linecap="square" mask="url(#mask-3)"></line>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

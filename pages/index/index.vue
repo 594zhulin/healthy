@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="page-index">
 		<home v-if="currentId == 0"></home>
 		<discover v-if="currentId == 1"></discover>
 		<mall v-if="currentId == 3"></mall>
@@ -34,9 +34,4 @@ export default {
 };
 </script>
 
-<style>
-.content {
-	height: 90vh;
-	padding-bottom: 128rpx;
-}
-</style>
+<style></style>

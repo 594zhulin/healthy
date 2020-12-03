@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="750px" height="599px" viewBox="0 0 750 599" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61 (89581) - https://sketch.com -->
+    <title>undraw_hiking_d24r</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#53ADFF" offset="0%"></stop>
+            <stop stop-color="#2975FF" offset="100%"></stop>
+        </linearGradient>
+        <path d="M0,0 L750,0 L750,583 C750,591.836556 742.836556,599 734,599 L16,599 C7.163444,599 1.082166e-15,591.836556 0,583 L0,0 L0,0 Z" id="path-2"></path>
+        <linearGradient x1="12.2375508%" y1="17.2991516%" x2="84.9409145%" y2="88.5660562%" id="linearGradient-4">
+            <stop stop-color="#EEEEEE" stop-opacity="0.054059222" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="83.2220503%" y1="14.9015358%" x2="18.482112%" y2="82.2381554%" id="linearGradient-5">
+            <stop stop-color="#EEEEEE" stop-opacity="0.054059222" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="17.0464919%" x2="50%" y2="98.8043708%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="17.0464919%" x2="50%" y2="98.8043708%" id="linearGradient-7">
+            <stop stop-color="#FFFFFF" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="AI体能训练计划" transform="translate(0.000000, -128.000000)">
+            <g id="undraw_hiking_d24r" transform="translate(0.000000, 128.000000)">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="蒙版" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                <circle id="椭圆形备份-3" fill="url(#linearGradient-4)" mask="url(#mask-3)" transform="translate(131.000000, 340.000000) rotate(-180.000000) translate(-131.000000, -340.000000) " cx="131" cy="340" r="146"></circle>
+                <circle id="椭圆形" fill="url(#linearGradient-5)" mask="url(#mask-3)" cx="514" cy="378" r="155"></circle>
+                <path d="M-1,542.626409 C95.7073374,542.626409 107.971022,568.180137 221.77804,568.180137 C368.503634,568.396524 404.414841,537.361797 517.524284,537.361797 C617.317608,537.074931 663.242688,577.390922 750,577.390922 C750,591.796974 750,599 750,599 L-1,599 C-1,579.881247 -1,561.09005 -1,542.626409 Z" id="路径" fill="url(#linearGradient-6)" mask="url(#mask-3)"></path>
+                <path d="M-1,522.001105 C95.7073374,522.001105 260.144806,560.501105 373.951825,560.501105 C520.677418,560.717492 481.394161,537.360273 580.065693,537.360273 C679.859017,537.073407 705.377738,577.392027 750,577.392027 C750,591.798079 750,599.001105 750,599.001105 L-1,599.001105 C-1,566.131412 -1,540.464745 -1,522.001105 Z" id="路径备份" fill="url(#linearGradient-7)" mask="url(#mask-3)" transform="translate(374.500000, 560.501105) scale(-1, 1) translate(-374.500000, -560.501105) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -12,21 +12,23 @@
   "appid": "wxf5296e2dc62af98a",
   "projectname": "黑石",
   "condition": {
-    "search": {
-      "current": -1,
-      "list": []
-    },
-    "conversation": {
-      "current": -1,
+    "plugin": {
       "list": []
     },
     "game": {
-      "current": -1,
+      "list": []
+    },
+    "gamePlugin": {
       "list": []
     },
     "miniprogram": {
-      "current": -1,
-      "list": []
+      "list": [
+        {
+          "name": "pages/index/bank",
+          "pathName": "pages/index/bank",
+          "scene": null
+        }
+      ]
     }
   }
 }

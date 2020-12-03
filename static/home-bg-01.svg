@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="405px" height="420px" viewBox="0 0 405 420" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61 (89581) - https://sketch.com -->
+    <title>编组 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#48C2FF" offset="0%"></stop>
+            <stop stop-color="#2778F0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#47C2FF" offset="0%"></stop>
+            <stop stop-color="#57AFFE" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="体能检测" transform="translate(-35.000000, -196.000000)">
+            <g id="编组-3" transform="translate(35.000000, 196.000000)">
+                <path d="M12,0 L355,0 C382.614237,-5.07265313e-15 405,22.3857625 405,50 L405,370 C405,397.614237 382.614237,420 355,420 L12,420 C5.372583,420 8.11624501e-16,414.627417 0,408 L0,12 C-8.11624501e-16,5.372583 5.372583,1.21743675e-15 12,0 Z" id="矩形备份-6" fill="url(#linearGradient-1)"></path>
+                <path d="M170,40.0017131 C170,109.036361 114.03605,165 45.0010196,165 C29.1369357,165 13.9630955,162.044732 -2.48689958e-14,156.654693 L0.000807054337,109.754604 C12.9651176,118.135524 28.4149186,123.000576 45.0010196,123.000576 C90.8402799,123.000576 128.000343,85.8407191 128.000343,40.0017131 C128.000343,25.4985121 124.280421,11.8641406 117.742646,0.000661271754 L163.462679,0.00100230319 C167.70192,12.5598851 170,26.0124279 170,40.0017131 Z" id="形状结合" fill="url(#linearGradient-2)" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,4 +1,7 @@
 {
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "体能观测",
   "usingComponents": {
     "custom-tabbar": "/components/custom-tabbar/custom-tabbar",
     "home": "/pages/index/home",

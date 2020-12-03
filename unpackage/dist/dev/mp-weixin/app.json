@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/index/bank"
   ],
   "subPackages": [
     {
@@ -30,8 +31,5 @@
       ]
     }
   ],
-  "window": {
-    "navigationStyle": "default"
-  },
   "usingComponents": {}
 }

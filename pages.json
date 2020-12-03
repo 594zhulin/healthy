@@ -1,13 +1,31 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index"
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"navigationBarTitleText": "体能观测"
+			}
+		},
+		{
+			"path": "pages/index/bank",
+			"style": {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"navigationBarTitleText": "步数银行"
+			}
 		}
 	],
 	"subPackages": [{
 			"root": "pages/train/",
 			"pages": [{
-				"path": "plan"
+				"path": "plan",
+				"style": {
+					"navigationBarBackgroundColor": "#52ADFF",
+					"navigationBarTextStyle": "white",
+					"navigationBarTitleText": "AI体能训练计划"
+				}
 			}, {
 				"path": "duration"
 			}, {
@@ -44,8 +62,5 @@
 				"path": "detail"
 			}]
 		}
-	],
-	"globalStyle": {
-		"navigationStyle": "default"
-	}
+	]
 }

@@ -1,3 +1,6 @@
 {
+  "navigationBarBackgroundColor": "#52ADFF",
+  "navigationBarTextStyle": "white",
+  "navigationBarTitleText": "AI体能训练计划",
   "usingComponents": {}
 }
