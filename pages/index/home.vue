@@ -2,8 +2,8 @@
 	<view class="component-home">
 		<view class="overview-content">
 			<view class="score-item">
-				<image class="background" src="../../static/home-bg-01.svg" mode="aspectFit"></image>
-				<image class="icon" src="../../static/home-icon-01.svg" mode="aspectFit"></image>
+				<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-01.svg" mode="aspectFit"></image>
 				<view class="title">体能评分</view>
 				<view class="date">今日 13:04</view>
 				<view class="chart"></view>
@@ -12,8 +12,8 @@
 				<view class="btn">数据报告</view>
 			</view>
 			<view class="bank-item">
-				<image class="background" src="../../static/home-bg-02.svg" mode="aspectFit"></image>
-				<image class="icon" src="../../static/home-icon-02.svg" mode="aspectFit"></image>
+				<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 				<view class="title">步数银行</view>
 				<view class="text">待存入</view>
 				<view class="step">5.7万</view>
@@ -23,29 +23,29 @@
 		</view>
 		<view class="grid-content">
 			<view class="grid-item plan">
-				<image class="icon" src="../../static/home-icon-03.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-03.svg" mode="aspectFit"></image>
 				<view class="title">AI体能训练计划</view>
 				<view class="btn">立即制定</view>
 			</view>
 			<view class="grid-item mall">
-				<image class="icon" src="../../static/home-icon-04.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>
 				<view class="title">步数书城</view>
 				<view class="text">海量图书</view>
 				<view class="text">免费兑换</view>
 			</view>
 			<view class="grid-item diet">
-				<image class="icon" src="../../static/home-icon-05.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-05.svg" mode="aspectFit"></image>
 				<view class="title">膳食健康管理</view>
 				<view class="btn">开始评测</view>
 			</view>
 			<view class="grid-item video">
-				<image class="icon" src="../../static/home-icon-06.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-06.svg" mode="aspectFit"></image>
 				<view class="title">黑石健康课堂</view>
 				<view class="text">轻松学习</view>
 				<view class="text">提高健康素养</view>
 			</view>
 			<view class="grid-item ranking">
-				<image class="icon" src="../../static/home-icon-07.svg" mode="aspectFit"></image>
+				<image class="icon" src="../../static/home/home-icon-07.svg" mode="aspectFit"></image>
 				<view class="content">
 					<view class="title">排行榜</view>
 					<view class="text">体能排行榜&步数银行排行榜</view>

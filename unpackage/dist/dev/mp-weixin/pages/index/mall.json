@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "custom-pull-refresh": "/components/custom-pull-refresh/custom-pull-refresh"
-  },
-  "component": true
-}

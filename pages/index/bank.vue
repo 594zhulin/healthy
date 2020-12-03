@@ -52,13 +52,58 @@
 				</view>
 			</view>
 		</view>
-		<view class="desc-content"></view>
-		<view class="banner-content"></view>
-		<view class="grid-content">
-			<view class="grid-item"></view>
-			<view class="grid-item"></view>
+		<view class="desc-content">
+			<image class="icon" src="../../static/bank/bank-icon-01.svg" mode="aspectFit"></image>
+			<view class="title">如何激活步数</view>
+			<view class="btn">订阅提醒</view>
+			<view class="text">
+				年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
+			</view>
 		</view>
-		<view class="list-content"></view>
+		<view class="banner-content">
+			<view class="title">步数商城</view>
+			<view class="text">行万步，破万卷 身心得健康</view>
+			<image class="background" src="../../static/bank/bank-img-03.png" mode="aspectFit"></image>
+			<image class="icon" src="../../static/bank/bank-img-02.png" mode="aspectFit"></image>
+		</view>
+		<view class="grid-content">
+			<view class="grid-item">
+				<image class="icon" src="../../static/bank/bank-icon-02.svg" mode="aspectFit"></image>
+				<view class="text">排行榜</view>
+			</view>
+			<view class="grid-item">
+				<image class="icon" src="../../static/bank/bank-icon-03.svg" mode="aspectFit"></image>
+				<view class="text">蹭火苗</view>
+			</view>
+		</view>
+		<view class="list-content">
+			<view class="title">我的火苗明细</view>
+			<view class="total">
+				<view class="fire">
+					<image class="icon" src="../../static/bank/bank-icon-04.svg" mode="aspectFit"></image>
+					<view class="text">我的火苗（X1）</view>
+				</view>
+				<view class="step">
+					<image class="icon" src="../../static/bank/bank-icon-05.svg" mode="aspectFit"></image>
+					<view class="text">可存步数（X1）</view>
+				</view>
+			</view>
+			<view class="list-item">
+				<view class="border"></view>
+				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
+				<view class="date">2011/12 15:30:27</view>
+			</view>
+			<view class="list-item">
+				<view class="border"></view>
+				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
+				<view class="date">2011/12 15:30:27</view>
+			</view>
+			<view class="list-item">
+				<view class="border"></view>
+				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
+				<view class="date">2011/12 15:30:27</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -96,9 +141,9 @@ export default {
 	.overview-content {
 		position: relative;
 		width: 88.8vw;
-		height: 382rpx;
-		box-shadow: 0px 10rpx 20rpx 0px rgba(64, 38, 2, 0.2);
+		height: 384rpx;
 		border-radius: 12rpx;
+		box-shadow: 0px 0 20rpx 0px rgba(64, 38, 2, 0.2);
 		.background {
 			position: absolute;
 			top: 0;
@@ -174,7 +219,7 @@ export default {
 		}
 	}
 	.chart-content {
-		margin: 68rpx 26rpx 60rpx 18rpx;
+		margin: 68rpx 26rpx 70rpx 18rpx;
 		.title {
 			font-size: 24rpx;
 			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
@@ -210,7 +255,221 @@ export default {
 				font-weight: 400;
 				color: #999999;
 				line-height: 30rpx;
-				letter-spacing: 4rpx;
+			}
+		}
+	}
+	.desc-content {
+		position: relative;
+		margin: 0 20rpx 34rpx 20rpx;
+		.icon {
+			position: absolute;
+			top: 6rpx;
+			left: 14rpx;
+			width: 24rpx;
+			height: 24rpx;
+		}
+		.title {
+			margin-left: 54rpx;
+			font-size: 24rpx;
+			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+			font-weight: bold;
+			color: #373d52;
+			line-height: 34rpx;
+		}
+		.btn {
+			position: absolute;
+			top: -16rpx;
+			right: 8rpx;
+			width: 160rpx;
+			height: 50rpx;
+			background: #2975ff;
+			border-radius: 26rpx;
+			font-size: 24rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #ffffff;
+			line-height: 50rpx;
+			text-align: center;
+		}
+		.text {
+			height: 150rpx;
+			padding: 16rpx 16rpx 16rpx 14rpx;
+			margin-top: 24rpx;
+			background: #f7f7f7;
+			border-radius: 12rpx;
+			box-sizing: border-box;
+			font-size: 24rpx;
+			font-family: PingFangSC-Regular, PingFang SC;
+			font-weight: 400;
+			color: #bebebe;
+			line-height: 30rpx;
+			letter-spacing: 4rpx;
+			text-align: justify;
+		}
+	}
+	.banner-content {
+		position: relative;
+		.title {
+			margin: 0 0 16rpx 14rpx;
+			font-size: 24rpx;
+			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+			font-weight: bold;
+			color: #373d52;
+			line-height: 34rpx;
+		}
+		.text {
+			font-size: 36rpx;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #ffffff;
+			line-height: 50rpx;
+			text-shadow: 0px 2rpx 4rpx rgba(0, 0, 0, 0.1);
+		}
+		.background {
+			width: 100%;
+			height: 176rpx;
+		}
+		.icon {
+			position: absolute;
+			right: 16rpx;
+			bottom: 12rpx;
+			width: 206rpx;
+			height: 200rpx;
+		}
+		.text {
+			position: absolute;
+			bottom: 44rpx;
+			left: 72rpx;
+			width: 252rpx;
+			height: 100rpx;
+			font-size: 36rpx;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #ffffff;
+			line-height: 50rpx;
+			text-shadow: 0px 2rpx 4rpx rgba(0, 0, 0, 0.1);
+		}
+	}
+	.grid-content {
+		display: flex;
+		align-items: center;
+		margin-top: 20rpx;
+		.grid-item {
+			width: 318rpx;
+			height: 200rpx;
+			background: #ffffff;
+			border-radius: 12rpx;
+			border: 2rpx solid #e4e4e4;
+			box-sizing: border-box;
+			.icon {
+				display: block;
+				width: 68rpx;
+				height: 68rpx;
+				margin: 46rpx auto 20rpx auto;
+			}
+			&:last-child {
+				margin-left: 30rpx;
+				.icon {
+					width: 44rpx;
+					height: 62rpx;
+					margin-top: 50rpx;
+				}
+			}
+			.text {
+				font-size: 30rpx;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 600;
+				color: #000000;
+				line-height: 42rpx;
+				text-align: center;
+			}
+		}
+	}
+	.list-content {
+		margin-top: 34rpx;
+		.title {
+			margin-left: 14rpx;
+			font-size: 24rpx;
+			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+			font-weight: bold;
+			color: #373d52;
+			line-height: 34rpx;
+		}
+		.total {
+			display: flex;
+			align-items: center;
+			margin: 24rpx 0 40rpx 14rpx;
+			.fire {
+				display: flex;
+				align-items: center;
+				margin-right: 64rpx;
+				.icon {
+					width: 26rpx;
+					height: 34rpx;
+				}
+				.text {
+					margin-left: 14rpx;
+					font-size: 22rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #333333;
+					line-height: 30rpx;
+				}
+			}
+			.step {
+				display: flex;
+				align-items: center;
+				.icon {
+					width: 30rpx;
+					height: 30rpx;
+				}
+			}
+			.text {
+				margin-left: 6rpx;
+				font-size: 22rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #333333;
+				line-height: 30rpx;
+			}
+		}
+		.list-item {
+			position: relative;
+			height: 114rpx;
+			padding: 18rpx 32rpx 14rpx 32rpx;
+			margin-bottom: 20rpx;
+			background: #ffffff;
+			border-radius: 16rpx;
+			border: 2rpx solid #e4e4e4;
+			box-sizing: border-box;
+			&:nth-child(2n) {
+				.border {
+					background: #ef5959;
+				}
+			}
+			.border {
+				position: absolute;
+				top: -2rpx;
+				left: -2rpx;
+				width: 14rpx;
+				height: 112rpx;
+				background: #0075ff;
+				border-radius: 46rpx 0px 0px 46rpx;
+			}
+			.text {
+				margin-bottom: 12rpx;
+				font-size: 24rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #333333;
+				line-height: 34rpx;
+			}
+			.date {
+				font-size: 24rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #999999;
+				line-height: 34rpx;
 			}
 		}
 	}
