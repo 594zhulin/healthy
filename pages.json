@@ -61,7 +61,12 @@
 			}, {
 				"path": "five"
 			}, {
-				"path": "result"
+				"path": "result",
+				"style": {
+					"navigationBarBackgroundColor": "#ffffff",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "膳食结构评估结果"
+				}
 			}, {
 				"path": "list"
 			}, {
