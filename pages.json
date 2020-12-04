@@ -15,6 +15,12 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarTitleText": "步数银行"
 			}
+		},
+		{
+			"path": "pages/index/measure",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"subPackages": [{

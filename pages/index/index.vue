@@ -3,7 +3,7 @@
 		<home v-if="currentId == 0"></home>
 		<discover v-if="currentId == 1"></discover>
 		<mall v-if="currentId == 3"></mall>
-		<user v-if="currentId == 4"></user>
+		<user v-if="currentId == 4" @onChangeHeaderBg="onChangeHeaderBg"></user>
 		<custom-tabbar :currentId="currentId" @switchTab="switchTab"></custom-tabbar>
 	</view>
 </template>
@@ -29,6 +29,25 @@ export default {
 	methods: {
 		switchTab(id) {
 			this.currentId = id;
+		},
+		onChangeHeaderBg(flag) {
+			if (flag) {
+				uni.setNavigationBarTitle({
+					title: '个人中心'
+				});
+				uni.setNavigationBarColor({
+					frontColor: '#ffffff',
+					backgroundColor: '#0056ff'
+				});
+			} else {
+				uni.setNavigationBarTitle({
+					title: '体能观测'
+				});
+				uni.setNavigationBarColor({
+					frontColor: '#000000',
+					backgroundColor: '#ffffff'
+				});
+			}
 		}
 	}
 };
