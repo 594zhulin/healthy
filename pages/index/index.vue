@@ -2,7 +2,7 @@
 	<view class="page-index">
 		<home v-if="currentId == 0"></home>
 		<discover v-if="currentId == 1"></discover>
-		<mall v-if="currentId == 3"></mall>
+		<mall v-if="currentId == 3" @onChangeHeaderBg="onChangeHeaderBg"></mall>
 		<user v-if="currentId == 4" @onChangeHeaderBg="onChangeHeaderBg"></user>
 		<custom-tabbar :currentId="currentId" @switchTab="switchTab"></custom-tabbar>
 	</view>
@@ -33,7 +33,7 @@ export default {
 		onChangeHeaderBg(flag) {
 			if (flag) {
 				uni.setNavigationBarTitle({
-					title: '个人中心'
+					title: this.currentId == 4 ? '个人中心' : '步数书城'
 				});
 				uni.setNavigationBarColor({
 					frontColor: '#ffffff',

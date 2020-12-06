@@ -33,33 +33,86 @@
 					"navigationBarTitleText": "AI体能训练计划"
 				}
 			}, {
-				"path": "duration"
+				"path": "list",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "安排运动"
+				}
 			}, {
-				"path": "list"
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "开始训练"
+				}
 			}, {
-				"path": "detail"
+				"path": "team",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "发起运动"
+				}
 			}, {
-				"path": "team"
+				"path": "record",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "组队记录"
+				}
 			}, {
-				"path": "record"
-			}, {
-				"path": "share"
+				"path": "share",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "活动邀约"
+				}
 			}]
 		},
 		{
 			"root": "pages/diet/",
 			"pages": [{
-				"path": "index"
+				"path": "index",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "膳食测试"
+				}
 			}, {
-				"path": "one"
+				"path": "one",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "膳食结构评估"
+				}
 			}, {
-				"path": "two"
+				"path": "two",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "蔬菜水果摄入情况"
+				}
 			}, {
-				"path": "three"
+				"path": "three",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "动物性食品"
+				}
 			}, {
-				"path": "four"
+				"path": "four",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "奶类及大豆坚果类"
+				}
 			}, {
-				"path": "five"
+				"path": "five",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "其他"
+				}
 			}, {
 				"path": "result",
 				"style": {
@@ -70,7 +123,12 @@
 			}, {
 				"path": "list"
 			}, {
-				"path": "detail"
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "专栏"
+				}
 			}]
 		}
 	]
