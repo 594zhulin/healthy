@@ -130,7 +130,7 @@ export default {
 		height: 6rpx;
 		margin: auto;
 		border-radius: 4rpx;
-		background: rgba(42, 118, 255, 1);
+		background: rgba(41, 117, 255, 1);
 	}
 	&__middle {
 		position: absolute;

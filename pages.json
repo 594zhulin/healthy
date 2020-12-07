@@ -1,11 +1,20 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/launch/launch",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black",
-				"navigationBarTitleText": "体能观测"
+				"navigationBarTitleText": "体能观测",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#F2F2F7"
 			}
 		},
 		{
@@ -13,7 +22,9 @@
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black",
-				"navigationBarTitleText": "附近设备"
+				"navigationBarTitleText": "附近设备",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#F7F6F9"
 			}
 		},
 		{

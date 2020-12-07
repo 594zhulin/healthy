@@ -88,8 +88,9 @@ export default {
 	data() {
 		return {};
 	},
-	methods: {
-	}
+	onPullDownRefresh() {},
+	onReachBottom() {},
+	methods: {}
 };
 </script>
 
