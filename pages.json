@@ -1,11 +1,35 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/home/home",
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black",
 				"navigationBarTitleText": "体能观测"
+			}
+		},
+		{
+			"path": "pages/discover/discover",
+			"style": {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"navigationBarTitleText": "附近设备"
+			}
+		},
+		{
+			"path": "pages/mall/mall",
+			"style": {
+				"navigationBarBackgroundColor": "#0056ff",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "步数书城"
+			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarBackgroundColor": "#0056ff",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "个人中心"
 			}
 		},
 		{
@@ -131,5 +155,24 @@
 				}
 			}]
 		}
-	]
+	],
+	"tabBar": {
+		"color": "#666666",
+		"selectedColor": "##2975FF",
+		"borderStyle": "white",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/home/home",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/discover/discover",
+			"text": "找黑石"
+		}, {
+			"pagePath": "pages/mall/mall",
+			"text": "步数书城"
+		}, {
+			"pagePath": "pages/user/user",
+			"text": "我的"
+		}]
+	}
 }

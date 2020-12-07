@@ -2,7 +2,7 @@
 	<cover-view class="custom-tabbar">
 		<cover-image class="custom-tabbar__bg" src="../../static/tabbar/bg.png"></cover-image>
 		<cover-view class="custom-tabbar__container">
-			<cover-view class="custom-tabbar__item" :class="item.id === currentId ? ' active' : ''" v-for="item in tabbar" :key="item.id" @click="switchTab(item.id)">
+			<cover-view class="custom-tabbar__item" :class="item.id === currentId ? ' active' : ''" v-for="item in tabbar" :key="item.id" @click="switchTab(item.url)">
 				<cover-view class="custom-tabbar__text">{{ item.text }}</cover-view>
 				<cover-view class="custom-tabbar__border" v-show="item.id === currentId"></cover-view>
 			</cover-view>
@@ -21,11 +21,13 @@ export default {
 			tabbar: [
 				{
 					id: 0,
-					text: '首页'
+					text: '首页',
+					url: '/pages/home/home'
 				},
 				{
 					id: 1,
-					text: '找黑石'
+					text: '找黑石',
+					url: '/pages/discover/discover'
 				},
 				{
 					id: 2,
@@ -33,18 +35,22 @@ export default {
 				},
 				{
 					id: 3,
-					text: '步数书城'
+					text: '步数书城',
+					url: '/pages/mall/mall'
 				},
 				{
 					id: 4,
-					text: '我的'
+					text: '我的',
+					url: '/pages/user/user'
 				}
 			]
 		};
 	},
 	methods: {
-		switchTab(id) {
-			this.$emit('switchTab', id);
+		switchTab(url) {
+			uni.switchTab({
+				url
+			});
 		},
 		onScan() {
 			const this_ = this;
