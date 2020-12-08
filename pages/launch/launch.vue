@@ -1,7 +1,7 @@
 <template>
 	<view class="page-launch">
 		<image class="background" :src="banner"></image>
-		<button class="btn" type="default" open-type="getUserInfo">立即行动</button>
+		<button class="btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo">立即行动</button>
 	</view>
 </template>
 
@@ -20,6 +20,26 @@ export default {
 			},
 			err => {}
 		);
+	},
+	methods: {
+		getUserInfo(e) {
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					console.log(loginRes.authResult);
+					// 获取用户信息
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							uni.switchTab({
+								url: '/pages/home/home'
+							});
+							uni.hideTabBar();
+						}
+					});
+				}
+			});
+		}
 	}
 };
 </script>

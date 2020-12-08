@@ -1,14 +1,14 @@
 <template>
 	<view class="page-team">
 		<view class="date-content">
-			<view class="flex">
+			<view class="row">
 				<view class="label">时间</view>
 				<picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
 					<view class="text">{{ date }}</view>
 				</picker>
 				<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 			</view>
-			<view class="flex">
+			<view class="row">
 				<view class="label">具体时间</view>
 				<picker class="picker" mode="time" :value="time" start="09:01" end="21:01" @change="bindTimeChange">
 					<view class="text">{{ time }}</view>
@@ -88,11 +88,12 @@ export default {
 
 <style lang="less" scoped>
 .page-team {
+	padding-top: 30rpx;
 	background-color: #f7f6f9;
 	.date-content {
-		margin: 30rpx 0;
+		margin: 0 0 30rpx 0;
 		background-color: #ffffff;
-		.flex {
+		.row {
 			position: relative;
 			display: flex;
 			align-items: center;
@@ -206,11 +207,21 @@ export default {
 		}
 	}
 	.desc-content {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 32rpx 0 60rpx;
 		background-color: #fff;
+		&::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 2rpx;
+			background-color: #e8e8e8;
+		}
 		.label {
 			width: 112rpx;
 			font-size: 28rpx;

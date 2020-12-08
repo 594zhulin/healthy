@@ -165,6 +165,33 @@
 					"navigationBarTitleText": "专栏"
 				}
 			}]
+		}, {
+			"root": "pages/order/",
+			"pages": [{
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "商品详情"
+				}
+			}]
+		}, {
+			"root": "pages/personal/",
+			"pages": [{
+				"path": "list",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "地址列表"
+				}
+			}, {
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "地址编辑"
+				}
+			}]
 		}
 	],
 	"tabBar": {
