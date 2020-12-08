@@ -191,6 +191,30 @@
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "地址编辑"
 				}
+			}, {
+				"path": "index",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "个人信息"
+				}
+			}]
+		}, {
+			"root": "pages/measure/",
+			"pages": [{
+				"path": "history",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "历史数据"
+				}
+			}, {
+				"path": "rank",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "体能排行榜"
+				}
 			}]
 		}
 	],
