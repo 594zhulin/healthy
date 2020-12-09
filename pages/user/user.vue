@@ -109,7 +109,7 @@
 				</view>
 				<view class="order-item">
 					<image class="icon delivery" src="../../static/user/user-icon-05.svg" mode="aspectFit"></image>
-					<view class="text">已发货</view>
+					<view class="text">待收货</view>
 				</view>
 				<view class="order-item">
 					<image class="icon signed" src="../../static/user/user-icon-06.svg" mode="aspectFit"></image>

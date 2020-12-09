@@ -168,11 +168,25 @@
 		}, {
 			"root": "pages/order/",
 			"pages": [{
-				"path": "detail",
+				"path": "product",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "商品详情"
+				}
+			}, {
+				"path": "list",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "订单列表"
+				}
+			}, {
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "订单详情"
 				}
 			}]
 		}, {
@@ -190,6 +204,13 @@
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "地址编辑"
+				}
+			}, {
+				"path": "step",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "余额明细"
 				}
 			}]
 		}
