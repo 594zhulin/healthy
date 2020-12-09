@@ -192,25 +192,52 @@
 		}, {
 			"root": "pages/personal/",
 			"pages": [{
-				"path": "list",
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "地址列表"
+					}
+				}, {
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "地址编辑"
+					}
+				}, {
+					"path": "step",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "余额明细"
+					}
+				},
+				{
+					"path": "index",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "个人信息"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/measure/",
+			"pages": [{
+				"path": "history",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "地址列表"
+					"navigationBarTitleText": "历史数据"
 				}
 			}, {
-				"path": "detail",
+				"path": "rank",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "地址编辑"
-				}
-			}, {
-				"path": "step",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "余额明细"
+					"navigationBarTitleText": "体能排行榜"
 				}
 			}]
 		}
