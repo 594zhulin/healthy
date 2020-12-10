@@ -166,7 +166,7 @@ page {
 		.btn {
 			height: 80rpx;
 			background: #2975ff;
-			border-radius: 42rpx;
+			border-radius: 8rpx;
 			font-size: 30rpx;
 			font-family: PingFangSC-Regular, PingFang SC;
 			font-weight: 400;
