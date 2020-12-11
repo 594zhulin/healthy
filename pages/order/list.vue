@@ -150,6 +150,7 @@ page {
 				align-items: center;
 				padding: 30rpx;
 				.pic {
+					flex-shrink: 0;
 					width: 120rpx;
 					height: 120rpx;
 					margin-right: 30rpx;
@@ -169,11 +170,11 @@ page {
 						line-height: 40rpx;
 					}
 					.count {
-						font-size: 28rpx;
+						font-size: 24rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						color: #999;
-						line-height: 40rpx;
+						line-height: 34rpx;
 					}
 				}
 			}
