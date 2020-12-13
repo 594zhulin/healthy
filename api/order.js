@@ -1,16 +1,14 @@
 const service = require('@/utils/http');
 
 const api = {
-	login: '/wechat/mp_auth',
-	getBanner: '/index/get_banner',
+	getProduct: '/products',
 }
 
-const login = data => {
+const getProduct = data => {
 	return new Promise((resolve, reject) => {
 		service.http({
-			url: api.login,
-			data,
-			method: 'POST'
+			url: api.getProduct,
+			data
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -23,12 +21,13 @@ const login = data => {
 	})
 }
 
-const getBanner = () => {
+const getProductDetail = (id, data) => {
 	return new Promise((resolve, reject) => {
 		service.http({
-			url: api.getBanner
+			url: '/product/detail/' + id,
+			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -40,6 +39,6 @@ const getBanner = () => {
 }
 
 module.exports = {
-	login,
-	getBanner
+	getProduct,
+	getProductDetail
 }

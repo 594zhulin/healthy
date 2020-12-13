@@ -1,136 +1,128 @@
 <template>
 	<view class="page-mall">
-		<view class="search-content">
+		<view class="search-content" @click="navigateTo('/pages/order/search')">
 			<view class="content">
 				<image class="icon" src="../../static/mall/mall-icon-01.svg" mode="aspectFit"></image>
-				<input class="input" type="text" value="" />
+				<view class="input"></view>
+				<!-- <input class="input" type="text" value="" /> -->
 			</view>
-			<view class="btn">搜索</view>
+			<!-- <view class="btn">搜索</view> -->
 		</view>
 		<view class="user-content">
 			<view class="user">
-				<view class="avatar"></view>
-				<view class="text">朱琳</view>
+				<image class="avatar" :src="userInfo.avatar" mode="aspectFit"></image>
+				<view class="text">{{ userInfo.nickname }}</view>
 			</view>
 			<view class="circle-deep"></view>
 			<view class="circle-shallow"></view>
 			<view class="overview">
 				<view class="balance">
 					<view class="text">余额</view>
-					<view class="step">25,588万</view>
+					<view class="step">{{ userInfo.integral }}</view>
 					<view class="text">步</view>
 				</view>
-				<view class="exchange">已兑换书籍：30本</view>
+				<view class="exchange">已兑换书籍：{{ userInfo.complete_count }}本</view>
 			</view>
 		</view>
 		<view class="menu-content">
 			<view class="menu-list">
-				<view class="menu-item active">
+				<view class="menu-item" :class="{ active: params.cid == '' }" @click="bindCategoryChange(0)">
 					<view class="text">猜你喜欢</view>
 					<image class="icon" src="../../static/mall/mall-icon-02.svg" mode="aspectFit"></image>
 				</view>
-				<view class="menu-item">
-					<view class="text">传统美食</view>
-					<image class="icon" src="../../static/mall/mall-icon-02.svg" mode="aspectFit"></image>
-				</view>
-				<view class="menu-item">
-					<view class="text">家居生活</view>
-					<image class="icon" src="../../static/mall/mall-icon-02.svg" mode="aspectFit"></image>
-				</view>
-				<view class="menu-item">
-					<view class="text">电子电器</view>
-					<image class="icon" src="../../static/mall/mall-icon-02.svg" mode="aspectFit"></image>
-				</view>
-				<view class="menu-item">
-					<view class="text">佳节礼品</view>
+				<view class="menu-item" :class="{ active: params.cid == item.id }" v-for="item in category" :key="item.id" @click="bindCategoryChange(item.id)">
+					<view class="text">{{ item.cate_name }}</view>
 					<image class="icon" src="../../static/mall/mall-icon-02.svg" mode="aspectFit"></image>
 				</view>
 			</view>
 		</view>
-		<custom-pull-refresh ref="customPullrefresh" @pulldownRefresh="pulldownRefresh" @pullupRefresh="pullupRefresh">
-			<view class="list-content">
-				<view class="list-item">
-					<view class="pic"></view>
-					<view class="name">商品名称</view>
-					<view class="content">
-						<view class="step">
-							<view class="text">3万步</view>
-							<view class="price">¥ 499</view>
-						</view>
-						<view class="btn">去兑换</view>
-						<!-- <view class="status">已售罄</view> -->
+		<view class="list-content" v-if="product.length > 0">
+			<view class="list-item" v-for="item in product" :key="item.id" @click="navigateTo('/pages/order/product?id=' + item.id)">
+				<image class="pic" :src="item.image" mode="aspectFit"></image>
+				<view class="name">{{ item.store_name }}</view>
+				<view class="content">
+					<view class="step">
+						<view class="text">{{ item.price }}</view>
+						<!-- <view class="price">¥{{ item.ot_price }}</view> -->
 					</view>
-				</view>
-				<view class="list-item">
-					<view class="pic"></view>
-					<view class="name">商品名称</view>
-					<view class="content">
-						<view class="step">
-							<view class="text">3万步</view>
-							<view class="price">¥ 499</view>
-						</view>
-						<view class="btn">去兑换</view>
-						<!-- <view class="status">已售罄</view> -->
-					</view>
-				</view>
-				<view class="list-item">
-					<view class="pic"></view>
-					<view class="name">商品名称</view>
-					<view class="content">
-						<view class="step">
-							<view class="text">3万步</view>
-							<view class="price">¥ 499</view>
-						</view>
-						<view class="btn">去兑换</view>
-						<!-- <view class="status">已售罄</view> -->
-					</view>
-				</view>
-				<view class="list-item">
-					<view class="pic"></view>
-					<view class="name">商品名称</view>
-					<view class="content">
-						<view class="step">
-							<view class="text">3万步</view>
-							<view class="price">¥ 499</view>
-						</view>
-						<view class="btn">去兑换</view>
-						<!-- <view class="status">已售罄</view> -->
-					</view>
+					<view class="btn" v-if="item.stock > 0">去兑换</view>
+					<view class="status" v-else>已售罄</view>
 				</view>
 			</view>
-		</custom-pull-refresh>
+		</view>
 		<custom-tabbar :currentId="3"></custom-tabbar>
 	</view>
 </template>
 
 <script>
+import { getUser, getCategory, getProduct, getRecommend } from '@/api/mall.js';
 export default {
 	data() {
-		return {};
+		return {
+			userInfo: {
+				avatar: '',
+				nickname: '',
+				integral: 0,
+				complete_count: 0
+			},
+			category: [],
+			params: {
+				cid: '',
+				page: 1,
+				limit: 20
+			},
+			product: []
+		};
+	},
+	onShow() {
+		getUser().then(
+			result => {
+				const { avatar, nickname, integral, complete_count } = result;
+				this.userInfo = { ...this.userInfo, avatar, nickname, integral, complete_count };
+			},
+			err => {}
+		);
+		getCategory().then(
+			result => {
+				this.category = result;
+				this.getListData('down');
+			},
+			err => {}
+		);
+	},
+	onReachBottom() {
+		this.getListData('up');
 	},
 	methods: {
-		pulldownRefresh() {
-			console.log('下拉请求数据');
-			uni.request({
-				url: 'https://stamina.yulongtianzi.com/api/login/is_check',
-				method: 'POST',
-				data: {
-					user_id: 2316
-				},
-				success: res => {
-					this.$refs['customPullrefresh'].endPulldown();
-					this.text += res.data.data;
-				}
-			});
+		bindCategoryChange(id) {
+			this.params.cid = id;
+			this.getListData('down');
 		},
-		pullupRefresh() {
-			uni.request({
-				url: 'https://stamina.yulongtianzi.com/api/login/is_check',
-				method: 'POST',
-				data: {
-					user_id: 2316
-				},
-				success: res => {}
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.page = 1;
+			} else {
+				this.params.page += 1;
+			}
+			if (this.params.cid == '') {
+				getRecommend({ page: this.params.page, limit: this.params.limit }).then(
+					result => {
+						this.product = direction == 'down' ? result : this.product.concat(result);
+					},
+					err => {}
+				);
+			} else {
+				getProduct({ ...this.params }).then(
+					result => {
+						this.product = direction == 'down' ? result : this.product.concat(result);
+					},
+					err => {}
+				);
+			}
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
 			});
 		}
 	}
@@ -157,7 +149,7 @@ page {
 		display: flex;
 		align-items: center;
 		height: 60rpx;
-		margin: 20rpx 0 42rpx 24rpx;
+		margin: 20rpx 24rpx 42rpx 24rpx;
 		.content {
 			flex: 1;
 			display: flex;
@@ -326,8 +318,8 @@ page {
 			margin-left: 4vw;
 			margin-bottom: 4vw;
 			.pic {
+				width: 100%;
 				height: 280rpx;
-				background: #d8d8d8;
 				border-radius: 12rpx;
 			}
 			.name {
@@ -337,6 +329,9 @@ page {
 				font-weight: 500;
 				color: #000000;
 				line-height: 34rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 			.content {
 				display: flex;

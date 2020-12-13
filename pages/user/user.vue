@@ -8,7 +8,7 @@
 			</view>
 			<view class="user-item">
 				<view class="avatar"></view>
-				<view class="name">
+				<view class="name" @click="navigateTo('/pages/personal/index')">
 					<view class="text">朱琳</view>
 					<image class="icon" src="../../static/user/user-icon-08.png" mode="aspectFit"></image>
 				</view>
@@ -87,12 +87,12 @@
 		</view>
 		<view class="address-content">
 			<view class="title">地址管理</view>
-			<view class="link">管理></view>
+			<view class="link" @click="navigateTo('/pages/personal/list')">管理></view>
 			<view class="address-list">
 				<view class="address-item">家</view>
 				<view class="address-item">公司</view>
 				<view class="address-item">学校</view>
-				<view class="address-item"></view>
+				<view class="address-item" @click="navigateTo('/pages/personal/detail')"></view>
 			</view>
 		</view>
 		<view class="order-content">
@@ -130,7 +130,13 @@ export default {
 	data() {
 		return {};
 	},
-	methods: {}
+	methods: {
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
+	}
 };
 </script>
 

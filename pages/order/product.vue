@@ -1,26 +1,36 @@
 <template>
 	<view class="page-product" :style="{ paddingBottom: bottom + 'px' }">
-		<view class="pic-content"></view>
+		<view class="pic-content">
+			<swiper class="swiper" :autoplay="true" :circular="true">
+				<swiper-item class="swiper-item" v-for="(item, index) in product.slider_image" :key="index"><image class="image" :src="item" mode="widthFix"></image></swiper-item>
+			</swiper>
+		</view>
 		<view class="detail-content">
-			<view class="name">做自己的心理医生</view>
-			<view class="step">3万</view>
+			<view class="name">{{ product.store_name }}</view>
+			<view class="step">{{ product.price }}</view>
 		</view>
 		<view class="title-content"><view class="text">商品详情</view></view>
-		<view class="desc-content"></view>
-		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }"><view class="btn">立即兑换</view></view>
+		<view class="desc-content"><rich-text :nodes="product.description"></rich-text></view>
+		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
+			<view class="btn" v-if="product.stock > 0">立即兑换</view>
+			<view class="btn disabled" v-else>库存不足</view>
+		</view>
 	</view>
 </template>
 
 <script>
+import { getProductDetail } from '@/api/order.js';
+import { formatRichText } from '@/utils/utils.js';
 export default {
 	data() {
 		return {
 			isIphoneX: false,
 			paddingBottom: '',
-			bottom: ''
+			bottom: '',
+			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '' }
 		};
 	},
-	onLoad() {
+	onLoad(option) {
 		this.isIphoneX = getApp().globalData.isIphoneX;
 		this.paddingBottom = getApp().globalData.paddingBottom;
 		const query = uni.createSelectorQuery().in(this);
@@ -30,7 +40,15 @@ export default {
 				this.bottom = data.height + 15;
 			})
 			.exec();
-	}
+		getProductDetail(option.id, { user_type: 'routine' }).then(
+			result => {
+				const { store_name, price, stock, slider_image, description } = result.storeInfo;
+				this.product = { ...this.product, store_name, price, stock, slider_image, description: formatRichText(description) };
+			},
+			err => {}
+		);
+	},
+	methods: {}
 };
 </script>
 
@@ -40,8 +58,15 @@ page {
 }
 .page-product {
 	.pic-content {
-		height: 412rpx;
+		height: 750rpx;
 		background-color: #eee;
+		.swiper {
+			height: 750rpx;
+			.image {
+				width: 100%;
+				height: auto;
+			}
+		}
 	}
 	.detail-content {
 		padding: 40rpx 30rpx 48rpx 30rpx;
@@ -100,8 +125,7 @@ page {
 		}
 	}
 	.desc-content {
-		height: 600rpx;
-		padding: 60rpx 30rpx;
+		padding: 60rpx 0;
 		background-color: #fff;
 	}
 	.btn-content {
@@ -130,6 +154,10 @@ page {
 			color: #fff;
 			line-height: 80rpx;
 			text-align: center;
+		}
+		.btn.disabled {
+			background: #eee;
+			color: #a3a7b9;
 		}
 	}
 }

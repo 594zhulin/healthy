@@ -1,18 +1,18 @@
 const service = require('@/utils/http');
 
 const api = {
-	getScore: '/index/index',
-	getStep: '/user/getWxInfo',
-	getProduct: '/related'
+	getUser: '/user',
+	getCategory: '/category',
+	getProduct: '/products',
+	getRecommend: '/related'
 }
 
-const getScore = data => {
+const getUser = () => {
 	return new Promise((resolve, reject) => {
 		service.http({
-			url: api.getScore,
-			data
+			url: api.getUser
 		}).then(result => {
-			if (result.state === 1) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -23,13 +23,12 @@ const getScore = data => {
 	})
 }
 
-const getStep = data => {
+const getCategory = () => {
 	return new Promise((resolve, reject) => {
 		service.http({
-			url: api.getStep,
-			data
+			url: api.getCategory
 		}).then(result => {
-			if (result.state === 1) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -57,8 +56,26 @@ const getProduct = data => {
 	})
 }
 
+const getRecommend = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.getRecommend,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
-	getScore,
-	getStep,
-	getProduct
+	getUser,
+	getCategory,
+	getProduct,
+	getRecommend
 }

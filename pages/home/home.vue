@@ -27,7 +27,7 @@
 				<view class="title">AI体能训练计划</view>
 				<view class="btn">立即制定</view>
 			</view>
-			<view class="grid-item mall">
+			<view class="grid-item mall" @click="switchTab">
 				<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>
 				<view class="title">步数书城</view>
 				<view class="text">海量图书</view>
@@ -54,28 +54,12 @@
 		</view>
 		<view class="list-content">
 			<view class="title">推荐兑换</view>
-			<view class="list-item">
-				<view class="pic"></view>
+			<view class="list-item" v-for="item in product" :key="item.id" @click="navigateTo('/pages/order/product?id=' + item.id)">
+				<image class="pic" :src="item.image" mode="aspectFit"></image>
 				<view class="content">
-					<view class="title">做自己的心理医生</view>
-					<view class="price">原价：39.9元</view>
-					<view class="step">3万</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="pic"></view>
-				<view class="content">
-					<view class="title">做自己的心理医生</view>
-					<view class="price">原价：39.9元</view>
-					<view class="step">3万</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="pic"></view>
-				<view class="content">
-					<view class="title">做自己的心理医生</view>
-					<view class="price">原价：39.9元</view>
-					<view class="step">3万</view>
+					<view class="title">{{ item.store_name }}</view>
+					<view class="price">原价：{{ item.ot_price }}元</view>
+					<view class="step">{{ item.price }}</view>
 				</view>
 			</view>
 		</view>
@@ -84,13 +68,51 @@
 </template>
 
 <script>
+import { getProduct } from '@/api/home.js';
 export default {
 	data() {
-		return {};
+		return {
+			params: {
+				page: 1,
+				limit: 20
+			},
+			product: []
+		};
 	},
-	onPullDownRefresh() {},
-	onReachBottom() {},
-	methods: {}
+	onLoad() {
+		this.getListData('down');
+	},
+	onPullDownRefresh() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.page = 1;
+			} else {
+				this.params.page += 1;
+			}
+			getProduct({ ...this.params }).then(
+				result => {
+					this.product = direction == 'down' ? result : this.product.concat(result);
+				},
+				err => {}
+			);
+		},
+		switchTab() {
+			uni.switchTab({
+				url: '/pages/mall/mall'
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
+	}
 };
 </script>
 

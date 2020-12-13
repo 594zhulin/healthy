@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { getBanner } from '@/api/launch.js';
+import { login, getBanner } from '@/api/launch.js';
 export default {
 	data() {
 		return {
@@ -26,15 +26,21 @@ export default {
 			uni.login({
 				provider: 'weixin',
 				success: function(loginRes) {
-					console.log(loginRes.authResult);
+					console.log(loginRes);
 					// 获取用户信息
 					uni.getUserInfo({
 						provider: 'weixin',
 						success: function(infoRes) {
-							uni.switchTab({
-								url: '/pages/home/home'
-							});
-							uni.hideTabBar();
+							login({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
+								result => {
+									uni.setStorageSync('token', result.token);
+									uni.switchTab({
+										url: '/pages/home/home'
+									});
+									uni.hideTabBar();
+								},
+								err => {}
+							);
 						}
 					});
 				}

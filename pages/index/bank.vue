@@ -108,9 +108,20 @@
 </template>
 
 <script>
+import { getCategory } from '@/api/bank.js';
 export default {
 	data() {
-		return {};
+		return {
+			category: []
+		};
+	},
+	onShow() {
+		getCategory().then(
+			result => {
+				this.category = result;
+			},
+			err => {}
+		);
 	}
 };
 </script>

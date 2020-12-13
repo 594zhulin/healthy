@@ -168,6 +168,13 @@
 		}, {
 			"root": "pages/order/",
 			"pages": [{
+				"path": "search",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "商品搜索"
+				}
+			}, {
 				"path": "product",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
@@ -187,6 +194,20 @@
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "订单详情"
+				}
+			}, {
+				"path": "confirm",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "确认订单"
+				}
+			}, {
+				"path": "refund",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "申请退款"
 				}
 			}]
 		}, {

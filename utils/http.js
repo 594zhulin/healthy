@@ -1,5 +1,5 @@
 //域名前缀
-const baseUrl = 'https://stamina.yulongtianzi.com/api';
+const baseUrl = 'https://shops.yulongtianzi.com/api';
 //请求队列参数
 const list = {
 	count: 0, //正在进行的请求数量
@@ -50,8 +50,14 @@ const service = {
 					});
 				}
 			};
-			options.method = 'POST';
+			const token = uni.getStorageSync('token');
+			options.method = options.method || 'GET';
 			options.url = baseUrl + options.url;
+			if (token) {
+				options.header = {
+					'Authori-zation': 'Bearer ' + token
+				};
+			}
 			options.fail = (err) => {
 				reject({
 					url: options.url,

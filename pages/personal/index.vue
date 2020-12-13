@@ -1,8 +1,8 @@
 <template>
 	<view class="page-index">
-		<view class="avatar-content">
+		<view class="avatar-content" @click="bindAvatarChange">
 			<view class="label">头像</view>
-			<view class="avatar"></view>
+			<image class="avatar" :src="avatar" mode="aspectFit"></image>
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 		</view>
 		<view class="name-content">
@@ -28,17 +28,28 @@
 </template>
 
 <script>
+import { getUser } from '@/api/personal.js';
 export default {
 	data() {
 		const currentDate = this.getDate({
 			format: true
 		});
 		return {
+			avatar: '',
 			name: '',
 			array: ['男', '女'],
 			index: 0,
 			date: currentDate
 		};
+	},
+	onLoad() {
+		getUser().then(
+			result => {
+				const { avatar, nickname, integral, complete_count } = result;
+				this.userInfo = { ...this.userInfo, avatar, nickname, integral, complete_count };
+			},
+			err => {}
+		);
 	},
 	computed: {
 		startDate() {
@@ -49,10 +60,37 @@ export default {
 		}
 	},
 	methods: {
-		bindDateChange: function(e) {
+		bindAvatarChange() {
+			const _this = this;
+			uni.chooseImage({
+				count: 1,
+				success: function(res) {
+					const token = uni.getStorageSync('token');
+					uni.uploadFile({
+						url: 'https://shop.healthmach.com/api/upload/image',
+						filePath: res.tempFilePaths[0],
+						name: 'pics',
+						formData: {
+							filename: 'pics'
+						},
+						header: {
+							'Content-Type': 'multipart/form-data',
+							'Authori-zation': 'Bearer ' + token
+						},
+						success: function(res) {
+							const data = JSON.parse(res.data);
+							if (data.status == 200) {
+								_this.avatar = data.data.url;
+							}
+						}
+					});
+				}
+			});
+		},
+		bindDateChange(e) {
 			this.date = e.target.value;
 		},
-		bindPickerChange: function(e) {
+		bindPickerChange(e) {
 			this.index = e.target.value;
 		},
 		getDate(type) {

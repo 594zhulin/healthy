@@ -6,29 +6,47 @@
 			<view class="tip">1000步将于2020-02-29过期</view>
 		</view>
 		<view class="list-content">
-			<view class="list-item">
-				<view class="title">做自己的心理医生</view>
-				<view class="date">2019-05-16 14:22</view>
-				<view class="step">-1000</view>
-			</view>
-			<view class="list-item">
-				<view class="title">做自己的心理医生</view>
-				<view class="date">2019-05-16 14:22</view>
-				<view class="step">-1000</view>
-			</view>
-			<view class="list-item">
-				<view class="title">做自己的心理医生</view>
-				<view class="date">2019-05-16 14:22</view>
-				<view class="step">-1000</view>
+			<view class="list-item" v-for="(item, index) in step" :key="index">
+				<view class="title">{{ item.mark }}</view>
+				<view class="date">{{ item.add_time }}</view>
+				<view class="step">{{ item.pm == 0 ? '-' : '+' }}{{ item.number }}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getStep } from '@/api/personal.js';
 export default {
 	data() {
-		return {};
+		return {
+			params: {
+				page: 1,
+				limit: 20
+			},
+			step: []
+		};
+	},
+	onLoad() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.page = 1;
+			} else {
+				this.params.page += 1;
+			}
+			getStep({ ...this.params }).then(
+				result => {
+					this.step = direction == 'down' ? result : this.step.concat(result);
+				},
+				err => {}
+			);
+		}
 	}
 };
 </script>

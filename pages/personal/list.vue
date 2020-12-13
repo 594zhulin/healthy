@@ -1,23 +1,23 @@
 <template>
 	<view class="page-list" :style="{ paddingBottom: bottom + 'px' }">
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in address" :key="item.id">
 				<view class="user">
-					<view class="name">朱琳</view>
-					<view class="phone">18737474753</view>
+					<view class="name">{{ item.real_name }}</view>
+					<view class="phone">{{ item.phone }}</view>
 				</view>
-				<view class="address">湖南省长沙市爱德华镇保德花园小区38号停车场 B区1楼</view>
+				<view class="address">{{ item.province }}{{ item.city }}{{ item.district }}{{ item.detail }}</view>
 				<view class="actionsheet">
-					<label class="label">
-						<radio class="radio" color="#2975FF" value="" />
-						<text class="text">设为默认地址</text>
+					<label class="label" @click="handleChange(item.id)">
+						<radio class="radio" :checked="item.is_default == 1" />
+						<text class="text" :class="{ checked: item.is_default == 1 }">{{ item.is_default == 1 ? '已设为默认' : '设为默认' }}</text>
 					</label>
 					<view class="btn-group">
-						<view class="btn-modify">
+						<view class="btn-modify" @click="navigateTo('/pages/personal/detail?id=' + item.id)">
 							<image class="icon" src="../../static/address/address-icon-01.png" mode="aspectFit"></image>
 							<view class="text">编辑</view>
 						</view>
-						<view class="btn-delete">
+						<view class="btn-delete" @click="handleDelete(item.id)">
 							<image class="icon" src="../../static/address/address-icon-02.png" mode="aspectFit"></image>
 							<view class="text">删除</view>
 						</view>
@@ -25,17 +25,25 @@
 				</view>
 			</view>
 		</view>
-		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }"><view class="btn">添加地址</view></view>
+		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
+			<view class="btn" @click="navigateTo('/pages/personal/detail')">添加地址</view>
+		</view>
 	</view>
 </template>
 
 <script>
+import { getAddress, setDefaultAddress, delAddress } from '@/api/personal.js';
 export default {
 	data() {
 		return {
 			isIphoneX: false,
 			paddingBottom: '',
-			bottom: ''
+			bottom: '',
+			params: {
+				page: 1,
+				limit: 20
+			},
+			address: []
 		};
 	},
 	onLoad() {
@@ -48,6 +56,80 @@ export default {
 				this.bottom = data.height + 15;
 			})
 			.exec();
+	},
+	onShow() {
+		this.getListData('down');
+	},
+	onPullDownRefresh() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.page = 1;
+			} else {
+				this.params.page += 1;
+			}
+			getAddress({ ...this.params }).then(
+				result => {
+					this.address = direction == 'down' ? result : this.address.concat(result);
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		handleChange(id) {
+			setDefaultAddress({ id }).then(
+				result => {
+					this.address.map(item => {
+						if (item.id == id) {
+							item.is_default = 1;
+						} else {
+							item.is_default = 0;
+						}
+					});
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		handleDelete(id) {
+			const _this = this;
+			uni.showModal({
+				content: '确定删除该地址？',
+				success: function(res) {
+					if (res.confirm) {
+						delAddress({ id }).then(
+							result => {
+								_this.getListData('down');
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>
@@ -59,8 +141,9 @@ page {
 .page-list {
 	.list-content {
 		.list-item {
-			margin: 30rpx 0;
+			margin: 30rpx;
 			background-color: #fff;
+			border-radius: 16rpx;
 			.user {
 				display: flex;
 				align-items: center;
@@ -106,12 +189,19 @@ page {
 					.radio {
 						transform: scale(0.7);
 					}
+					.radio .wx-radio-input.wx-radio-input-checked {
+						border: 1px solid #2975ff !important;
+						background-color: #2975ff !important;
+					}
 					.text {
 						font-size: 28rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
-						color: #2975ff;
+						color: #999;
 						line-height: 40rpx;
+					}
+					.text.checked {
+						color: #2975ff;
 					}
 				}
 				.btn-group {
