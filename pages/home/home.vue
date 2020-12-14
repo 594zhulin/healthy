@@ -33,7 +33,7 @@
 				<view class="text">海量图书</view>
 				<view class="text">免费兑换</view>
 			</view>
-			<view class="grid-item diet">
+			<view class="grid-item diet" @click="navigateTo('/pages/diet/index')">
 				<image class="icon" src="../../static/home/home-icon-05.svg" mode="aspectFit"></image>
 				<view class="title">膳食健康管理</view>
 				<view class="btn">开始评测</view>

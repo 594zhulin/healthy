@@ -7,6 +7,7 @@
 
 <script>
 import { login, getBanner } from '@/api/launch.js';
+import { generateUUID } from '@/utils/utils.js';
 export default {
 	data() {
 		return {
@@ -27,11 +28,12 @@ export default {
 				provider: 'weixin',
 				success: function(loginRes) {
 					console.log(loginRes);
+					console.log(generateUUID().length);
 					// 获取用户信息
 					uni.getUserInfo({
 						provider: 'weixin',
 						success: function(infoRes) {
-							login({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
+							login({ code: loginRes.code, session_key: generateUUID(), iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
 								result => {
 									uni.setStorageSync('token', result.token);
 									uni.switchTab({

@@ -1,7 +1,7 @@
 <template>
 	<view class="page-index">
 		<view class="banner-content"></view>
-		<view class="test-content">
+		<view class="test-content" @click="navigateTo('/pages/diet/one')">
 			<view class="pic"></view>
 			<view class="content">
 				<view class="title">膳食测评</view>
@@ -24,6 +24,13 @@
 export default {
 	data() {
 		return {};
+	},
+	methods: {
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

@@ -15,6 +15,34 @@
 			<view class="btn" v-if="product.stock > 0">立即兑换</view>
 			<view class="btn disabled" v-else>库存不足</view>
 		</view>
+		<custom-modal ref="specs" direction="bottom" maskClick>
+			<view class="specs-content">
+				<view class="product">
+					<image class="pic" :src="product.image" mode="aspectFit"></image>
+					<view class="content">
+						<view class="name">{{ product.store_name }}</view>
+						<view class="price">￥{{ product.price }}</view>
+					</view>
+				</view>
+				<view class="specs" v-for="item in attr" :key="item.attr_name">
+					<view class="text">{{ item.attr_name }}</view>
+					<view class="specs-list">
+						<view class="specs-item" v-for="attr in item.attr_value" :class="{ active: currentAttr.includes(attr.attr) }" @click="selectAttr(attr, item.attr_name)">
+							{{ attr.attr }}
+						</view>
+					</view>
+				</view>
+				<view class="count">
+					<view class="text">数量</view>
+					<view class="input-number">
+						<view class="btn-minus" @click="decrease"></view>
+						<view class="input">{{ cartNum }}</view>
+						<view class="btn-plus" @click="increase">+</view>
+					</view>
+				</view>
+				<view class="btn-confirm" @click="addCart">确认</view>
+			</view>
+		</custom-modal>
 	</view>
 </template>
 
@@ -27,7 +55,8 @@ export default {
 			isIphoneX: false,
 			paddingBottom: '',
 			bottom: '',
-			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '' }
+			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '', image: '' },
+			attr: []
 		};
 	},
 	onLoad(option) {
@@ -42,11 +71,12 @@ export default {
 			.exec();
 		getProductDetail(option.id, { user_type: 'routine' }).then(
 			result => {
-				const { store_name, price, stock, slider_image, description } = result.storeInfo;
-				this.product = { ...this.product, store_name, price, stock, slider_image, description: formatRichText(description) };
+				const { store_name, price, stock, slider_image, description, image } = result.storeInfo;
+				this.product = { ...this.product, store_name, price, stock, slider_image, image, description: formatRichText(description) };
 			},
 			err => {}
 		);
+		this.$refs['specs'].open();
 	},
 	methods: {}
 };
@@ -158,6 +188,143 @@ page {
 		.btn.disabled {
 			background: #eee;
 			color: #a3a7b9;
+		}
+	}
+	.specs-content {
+		padding: 0 36rpx 36rpx 36rpx;
+		.product {
+			display: flex;
+			align-items: center;
+			padding: 40rpx 0;
+			margin-bottom: 60rpx;
+			.pic {
+				width: 160rpx;
+				height: 160rpx;
+				flex-shrink: 0;
+				margin-right: 30rpx;
+				border-radius: 16rpx;
+			}
+			.content {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 160rpx;
+				.name {
+					margin-bottom: 20rpx;
+					font-size: 28rpx;
+					font-family: Alibaba;
+					font-weight: normal;
+					color: #000;
+					line-height: 40rpx;
+				}
+				.price {
+					font-size: 32rpx;
+					font-family: Alibaba;
+					font-weight: normal;
+					color: #cd1f1f;
+					line-height: 46rpx;
+				}
+			}
+		}
+		.specs {
+			margin-top: 52rpx;
+			margin-bottom: 56rpx;
+			.text {
+				font-size: 28rpx;
+				font-family: Alibaba;
+				font-weight: normal;
+				color: rgba(165, 165, 165, 1);
+				line-height: 40rpx;
+			}
+			.specs-list {
+				display: flex;
+				flex-wrap: wrap;
+			}
+			.specs-item {
+				width: 178rpx;
+				height: 38rpx;
+				line-height: 38rpx;
+				margin-right: 48rpx;
+				margin-top: 30rpx;
+				background: rgba(229, 229, 229, 1);
+				border-radius: 6rpx;
+				font-size: 28rpx;
+				font-family: Alibaba;
+				font-weight: normal;
+				color: rgba(165, 165, 165, 1);
+				text-align: center;
+			}
+			.specs-item.active {
+				background-color: #fe7910;
+				color: #fff;
+			}
+		}
+		.count {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.text {
+				font-size: 28rpx;
+				font-family: Alibaba;
+				font-weight: normal;
+				color: rgba(165, 165, 165, 1);
+			}
+		}
+		.input-number {
+			display: flex;
+			align-items: center;
+			border: 2rpx solid #e5e5e5;
+			border-radius: 36rpx;
+			.input {
+				width: 48rpx;
+				height: 28rpx;
+				line-height: 28rpx;
+				margin: 8rpx 0;
+				border-left: 2rpx solid #e5e5e5;
+				border-right: 2rpx solid #e5e5e5;
+				font-size: 28rpx;
+				font-family: Alibaba;
+				font-weight: normal;
+				color: #aeaeae;
+				text-align: center;
+			}
+			.btn-minus,
+			.btn-plus {
+				position: relative;
+				width: 60rpx;
+				height: 50rpx;
+				line-height: 50rpx;
+				font-size: 36rpx;
+				font-family: Alibaba;
+				font-weight: normal;
+				color: #aeaeae;
+				text-align: center;
+			}
+			.btn-minus::after {
+				position: absolute;
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 0;
+				margin: auto;
+				content: '';
+				display: block;
+				width: 20rpx;
+				height: 4rpx;
+				background-color: #aeaeae;
+			}
+		}
+		.btn-confirm {
+			height: 70rpx;
+			line-height: 70rpx;
+			margin: 40rpx 0;
+			border-radius: 45rpx;
+			background-color: #fe7910;
+			font-size: 28rpx;
+			font-family: Alibaba;
+			font-weight: normal;
+			color: #fff;
+			text-align: center;
 		}
 	}
 }

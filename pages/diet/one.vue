@@ -58,9 +58,11 @@
 </template>
 
 <script>
+import { getSurvey } from '@/api/diet.js';
 export default {
 	data() {
 		return {
+			question: '',
 			current: 0,
 			items1: [
 				{
@@ -142,6 +144,21 @@ export default {
 				}
 			]
 		};
+	},
+	onLoad() {
+		getSurvey().then(
+			result => {
+				this.question = result;
+			},
+			err => {}
+		);
+	},
+	methods: {
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>
