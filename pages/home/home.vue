@@ -58,8 +58,9 @@
 				<image class="pic" :src="item.image" mode="aspectFit"></image>
 				<view class="content">
 					<view class="title">{{ item.store_name }}</view>
-					<view class="price">原价：{{ item.ot_price }}元</view>
-					<view class="step">{{ item.price }}</view>
+					<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
+					<view class="step" v-if="item.is_model == 1">{{ item.buy_credits }}</view>
+					<view class="text" v-else>￥{{ item.price }}</view>
 				</view>
 			</view>
 		</view>
@@ -76,7 +77,8 @@ export default {
 				page: 1,
 				limit: 20
 			},
-			product: []
+			product: [],
+			total: 0
 		};
 	},
 	onLoad() {
@@ -93,11 +95,16 @@ export default {
 			if (direction == 'down') {
 				this.params.page = 1;
 			} else {
+				if (this.product.length >= this.total) {
+					return false;
+				}
 				this.params.page += 1;
 			}
 			getProduct({ ...this.params }).then(
 				result => {
-					this.product = direction == 'down' ? result : this.product.concat(result);
+					const { list, total } = result;
+					this.product = direction == 'down' ? list : this.product.concat(list);
+					this.total = total;
 				},
 				err => {}
 			);
@@ -449,6 +456,12 @@ page {
 				background: #d8d8d8;
 				border-radius: 20rpx;
 			}
+			.content {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 150rpx;
+			}
 			.title {
 				font-size: 32rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
@@ -479,6 +492,13 @@ page {
 					color: #fc6262;
 					line-height: 26rpx;
 				}
+			}
+			.text {
+				font-size: 32rpx;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 600;
+				color: #fc6262;
+				line-height: 46rpx;
 			}
 		}
 	}

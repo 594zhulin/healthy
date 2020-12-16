@@ -7,7 +7,8 @@
 		</view>
 		<view class="detail-content">
 			<view class="name">{{ product.store_name }}</view>
-			<view class="step">{{ product.price }}</view>
+			<view class="step" v-if="product.is_model == 1">{{ product.buy_credits }}</view>
+			<view class="text" v-else>￥{{ product.price }}</view>
 		</view>
 		<view class="title-content"><view class="text">商品详情</view></view>
 		<view class="desc-content"><rich-text :nodes="product.description"></rich-text></view>
@@ -21,13 +22,14 @@
 					<image class="pic" :src="product.image" mode="aspectFit"></image>
 					<view class="content">
 						<view class="name">{{ product.store_name }}</view>
-						<view class="price">￥{{ product.price }}</view>
+						<view class="step" v-if="product.is_model == 1">{{ product.buy_credits }}</view>
+						<view class="text" v-else>￥{{ product.price }}</view>
 					</view>
 				</view>
-				<view class="specs" v-for="item in attr" :key="item.attr_name">
+				<view class="specs" v-for="item in product.productAttr" :key="item.attr_name">
 					<view class="text">{{ item.attr_name }}</view>
 					<view class="specs-list">
-						<view class="specs-item" v-for="attr in item.attr_value" :class="{ active: currentAttr.includes(attr.attr) }" @click="selectAttr(attr, item.attr_name)">
+						<view class="specs-item" :class="{ active: attr.check }" :key="index" v-for="(attr, index) in item.attr_value" @click="bindAttrChange(item, attr.attr)">
 							{{ attr.attr }}
 						</view>
 					</view>
@@ -55,8 +57,7 @@ export default {
 			isIphoneX: false,
 			paddingBottom: '',
 			bottom: '',
-			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '', image: '' },
-			attr: []
+			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '', image: '', is_model: 0, buy_credits: 0, productAttr: [], productValue: [] }
 		};
 	},
 	onLoad(option) {
@@ -71,14 +72,42 @@ export default {
 			.exec();
 		getProductDetail(option.id, { user_type: 'routine' }).then(
 			result => {
-				const { store_name, price, stock, slider_image, description, image } = result.storeInfo;
-				this.product = { ...this.product, store_name, price, stock, slider_image, image, description: formatRichText(description) };
+				const { store_name, price, stock, slider_image, description, image, is_model, buy_credits } = result.storeInfo;
+				const { productAttr, productValue } = result;
+				this.product = {
+					...this.product,
+					store_name,
+					price,
+					stock,
+					slider_image,
+					image,
+					is_model,
+					buy_credits,
+					productAttr,
+					productValue,
+					description: formatRichText(description)
+				};
+				this.product.productAttr.map(item => {
+					if (item.attr_value[0]) {
+						item.attr_value[0].check = true;
+					}
+				});
 			},
 			err => {}
 		);
 		this.$refs['specs'].open();
 	},
-	methods: {}
+	methods: {
+		bindAttrChange(item, attr) {
+			item.attr_value.map(i => {
+				if (i.attr == attr) {
+					i.check = true;
+				} else {
+					i.check = false;
+				}
+			});
+		}
+	}
 };
 </script>
 
@@ -123,6 +152,13 @@ page {
 				color: #fc6262;
 				line-height: 26rpx;
 			}
+		}
+		.text {
+			font-size: 40rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #fc6262;
+			line-height: 46rpx;
 		}
 	}
 	.title-content {
@@ -217,11 +253,26 @@ page {
 					color: #000;
 					line-height: 40rpx;
 				}
-				.price {
+				.step {
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #fc6262;
+					line-height: 46rpx;
+					&::after {
+						content: '步';
+						font-size: 18rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #fc6262;
+						line-height: 26rpx;
+					}
+				}
+				.text {
 					font-size: 32rpx;
 					font-family: Alibaba;
 					font-weight: normal;
-					color: #cd1f1f;
+					color: #fc6262;
 					line-height: 46rpx;
 				}
 			}

@@ -42,11 +42,12 @@
 				<view class="name">{{ item.store_name }}</view>
 				<view class="content">
 					<view class="step">
-						<view class="text">{{ item.price }}</view>
+						<view class="text" v-if="item.is_model == 1">{{ item.buy_credits }}步</view>
+						<view class="text" v-else>￥{{ item.price }}</view>
 						<!-- <view class="price">¥{{ item.ot_price }}</view> -->
 					</view>
-					<view class="btn" v-if="item.stock > 0">去兑换</view>
-					<view class="status" v-else>已售罄</view>
+					<view class="btn">去兑换</view>
+					<!-- <view class="status" v-else>已售罄</view> -->
 				</view>
 			</view>
 		</view>

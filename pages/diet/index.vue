@@ -9,7 +9,7 @@
 			</view>
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 		</view>
-		<view class="cookbook-content">
+		<view class="cookbook-content" @click="navigateTo('/pages/diet/category')">
 			<view class="pic"></view>
 			<view class="content">
 				<view class="title">健康食谱</view>

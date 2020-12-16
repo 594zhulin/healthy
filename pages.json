@@ -156,13 +156,25 @@
 					"navigationBarTitleText": "膳食结构评估结果"
 				}
 			}, {
-				"path": "list"
+				"path": "category",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "健康食谱"
+				}
+			}, {
+				"path": "list",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "专栏"
+				}
 			}, {
 				"path": "detail",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "专栏"
+					"navigationBarTitleText": "文章详情"
 				}
 			}]
 		}, {
