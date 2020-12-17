@@ -9,7 +9,7 @@ const api = {
 
 const getUser = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getUser
 		}).then(result => {
 			if (result.status === 200) {
@@ -25,7 +25,7 @@ const getUser = () => {
 
 const getCategory = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getCategory
 		}).then(result => {
 			if (result.status === 200) {
@@ -41,7 +41,7 @@ const getCategory = () => {
 
 const getProduct = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getProduct,
 			data
 		}).then(result => {
@@ -58,7 +58,7 @@ const getProduct = data => {
 
 const getRecommend = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getRecommend,
 			data
 		}).then(result => {

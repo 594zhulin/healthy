@@ -1,5 +1,6 @@
 //域名前缀
 const baseUrl = 'https://shops.yulongtianzi.com/api';
+const prefixUrl = 'https://stamina.yulongtianzi.com/api'
 //请求队列参数
 const list = {
 	count: 0, //正在进行的请求数量
@@ -37,7 +38,7 @@ const request = (options) => {
 	}
 }
 const service = {
-	http: (options) => {
+	request: (options) => {
 		return new Promise((resolve, reject) => {
 			options.success = res => {
 				if (res.statusCode == 200) {
@@ -58,6 +59,31 @@ const service = {
 					'Authori-zation': 'Bearer ' + token
 				};
 			}
+			options.fail = (err) => {
+				reject({
+					url: options.url,
+					err: err,
+					text: '网络环境差，请稍后重试'
+				});
+			};
+			request(options);
+		})
+	},
+	http: (options) => {
+		return new Promise((resolve, reject) => {
+			options.success = res => {
+				if (res.statusCode == 200) {
+					resolve(res.data)
+				} else {
+					reject({
+						url: options.url,
+						err: res,
+						text: '网络环境差，请稍后重试'
+					});
+				}
+			};
+			options.method = 'POST';
+			options.url = prefixUrl + options.url;
 			options.fail = (err) => {
 				reject({
 					url: options.url,

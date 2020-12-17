@@ -12,7 +12,7 @@ const api = {
 
 const getUser = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getUser
 		}).then(result => {
 			if (result.status === 200) {
@@ -28,7 +28,7 @@ const getUser = () => {
 
 const getAddress = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getAddress,
 			data
 		}).then(result => {
@@ -45,7 +45,7 @@ const getAddress = data => {
 
 const getAddressDetail = id => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: '/address/detail/' + id,
 		}).then(result => {
 			if (result.status === 200) {
@@ -61,7 +61,7 @@ const getAddressDetail = id => {
 
 const editAddress = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.editAddress,
 			data,
 			method: 'POST'
@@ -79,7 +79,7 @@ const editAddress = data => {
 
 const delAddress = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.delAddress,
 			data,
 			method: 'POST'
@@ -97,7 +97,7 @@ const delAddress = data => {
 
 const setDefaultAddress = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.setDefaultAddress,
 			data,
 			method: 'POST'
@@ -115,7 +115,7 @@ const setDefaultAddress = data => {
 
 const getStep = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getStep,
 			data,
 		}).then(result => {

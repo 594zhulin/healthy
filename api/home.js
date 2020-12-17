@@ -42,7 +42,7 @@ const getStep = data => {
 
 const getProduct = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getProduct,
 			data
 		}).then(result => {

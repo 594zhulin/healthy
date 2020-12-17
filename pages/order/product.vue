@@ -13,11 +13,11 @@
 		<view class="title-content"><view class="text">商品详情</view></view>
 		<view class="desc-content"><rich-text :nodes="product.description"></rich-text></view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
-			<view class="btn" v-if="product.stock > 0">立即兑换</view>
+			<view class="btn" v-if="product.stock > 0" @click="handleOpen">立即兑换</view>
 			<view class="btn disabled" v-else>库存不足</view>
 		</view>
-		<custom-modal ref="specs" direction="bottom" maskClick>
-			<view class="specs-content">
+		<custom-modal ref="specsModal" direction="bottom" maskClick>
+			<view class="specs-modal">
 				<view class="product">
 					<image class="pic" :src="product.image" mode="aspectFit"></image>
 					<view class="content">
@@ -28,8 +28,8 @@
 				</view>
 				<view class="specs" v-for="item in product.productAttr" :key="item.attr_name">
 					<view class="text">{{ item.attr_name }}</view>
-					<view class="specs-list">
-						<view class="specs-item" :class="{ active: attr.check }" :key="index" v-for="(attr, index) in item.attr_value" @click="bindAttrChange(item, attr.attr)">
+					<view class="list-content">
+						<view class="list-item" :class="{ active: attr.check }" :key="index" v-for="(attr, index) in item.attr_value" @click="bindAttrChange(item, attr.attr)">
 							{{ attr.attr }}
 						</view>
 					</view>
@@ -37,19 +37,19 @@
 				<view class="count">
 					<view class="text">数量</view>
 					<view class="input-number">
-						<view class="btn-minus" @click="decrease"></view>
+						<view class="btn-minus" @click="onDecrease"></view>
 						<view class="input">{{ cartNum }}</view>
-						<view class="btn-plus" @click="increase">+</view>
+						<view class="btn-plus" @click="onIncrease">+</view>
 					</view>
 				</view>
-				<view class="btn-confirm" @click="addCart">确认</view>
+				<view class="btn-confirm" @click="handleConfirm">确认</view>
 			</view>
 		</custom-modal>
 	</view>
 </template>
 
 <script>
-import { getProductDetail } from '@/api/order.js';
+import { getProductDetail, addCart } from '@/api/order.js';
 import { formatRichText } from '@/utils/utils.js';
 export default {
 	data() {
@@ -57,7 +57,20 @@ export default {
 			isIphoneX: false,
 			paddingBottom: '',
 			bottom: '',
-			product: { store_name: '', price: '￥0.00', stock: 0, slider_image: [], description: '', image: '', is_model: 0, buy_credits: 0, productAttr: [], productValue: [] }
+			product: {
+				id: '',
+				store_name: '',
+				price: '￥0.00',
+				stock: 0,
+				slider_image: [],
+				description: '',
+				image: '',
+				is_model: 0,
+				buy_credits: 0,
+				productAttr: [],
+				productValue: []
+			},
+			cartNum: 1
 		};
 	},
 	onLoad(option) {
@@ -72,10 +85,11 @@ export default {
 			.exec();
 		getProductDetail(option.id, { user_type: 'routine' }).then(
 			result => {
-				const { store_name, price, stock, slider_image, description, image, is_model, buy_credits } = result.storeInfo;
+				const { id, store_name, price, stock, slider_image, description, image, is_model, buy_credits } = result.storeInfo;
 				const { productAttr, productValue } = result;
 				this.product = {
 					...this.product,
+					id,
 					store_name,
 					price,
 					stock,
@@ -83,6 +97,7 @@ export default {
 					image,
 					is_model,
 					buy_credits,
+					stock,
 					productAttr,
 					productValue,
 					description: formatRichText(description)
@@ -95,7 +110,6 @@ export default {
 			},
 			err => {}
 		);
-		this.$refs['specs'].open();
 	},
 	methods: {
 		bindAttrChange(item, attr) {
@@ -106,6 +120,39 @@ export default {
 					i.check = false;
 				}
 			});
+		},
+		handleOpen() {
+			this.$refs['specsModal'].open();
+		},
+		onDecrease() {
+			if (this.cartNum > 1) {
+				this.cartNum--;
+			}
+		},
+		onIncrease() {
+			if (this.product.stock > this.cartNum) {
+				this.cartNum++;
+			}
+		},
+		handleConfirm() {
+			const sku = [];
+			this.product.productAttr.map(item => {
+				item.attr_value.map(i => {
+					if (i.check) {
+						sku.push(i.attr);
+					}
+				});
+			});
+			const uniqueId = this.product.productValue[sku].unique;
+			addCart({ productId: this.product.id, cartNum: this.cartNum, uniqueId, new: 1 }).then(
+				result => {
+					this.$refs['specsModal'].close();
+					uni.navigateTo({
+						url: '/pages/order/confirm?cartId=' + result.cartId
+					});
+				},
+				err => {}
+			);
 		}
 	}
 };
@@ -226,7 +273,7 @@ page {
 			color: #a3a7b9;
 		}
 	}
-	.specs-content {
+	.specs-modal {
 		padding: 0 36rpx 36rpx 36rpx;
 		.product {
 			display: flex;
@@ -287,11 +334,11 @@ page {
 				color: rgba(165, 165, 165, 1);
 				line-height: 40rpx;
 			}
-			.specs-list {
+			.list-content {
 				display: flex;
 				flex-wrap: wrap;
 			}
-			.specs-item {
+			.list-item {
 				width: 178rpx;
 				height: 38rpx;
 				line-height: 38rpx;
@@ -305,7 +352,7 @@ page {
 				color: rgba(165, 165, 165, 1);
 				text-align: center;
 			}
-			.specs-item.active {
+			.list-item.active {
 				background-color: #fe7910;
 				color: #fff;
 			}
