@@ -1,9 +1,28 @@
 const service = require('@/utils/http');
 
 const api = {
+	login: '/wechat/mp_auth',
 	getScore: '/index/index',
 	getStep: '/user/getWxInfo',
 	getProduct: '/related'
+}
+
+const login = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.login,
+			data,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
 }
 
 const getScore = data => {
@@ -61,6 +80,7 @@ const getProduct = data => {
 }
 
 module.exports = {
+	login,
 	getScore,
 	getStep,
 	getProduct

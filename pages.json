@@ -1,13 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/launch/launch",
-			"style": {
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",

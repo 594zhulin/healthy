@@ -13,7 +13,7 @@
 				<image class="pic" :src="item.image" mode="aspectFit"></image>
 				<view class="content">
 					<view class="title">{{ item.store_name }}</view>
-					<view class="price">原价：{{ item.ot_price }}元</view>
+					<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
 					<view class="step">{{ item.price }}</view>
 				</view>
 			</view>

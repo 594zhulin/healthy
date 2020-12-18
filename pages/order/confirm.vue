@@ -1,14 +1,19 @@
 <template>
 	<view class="page-confirm" :style="{ paddingBottom: bottom + 'px' }">
-		<view class="address-content">
-			<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
-			<view class="content" v-if="address">
-				<view class="user">
-					<view class="name">{{ address.real_name }}</view>
-					<view class="phone">{{ address.phone }}</view>
+		<view class="address-content" @click="navigateTo(order.addressInfo ? '/pages/personal/list' : '/pages/personal/detail')">
+			<template v-if="order.addressInfo">
+				<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
+				<view class="content">
+					<view class="user">
+						<view class="name">{{ order.addressInfo.real_name }}</view>
+						<view class="phone">{{ order.addressInfo.phone }}</view>
+					</view>
+					<view class="address">{{ order.addressInfo.province }}{{ order.addressInfo.city }}{{ order.addressInfo.district }}{{ order.addressInfo.detail }}</view>
 				</view>
-				<view class="address">{{ address.province }}{{ address.city }}{{ address.district }}{{ address.detail }}</view>
-			</view>
+			</template>
+			<template v-else>
+				<view class="btn">添加地址</view>
+			</template>
 			<image class="icon arrow" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 		</view>
 		<view class="product-content">
@@ -23,16 +28,16 @@
 			<view class="order">
 				<view class="row">
 					<view class="label">商品总价</view>
-					<view class="text">￥299.00</view>
+					<view class="text">￥{{ order.priceGroup.totalPrice }}</view>
 				</view>
 				<view class="row">
 					<view class="label">快递运费</view>
-					<view class="text">￥8.00</view>
+					<view class="text">￥{{ order.priceGroup.storeFreePostage < parseFloat(order.priceGroup.totalPrice) ? '包邮' : order.priceGroup.storePostage }}</view>
 				</view>
-				<view class="row">
+				<!-- <view class="row">
 					<view class="label">扣除步数</view>
 					<view class="text step">-3万</view>
-				</view>
+				</view> -->
 			</view>
 			<view class="desc">
 				<view class="text">备注信息</view>
@@ -42,15 +47,15 @@
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
 				<view class="text">合计:</view>
-				<view class="value">￥0.00</view>
+				<view class="value">￥{{ order.priceGroup.totalPrice }}</view>
 			</view>
-			<view class="btn">提交订单</view>
+			<view class="btn" @click="handleSubmit">提交订单</view>
 		</view>
 	</view>
 </template>
 
 <script>
-import { getAddress, confirmOrder } from '@/api/order.js';
+import { getAddress, confirmOrder, createOrder } from '@/api/order.js';
 export default {
 	data() {
 		return {
@@ -63,6 +68,7 @@ export default {
 		};
 	},
 	onLoad(option) {
+		this.cartId = option.cartId;
 		this.isIphoneX = getApp().globalData.isIphoneX;
 		this.paddingBottom = getApp().globalData.paddingBottom;
 		const query = uni.createSelectorQuery().in(this);
@@ -78,12 +84,67 @@ export default {
 			},
 			err => {}
 		);
-		confirmOrder({ cartId: option.cartId }).then(
+	},
+	onShow() {
+		confirmOrder({ cartId: this.cartId }).then(
 			result => {
 				this.order = result;
 			},
 			err => {}
 		);
+	},
+	methods: {
+		handleSubmit() {
+			createOrder(
+				{
+					addressId: this.address.id,
+					couponId: '',
+					payType: 'weixin',
+					useIntegral: 0,
+					integral_num: 0,
+					deductionPrice: 0,
+					mark: this.desc,
+					from: 'routine'
+				},
+				this.order.orderKey
+			).then(
+				result => {
+					this.wxpay(result.jsConfig, result.orderId);
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		wxpay(params, orderId) {
+			const this_ = this;
+			uni.requestPayment({
+				provider: 'wxpay',
+				timeStamp: params.timestamp,
+				nonceStr: params.nonceStr,
+				package: params.package,
+				signType: params.signType,
+				paySign: params.paySign,
+				success: function(res) {
+					if (res.errMsg == 'requestPayment:ok') {
+						uni.redirectTo({
+							url: '/pages/order/detail?orderId=' + orderId
+						});
+					}
+				},
+				fail: function(err) {
+					console.log('fail:' + JSON.stringify(err));
+				}
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

@@ -19,11 +19,11 @@
 		<custom-modal ref="specsModal" direction="bottom" maskClick>
 			<view class="specs-modal">
 				<view class="product">
-					<image class="pic" :src="product.image" mode="aspectFit"></image>
+					<image class="pic" :src="sku.image" mode="aspectFit"></image>
 					<view class="content">
 						<view class="name">{{ product.store_name }}</view>
 						<view class="step" v-if="product.is_model == 1">{{ product.buy_credits }}</view>
-						<view class="text" v-else>￥{{ product.price }}</view>
+						<view class="text" v-else>￥{{ sku.price }}</view>
 					</view>
 				</view>
 				<view class="specs" v-for="item in product.productAttr" :key="item.attr_name">
@@ -70,6 +70,7 @@ export default {
 				productAttr: [],
 				productValue: []
 			},
+			sku: null,
 			cartNum: 1
 		};
 	},
@@ -107,11 +108,23 @@ export default {
 						item.attr_value[0].check = true;
 					}
 				});
+				this.getSku();
 			},
 			err => {}
 		);
 	},
 	methods: {
+		getSku() {
+			const sku = [];
+			this.product.productAttr.map(item => {
+				item.attr_value.map(i => {
+					if (i.check) {
+						sku.push(i.attr);
+					}
+				});
+			});
+			this.sku = this.product.productValue[sku];
+		},
 		bindAttrChange(item, attr) {
 			item.attr_value.map(i => {
 				if (i.attr == attr) {
@@ -120,6 +133,7 @@ export default {
 					i.check = false;
 				}
 			});
+			this.getSku();
 		},
 		handleOpen() {
 			this.$refs['specsModal'].open();
@@ -135,16 +149,7 @@ export default {
 			}
 		},
 		handleConfirm() {
-			const sku = [];
-			this.product.productAttr.map(item => {
-				item.attr_value.map(i => {
-					if (i.check) {
-						sku.push(i.attr);
-					}
-				});
-			});
-			const uniqueId = this.product.productValue[sku].unique;
-			addCart({ productId: this.product.id, cartNum: this.cartNum, uniqueId, new: 1 }).then(
+			addCart({ productId: this.product.id, cartNum: this.cartNum, uniqueId: this.sku.unique, new: 1 }).then(
 				result => {
 					this.$refs['specsModal'].close();
 					uni.navigateTo({

@@ -1,78 +1,88 @@
 <template>
 	<view class="page-home">
-		<view class="overview-content">
-			<view class="score-item">
-				<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
-				<image class="icon" src="../../static/home/home-icon-01.svg" mode="aspectFit"></image>
-				<view class="title">体能评分</view>
-				<view class="date">今日 13:04</view>
-				<view class="chart"></view>
-				<view class="tag">非常优秀</view>
-				<view class="text">超过89%的用户</view>
-				<view class="btn">数据报告</view>
-			</view>
-			<view class="bank-item">
-				<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
-				<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
-				<view class="title">步数银行</view>
-				<view class="text">待存入</view>
-				<view class="step">5.7万</view>
-				<view class="text total">共累计1000万步</view>
-				<view class="btn">点我存入</view>
-			</view>
-		</view>
-		<view class="grid-content">
-			<view class="grid-item plan">
-				<image class="icon" src="../../static/home/home-icon-03.svg" mode="aspectFit"></image>
-				<view class="title">AI体能训练计划</view>
-				<view class="btn">立即制定</view>
-			</view>
-			<view class="grid-item mall" @click="switchTab">
-				<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>
-				<view class="title">步数书城</view>
-				<view class="text">海量图书</view>
-				<view class="text">免费兑换</view>
-			</view>
-			<view class="grid-item diet" @click="navigateTo('/pages/diet/index')">
-				<image class="icon" src="../../static/home/home-icon-05.svg" mode="aspectFit"></image>
-				<view class="title">膳食健康管理</view>
-				<view class="btn">开始评测</view>
-			</view>
-			<view class="grid-item video">
-				<image class="icon" src="../../static/home/home-icon-06.svg" mode="aspectFit"></image>
-				<view class="title">黑石健康课堂</view>
-				<view class="text">轻松学习</view>
-				<view class="text">提高健康素养</view>
-			</view>
-			<view class="grid-item ranking">
-				<image class="icon" src="../../static/home/home-icon-07.svg" mode="aspectFit"></image>
-				<view class="content">
-					<view class="title">排行榜</view>
-					<view class="text">体能排行榜&步数银行排行榜</view>
+		<template v-if="isLogin">
+			<view class="overview-content">
+				<view class="score-item">
+					<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
+					<image class="icon" src="../../static/home/home-icon-01.svg" mode="aspectFit"></image>
+					<view class="title">体能评分</view>
+					<view class="date">今日 13:04</view>
+					<view class="chart"></view>
+					<view class="tag">非常优秀</view>
+					<view class="text">超过89%的用户</view>
+					<view class="btn">数据报告</view>
+				</view>
+				<view class="bank-item">
+					<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
+					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
+					<view class="title">步数银行</view>
+					<view class="text">待存入</view>
+					<view class="step">5.7万</view>
+					<view class="text total">共累计1000万步</view>
+					<view class="btn">点我存入</view>
 				</view>
 			</view>
-		</view>
-		<view class="list-content">
-			<view class="title">推荐兑换</view>
-			<view class="list-item" v-for="item in product" :key="item.id" @click="navigateTo('/pages/order/product?id=' + item.id)">
-				<image class="pic" :src="item.image" mode="aspectFit"></image>
-				<view class="content">
-					<view class="title">{{ item.store_name }}</view>
-					<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
-					<view class="step" v-if="item.is_model == 1">{{ item.buy_credits }}</view>
-					<view class="text" v-else>￥{{ item.price }}</view>
+			<view class="grid-content">
+				<view class="grid-item plan">
+					<image class="icon" src="../../static/home/home-icon-03.svg" mode="aspectFit"></image>
+					<view class="title">AI体能训练计划</view>
+					<view class="btn">立即制定</view>
+				</view>
+				<view class="grid-item mall" @click="switchTab">
+					<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>
+					<view class="title">步数书城</view>
+					<view class="text">海量图书</view>
+					<view class="text">免费兑换</view>
+				</view>
+				<view class="grid-item diet" @click="navigateTo('/pages/diet/index')">
+					<image class="icon" src="../../static/home/home-icon-05.svg" mode="aspectFit"></image>
+					<view class="title">膳食健康管理</view>
+					<view class="btn">开始评测</view>
+				</view>
+				<view class="grid-item video">
+					<image class="icon" src="../../static/home/home-icon-06.svg" mode="aspectFit"></image>
+					<view class="title">黑石健康课堂</view>
+					<view class="text">轻松学习</view>
+					<view class="text">提高健康素养</view>
+				</view>
+				<view class="grid-item ranking">
+					<image class="icon" src="../../static/home/home-icon-07.svg" mode="aspectFit"></image>
+					<view class="content">
+						<view class="title">排行榜</view>
+						<view class="text">体能排行榜&步数银行排行榜</view>
+					</view>
 				</view>
 			</view>
-		</view>
-		<custom-tabbar :currentId="0"></custom-tabbar>
+			<view class="list-content">
+				<view class="title">推荐兑换</view>
+				<view class="list-item" v-for="item in product" :key="item.id" @click="navigateTo('/pages/order/product?id=' + item.id)">
+					<image class="pic" :src="item.image" mode="aspectFit"></image>
+					<view class="content">
+						<view class="title">{{ item.store_name }}</view>
+						<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
+						<view class="step" v-if="item.is_model == 1">{{ item.buy_credits }}</view>
+						<view class="text" v-else>￥{{ item.price }}</view>
+					</view>
+				</view>
+			</view>
+			<custom-tabbar :currentId="0"></custom-tabbar>
+		</template>
+		<template v-else>
+			<view class="login-content">
+				<image class="logo" src="../../static/home/home-image-01.png" mode="aspectFit"></image>
+				<view class="title">给自己的体能建立档案</view>
+				<button class="btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo">立即行动</button>
+			</view>
+		</template>
 	</view>
 </template>
 
 <script>
-import { getProduct } from '@/api/home.js';
+import { login, getProduct } from '@/api/home.js';
 export default {
 	data() {
 		return {
+			isLogin: false,
 			params: {
 				page: 1,
 				limit: 20
@@ -82,6 +92,8 @@ export default {
 		};
 	},
 	onLoad() {
+		uni.hideTabBar();
+		this.isLogin = getApp().globalData.isLogin;
 		this.getListData('down');
 	},
 	onPullDownRefresh() {
@@ -108,6 +120,29 @@ export default {
 				},
 				err => {}
 			);
+		},
+		getUserInfo(e) {
+			const _this = this;
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					console.log(loginRes);
+					// 获取用户信息
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							login({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
+								result => {
+									uni.setStorageSync('token', result.token);
+									uni.setStorageSync('user_id', result.userInfo.uid);
+									_this.isLogin = true;
+								},
+								err => {}
+							);
+						}
+					});
+				}
+			});
 		},
 		switchTab() {
 			uni.switchTab({
@@ -499,6 +534,45 @@ page {
 				font-weight: 600;
 				color: #fc6262;
 				line-height: 46rpx;
+			}
+		}
+	}
+	.login-content {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #fff;
+		.logo {
+			display: block;
+			margin: 200rpx auto 40rpx auto;
+			width: 150rpx;
+			height: 150rpx;
+		}
+		.title {
+			font-size: 36rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #000;
+			text-align: center;
+		}
+		.btn {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 450rpx;
+			width: 320rpx;
+			margin: 0 auto;
+			background: linear-gradient(to right, #53a6dc, #05caab);
+			border-radius: 50rpx;
+			box-shadow: 0px 14rpx 30rpx 0px #7e9da2;
+			font-size: 36rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 700;
+			color: #fff;
+			&::after {
+				display: none;
 			}
 		}
 	}
