@@ -2,21 +2,21 @@
 	<view class="page-confirm" :style="{ paddingBottom: bottom + 'px' }">
 		<view class="address-content">
 			<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
-			<view class="content">
+			<view class="content" v-if="address">
 				<view class="user">
-					<view class="name">朱琳</view>
-					<view class="phone">18375747474</view>
+					<view class="name">{{ address.real_name }}</view>
+					<view class="phone">{{ address.phone }}</view>
 				</view>
-				<view class="address">四川省成都市锦江区锦城逸景A区</view>
+				<view class="address">{{ address.province }}{{ address.city }}{{ address.district }}{{ address.detail }}</view>
 			</view>
 			<image class="icon arrow" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 		</view>
 		<view class="product-content">
-			<view class="product">
-				<view class="pic"></view>
+			<view class="product" v-for="item in order.cartInfo" :key="item.id">
+				<image class="pic" :src="item.productInfo.image" mode="aspectFit"></image>
 				<view class="detail">
-					<view class="name">做自己的心理医生</view>
-					<view class="count">×1</view>
+					<view class="name">{{ item.productInfo.store_name }}</view>
+					<view class="count">×{{ item.cart_num }}</view>
 				</view>
 				<image class="icon" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 			</view>
@@ -50,16 +50,19 @@
 </template>
 
 <script>
+import { getAddress, confirmOrder } from '@/api/order.js';
 export default {
 	data() {
 		return {
 			desc: '',
 			isIphoneX: false,
 			paddingBottom: '',
-			bottom: ''
+			bottom: '',
+			address: null,
+			order: null
 		};
 	},
-	onLoad() {
+	onLoad(option) {
 		this.isIphoneX = getApp().globalData.isIphoneX;
 		this.paddingBottom = getApp().globalData.paddingBottom;
 		const query = uni.createSelectorQuery().in(this);
@@ -69,6 +72,18 @@ export default {
 				this.bottom = data.height + 15;
 			})
 			.exec();
+		getAddress().then(
+			result => {
+				this.address = result;
+			},
+			err => {}
+		);
+		confirmOrder({ cartId: option.cartId }).then(
+			result => {
+				this.order = result;
+			},
+			err => {}
+		);
 	}
 };
 </script>

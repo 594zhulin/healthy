@@ -7,7 +7,7 @@ const api = {
 
 const login = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.login,
 			data,
 			method: 'POST'

@@ -24,7 +24,7 @@ const getSurvey = () => {
 
 const getCategory = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: api.getCategory,
 		}).then(result => {
 			if (result.status === 200) {
@@ -40,7 +40,7 @@ const getCategory = () => {
 
 const getCookbook = id => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: '/article/list/' + id,
 		}).then(result => {
 			if (result.status === 200) {
@@ -56,7 +56,7 @@ const getCookbook = id => {
 
 const getCookbookDetail = id => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.request({
 			url: '/article/details/' + id,
 		}).then(result => {
 			if (result.status === 200) {
