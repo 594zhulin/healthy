@@ -37,7 +37,7 @@
 			}
 		},
 		{
-			"path": "pages/index/bank",
+			"path": "pages/bank/bank",
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black",
@@ -45,9 +45,30 @@
 			}
 		},
 		{
-			"path": "pages/index/measure",
+			"path": "pages/video/list",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationBarBackgroundColor": "#000",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "体能观测",
+				"backgroundColor": "#000",
+				"backgroundTextStyle": "light",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/video/detail",
+			"style": {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black",
+				"navigationBarTitleText": "视频详情"
+			}
+		},
+		{
+			"path": "pages/ranking/ranking",
+			"style": {
+				"navigationBarBackgroundColor": "#0056ff",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "体能排行榜"
 			}
 		}
 	],
@@ -252,6 +273,11 @@
 		{
 			"root": "pages/measure/",
 			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationStyle": "custom"
+				}
+			}, {
 				"path": "history",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",

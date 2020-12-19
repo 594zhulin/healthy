@@ -25,11 +25,10 @@ const login = data => {
 	})
 }
 
-const getScore = data => {
+const getScore = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
-			url: api.getScore,
-			data
+		service.http_({
+			url: api.getScore
 		}).then(result => {
 			if (result.state === 1) {
 				resolve(result.data)

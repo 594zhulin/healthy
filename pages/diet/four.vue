@@ -6,125 +6,52 @@
 		<view class="form-content">
 			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
 			<view class="form-list">
-				<view class="form-item">
-					<view class="question">1、奶，及奶制品如酸奶等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items1" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">2、大豆及制品，如豆腐，豆浆等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items2" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">3、坚果类，如核桃，碧根果等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items3" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">4、你觉得上述这些食物大概可以占到您食物分量的多少？</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items4" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
+				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
+					<view class="question">{{ index + 1 }}、{{ item.content }}</view>
+					<radio-group class="answer-list">
+						<label class="answer-item" v-for="(answer, index) in item.option" :key="answer.option_id">
+							<view class="radio"><radio color="#2975FF" :value="answer.option_id" :checked="index === current" /></view>
+							<view class="text">{{ answer.content }}</view>
 						</label>
 					</radio-group>
 				</view>
 			</view>
 		</view>
 		<view class="btn-content">
-			<view class="prev-btn">上一步</view>
-			<view class="next-btn">下一步</view>
+			<view class="prev-btn" @click="navigateBack">上一步</view>
+			<view class="next-btn" @click="navigateTo('/pages/diet/five')">下一步</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getSurvey } from '@/api/diet.js';
 export default {
 	data() {
 		return {
-			current: 0,
-			items1: [
-				{
-					value: 'A',
-					name: 'A 天天有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 无'
-				}
-			],
-			items2: [
-				{
-					value: 'A',
-					name: 'A 天天有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 无'
-				}
-			],
-			items3: [
-				{
-					value: 'A',
-					name: 'A 天天有一小把'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 天天，都比较多'
-				},
-				{
-					value: 'D',
-					name: 'D 几乎没有'
-				}
-			],
-			items4: [
-				{
-					value: 'A',
-					name: 'A 1/4左右'
-				},
-				{
-					value: 'B',
-					name: 'B 1/3左右',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 几乎没有'
-				},
-				{
-					value: 'D',
-					name: 'D 一半甚至以上'
-				}
-			]
+			question: [],
+			current: 0
 		};
+	},
+	onLoad() {
+		getSurvey({ is_model: 4 }).then(
+			result => {
+				this.question = result;
+			},
+			err => {}
+		);
+	},
+	methods: {
+		navigateBack() {
+			uni.navigateBack({
+				delta: 1
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

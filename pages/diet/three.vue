@@ -6,129 +6,52 @@
 		<view class="form-content">
 			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
 			<view class="form-list">
-				<view class="form-item">
-					<view class="question">1、畜禽肉，如猪牛羊肉</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items1" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">2、水产品类，如鱼虾蟹贝</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items2" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">3、蛋</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items3" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">4、你觉得上述这些食物大概可以占到您食物分量的多少？</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items4" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
+				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
+					<view class="question">{{ index + 1 }}、{{ item.content }}</view>
+					<radio-group class="answer-list">
+						<label class="answer-item" v-for="(answer, index) in item.option" :key="answer.option_id">
+							<view class="radio"><radio color="#2975FF" :value="answer.option_id" :checked="index === current" /></view>
+							<view class="text">{{ answer.content }}</view>
 						</label>
 					</radio-group>
 				</view>
 			</view>
 		</view>
 		<view class="btn-content">
-			<view class="prev-btn">上一步</view>
-			<view class="next-btn">下一步</view>
+			<view class="prev-btn" @click="navigateBack">上一步</view>
+			<view class="next-btn" @click="navigateTo('/pages/diet/four')">下一步</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getSurvey } from '@/api/diet.js';
 export default {
 	data() {
 		return {
-			current: 0,
-			items1: [
-				{
-					value: 'A',
-					name: 'A 有，但会注意适量，一天不超过二两'
-				},
-				{
-					value: 'B',
-					name: 'B 比较少吃，但会注意补充蛋白质含量高的其他食物',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 比较少吃，不会刻意补充其它蛋白质来源'
-				},
-				{
-					value: 'D',
-					name: 'D 无肉不欢，会吃的比较多'
-				}
-			],
-			items2: [
-				{
-					value: 'A',
-					name: 'A 时常有，倾向于深海鱼虾'
-				},
-				{
-					value: 'B',
-					name: 'B 时常有，淡水鱼居多',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 偶尔有'
-				},
-				{
-					value: 'D',
-					name: 'D 很少有'
-				}
-			],
-			items3: [
-				{
-					value: 'A',
-					name: 'A 天天有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 无'
-				}
-			],
-			items4: [
-				{
-					value: 'A',
-					name: 'A 1/4左右'
-				},
-				{
-					value: 'B',
-					name: 'B 1/3左右',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 几乎没有'
-				},
-				{
-					value: 'D',
-					name: 'D 一半甚至以上'
-				}
-			]
+			question: [],
+			current: 0
 		};
+	},
+	onLoad() {
+		getSurvey({ is_model: 3 }).then(
+			result => {
+				this.question = result;
+			},
+			err => {}
+		);
+	},
+	methods: {
+		navigateBack() {
+			uni.navigateBack({
+				delta: 1
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

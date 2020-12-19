@@ -5,10 +5,11 @@ const api = {
 	getCategory: '/article/category/list'
 }
 
-const getSurvey = () => {
+const getSurvey = data => {
 	return new Promise((resolve, reject) => {
 		service.http({
 			url: api.getSurvey,
+			data,
 			method: 'POST'
 		}).then(result => {
 			if (result.status === 200) {

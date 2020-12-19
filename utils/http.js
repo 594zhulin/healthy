@@ -1,6 +1,6 @@
 //域名前缀
 const baseUrl = 'https://shops.yulongtianzi.com/api';
-const prefixUrl = 'https://stamina.yulongtianzi.com/api'
+const prefixUrl = 'https://swoole.yulongtianzi.com/api'
 //请求队列参数
 const list = {
 	count: 0, //正在进行的请求数量

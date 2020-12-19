@@ -6,53 +6,17 @@
 		<view class="form-content">
 			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
 			<view class="form-list">
-				<view class="form-item">
-					<view class="question">1、米饭或面制品</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items1" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">2、杂粮类如玉米，燕麦等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items2" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">3、薯类，如红薯，马铃薯，芋头等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items3" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">4、杂豆类，如红豆，绿豆，豌豆等</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items4" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
-						</label>
-					</radio-group>
-				</view>
-				<view class="form-item">
-					<view class="question">5、你觉得上述这些食物大概可以占到您食物分量的多少？</view>
-					<radio-group class="answer-list" @change="radioChange">
-						<label class="answer-item" v-for="(item, index) in items5" :key="item.value">
-							<view class="radio"><radio color="#2975FF" :value="item.value" :checked="index === current" /></view>
-							<view class="text">{{ item.name }}</view>
+				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
+					<view class="question">{{ index + 1 }}、{{ item.content }}</view>
+					<radio-group class="answer-list">
+						<label class="answer-item" v-for="(answer, index) in item.option" :key="answer.option_id">
+							<view class="radio"><radio color="#2975FF" :value="answer.option_id" :checked="index === current" /></view>
+							<view class="text">{{ answer.content }}</view>
 						</label>
 					</radio-group>
 				</view>
 			</view>
-			<view class="btn">下一步</view>
+			<view class="btn" @click="navigateTo('/pages/diet/two')">下一步</view>
 		</view>
 	</view>
 </template>
@@ -62,91 +26,12 @@ import { getSurvey } from '@/api/diet.js';
 export default {
 	data() {
 		return {
-			question: '',
-			current: 0,
-			items1: [
-				{
-					value: 'A',
-					name: 'A 有，倾向选择全谷物'
-				},
-				{
-					value: 'B',
-					name: 'B 有，注重细腻口感',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 很少吃'
-				}
-			],
-			items2: [
-				{
-					value: 'A',
-					name: 'A 常有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 几乎没有'
-				}
-			],
-			items3: [
-				{
-					value: 'A',
-					name: 'A 常有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 几乎没有'
-				}
-			],
-			items4: [
-				{
-					value: 'A',
-					name: 'A 常有'
-				},
-				{
-					value: 'B',
-					name: 'B 偶尔有',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 几乎没有'
-				}
-			],
-			items5: [
-				{
-					value: 'A',
-					name: 'A 约三分之一'
-				},
-				{
-					value: 'B',
-					name: 'B 约四分之一',
-					checked: 'true'
-				},
-				{
-					value: 'C',
-					name: 'C 超过一半'
-				},
-				{
-					value: 'D',
-					name: 'D 几乎没有'
-				}
-			]
+			question: [],
+			current: 0
 		};
 	},
 	onLoad() {
-		getSurvey().then(
+		getSurvey({ is_model: 1 }).then(
 			result => {
 				this.question = result;
 			},

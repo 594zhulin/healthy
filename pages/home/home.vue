@@ -6,11 +6,14 @@
 					<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
 					<image class="icon" src="../../static/home/home-icon-01.svg" mode="aspectFit"></image>
 					<view class="title">体能评分</view>
-					<view class="date">今日 13:04</view>
-					<view class="chart"></view>
-					<view class="tag">非常优秀</view>
-					<view class="text">超过89%的用户</view>
-					<view class="btn">数据报告</view>
+					<view class="date">{{ create_at }}</view>
+					<view class="chart">
+						<mpvue-echarts class="gauge" ref="gaugeChart" :echarts="echarts" @onInit="initGaugeChart" />
+						<view class="score">{{ score }}</view>
+					</view>
+					<view class="tag">{{ synthesis_lable }}</view>
+					<view class="text">超过{{ percent }}%的用户</view>
+					<view class="btn" @click="navigateTo('/pages/measure/index')">数据报告</view>
 				</view>
 				<view class="bank-item">
 					<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
@@ -37,15 +40,15 @@
 				<view class="grid-item diet" @click="navigateTo('/pages/diet/index')">
 					<image class="icon" src="../../static/home/home-icon-05.svg" mode="aspectFit"></image>
 					<view class="title">膳食健康管理</view>
-					<view class="btn">开始评测</view>
+					<view class="btn" @click.stop="navigateTo('/pages/diet/one')">开始评测</view>
 				</view>
-				<view class="grid-item video">
+				<view class="grid-item video" @click="navigateTo('/pages/video/list')">
 					<image class="icon" src="../../static/home/home-icon-06.svg" mode="aspectFit"></image>
 					<view class="title">黑石健康课堂</view>
 					<view class="text">轻松学习</view>
 					<view class="text">提高健康素养</view>
 				</view>
-				<view class="grid-item ranking">
+				<view class="grid-item ranking" @click="navigateTo('/pages/ranking/ranking')">
 					<image class="icon" src="../../static/home/home-icon-07.svg" mode="aspectFit"></image>
 					<view class="content">
 						<view class="title">排行榜</view>
@@ -78,11 +81,22 @@
 </template>
 
 <script>
-import { login, getProduct } from '@/api/home.js';
+import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
+import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
+import { login, getScore, getProduct } from '@/api/home.js';
 export default {
+	components: {
+		mpvueEcharts
+	},
 	data() {
 		return {
 			isLogin: false,
+			echarts,
+			gagugeOption: null,
+			score: 0,
+			percent: 0,
+			synthesis_lable: '',
+			create_at: '',
 			params: {
 				page: 1,
 				limit: 20
@@ -94,15 +108,33 @@ export default {
 	onLoad() {
 		uni.hideTabBar();
 		this.isLogin = getApp().globalData.isLogin;
+		this.initGaugeChartOption();
+		this.getScore();
 		this.getListData('down');
 	},
 	onPullDownRefresh() {
+		this.getScore();
 		this.getListData('down');
+		// setTimeout(function() {
+		// 	uni.stopPullDownRefresh();
+		// }, 1000);
 	},
 	onReachBottom() {
 		this.getListData('up');
 	},
 	methods: {
+		getScore() {
+			getScore().then(
+				result => {
+					const { score, synthesis_lable, create_at } = result;
+					this.score = score;
+					this.synthesis_lable = synthesis_lable;
+					this.create_at = create_at;
+					this.percent = parseFloat(score) + 0.9 * (100 - parseFloat(score)).toFixed(2);
+				},
+				err => {}
+			);
+		},
 		getListData(direction) {
 			if (direction == 'down') {
 				this.params.page = 1;
@@ -117,6 +149,7 @@ export default {
 					const { list, total } = result;
 					this.product = direction == 'down' ? list : this.product.concat(list);
 					this.total = total;
+					uni.stopPullDownRefresh();
 				},
 				err => {}
 			);
@@ -143,6 +176,87 @@ export default {
 					});
 				}
 			});
+		},
+		initGaugeChartOption() {
+			this.gagugeOption = {
+				series: [
+					{
+						name: '',
+						type: 'gauge',
+						radius: '140%',
+						center: ['50%', '80%'],
+						splitNumber: 4, //刻度数量
+						startAngle: 190,
+						endAngle: -10,
+						axisLine: {
+							show: true,
+							lineStyle: {
+								width: 0,
+								shadowBlur: 0,
+								color: [
+									[0.05, '#F63E38'],
+									[0.1, '#F45239'],
+									[0.15, '#EF7339'],
+									[0.2, '#ED843A'],
+									[0.25, '#EC8439'],
+									[0.3, '#EA953A'],
+									[0.35, '#E8A53B'],
+									[0.4, '#E6B43B'],
+									[0.45, '#E3C93B'],
+									[0.5, '#E1D73B'],
+									[0.55, '#DBE43D'],
+									[0.6, '#BFE546'],
+									[0.65, '#B1E44A'],
+									[0.7, '#A3E54F'],
+									[0.75, '#92E454'],
+									[0.8, '#7FE45A'],
+									[0.85, '#71E45E'],
+									[0.9, '#60E464'],
+									[0.95, '#4FE469'],
+									[1, '#42E46D']
+								]
+							}
+						},
+						axisTick: {
+							show: true,
+							lineStyle: {
+								color: 'auto',
+								width: 4
+							},
+							length: 8,
+							splitNumber: 4
+						},
+						splitLine: {
+							show: false
+						},
+						axisLabel: {
+							show: false
+						},
+						pointer: {
+							show: false
+						},
+						detail: {
+							show: false
+						}
+					}
+				]
+			};
+			if (this.$refs.gaugeChart) {
+				this.$refs.gaugeChart.init();
+			}
+		},
+		initGaugeChart(e) {
+			let { canvas, width, height } = e;
+			echarts.setCanvasCreator(() => canvas);
+			const chart = echarts.init(canvas, null, {
+				width: width,
+				height: height
+			});
+			canvas.setChart(chart);
+			if (this.gagugeOption) {
+				chart.setOption(this.gagugeOption);
+			}
+			return chart;
 		},
 		switchTab() {
 			uni.switchTab({
@@ -211,7 +325,27 @@ page {
 				line-height: 28rpx;
 			}
 			.chart {
+				position: relative;
 				height: 158rpx;
+				.gauge {
+					position: absolute;
+					top: 20rpx;
+					left: 0;
+					right: 0;
+					height: 158rpx;
+				}
+				.score {
+					position: absolute;
+					top: 66rpx;
+					left: 0;
+					right: 0;
+					font-size: 60rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #ffffff;
+					line-height: 84rpx;
+					text-align: center;
+				}
 			}
 			.tag {
 				width: 100rpx;
@@ -503,6 +637,12 @@ page {
 				font-weight: 600;
 				color: #000000;
 				line-height: 46rpx;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
 			}
 			.price {
 				margin: 24rpx 0 4rpx 0;

@@ -1,36 +1,51 @@
 <template>
 	<view class="page-discover">
 		<view class="device-content">
-			<view class="device-item">
+			<view class="device-item" v-for="item in device" :key="item.device_id" @click="handleOpen(item.latitude, item.longitude)">
 				<view class="point"><image class="icon" src="../../static/discover/discover-icon-01.svg" mode="aspectFit"></image></view>
 				<view class="content">
-					<view class="name">安公广场</view>
-					<view class="text">安公广场体育锻炼设施处</view>
+					<view class="name">{{ item.community_plot_name }}</view>
+					<view class="text">{{ item.address }}</view>
 				</view>
-				<view class="distance">4.6km</view>
-			</view>
-			<view class="device-item">
-				<view class="point"><image class="icon" src="../../static/discover/discover-icon-01.svg" mode="aspectFit"></image></view>
-				<view class="content">
-					<view class="name">安公广场</view>
-					<view class="text">安公广场体育锻炼设施处</view>
-				</view>
-				<view class="distance">4.6km</view>
+				<view class="distance">{{ (item.distance / 1000).toFixed(2) }}km</view>
 			</view>
 		</view>
 		<custom-tabbar :currentId="1"></custom-tabbar>
 	</view>
 </template>
 <script>
+import { getDevice } from '@/api/discover.js';
 export default {
 	data() {
 		return {
-			lower: '',
-			upper: '',
-			text: ''
+			device: []
 		};
 	},
-	methods: {}
+	onLoad() {
+		const _this = this;
+		uni.getLocation({
+			type: 'wgs84',
+			success: function(res) {
+				getDevice({ longitude: res.longitude, latitude: res.latitude }).then(
+					result => {
+						_this.device = result.device_list;
+					},
+					err => {}
+				);
+			}
+		});
+	},
+	methods: {
+		handleOpen(latitude, longitude) {
+			uni.openLocation({
+				latitude,
+				longitude,
+				success: function() {
+					console.log('success');
+				}
+			});
+		}
+	}
 };
 </script>
 

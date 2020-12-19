@@ -150,7 +150,7 @@ page {
 		display: flex;
 		align-items: center;
 		height: 60rpx;
-		margin: 20rpx 24rpx 42rpx 24rpx;
+		margin: 20rpx 60rpx 42rpx 60rpx;
 		.content {
 			flex: 1;
 			display: flex;

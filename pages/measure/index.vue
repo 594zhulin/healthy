@@ -86,6 +86,7 @@ export default {
 		position: relative;
 		display: flex;
 		align-items: center;
+		padding: 34rpx 0 0 30rpx;
 		.avatar {
 			width: 120rpx;
 			height: 120rpx;
@@ -201,5 +202,10 @@ export default {
 			}
 		}
 	}
+.result-content{
+	background: #FFFFFF;
+	box-shadow: 0px -4rpx 20rpx 0px rgba(17,0,177,0.16);
+	border-radius: 48rpx 48rpx 0px 0px;
+}
 }
 </style>
