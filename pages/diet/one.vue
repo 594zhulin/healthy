@@ -8,7 +8,7 @@
 			<view class="form-list">
 				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
 					<view class="question">{{ index + 1 }}、{{ item.content }}</view>
-					<radio-group class="answer-list">
+					<radio-group class="answer-list" :id="item.question_id" @change="bindRadioChange">
 						<label class="answer-item" v-for="(answer, index) in item.option" :key="answer.option_id">
 							<view class="radio"><radio color="#2975FF" :value="answer.option_id" :checked="index === current" /></view>
 							<view class="text">{{ answer.content }}</view>
@@ -22,27 +22,44 @@
 </template>
 
 <script>
-import { getSurvey } from '@/api/diet.js';
+import { getSurvey, submitSurvey } from '@/api/diet.js';
 export default {
 	data() {
 		return {
 			question: [],
-			current: 0
+			current: 0,
+			answer: []
 		};
 	},
 	onLoad() {
 		getSurvey({ is_model: 1 }).then(
 			result => {
 				this.question = result;
+				result.map(item => {
+					let obj = { questionnaire_id: item.question_id, is_model: 1, answer: [item.option[0].option_id] };
+					this.answer.push(obj);
+				});
 			},
 			err => {}
 		);
 	},
 	methods: {
-		navigateTo(url) {
-			uni.navigateTo({
-				url
+		bindRadioChange(e) {
+			this.answer.map(item => {
+				if (item.questionnaire_id == e.target.id) {
+					item.answer = [e.detail.value];
+				}
 			});
+		},
+		navigateTo(url) {
+			submitSurvey({ is_model: 1, data: JSON.stringify(this.answer) }).then(
+				result => {
+					uni.navigateTo({
+						url
+					});
+				},
+				err => {}
+			);
 		}
 	}
 };

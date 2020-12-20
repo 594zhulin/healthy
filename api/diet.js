@@ -2,6 +2,7 @@ const service = require('@/utils/http');
 
 const api = {
 	getSurvey: '/survey/index',
+	submitSurvey: '/survey/submit',
 	getCategory: '/article/category/list'
 }
 
@@ -9,6 +10,24 @@ const getSurvey = data => {
 	return new Promise((resolve, reject) => {
 		service.http({
 			url: api.getSurvey,
+			data,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const submitSurvey = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.submitSurvey,
 			data,
 			method: 'POST'
 		}).then(result => {
@@ -73,6 +92,7 @@ const getCookbookDetail = id => {
 
 module.exports = {
 	getSurvey,
+	submitSurvey,
 	getCategory,
 	getCookbook,
 	getCookbookDetail
