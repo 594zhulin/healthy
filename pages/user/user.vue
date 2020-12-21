@@ -7,14 +7,14 @@
 				<view class="text">联系客服</view>
 			</view>
 			<view class="user-item">
-				<view class="avatar"></view>
+				<image class="avatar" :src="user.avatar" mode="aspectFit"></image>
 				<view class="name" @click="navigateTo('/pages/personal/index')">
-					<view class="text">朱琳</view>
+					<view class="text">{{ user.nickname }}</view>
 					<image class="icon" src="../../static/user/user-icon-08.png" mode="aspectFit"></image>
 				</view>
 				<view class="score">
 					<image class="icon" src="../../static/user/user-icon-02.svg" mode="aspectFit"></image>
-					<view class="text">65分</view>
+					<view class="text">{{ user.score }}分</view>
 				</view>
 			</view>
 		</view>
@@ -82,7 +82,7 @@
 		<view class="balance-content">
 			<view class="title">我的余额</view>
 			<view class="link">余额明细></view>
-			<view class="step">25,588万</view>
+			<view class="step">{{ user.integral }}</view>
 			<view class="btn">去使用</view>
 		</view>
 		<view class="address-content">
@@ -97,25 +97,29 @@
 		</view>
 		<view class="order-content">
 			<view class="title">我的订单</view>
-			<view class="link">查看全部></view>
+			<view class="link" @click="navigateTo('/pages/order/list')">查看全部></view>
 			<view class="order-list">
-				<view class="order-item">
+				<view class="order-item" @click="navigateTo('/pages/order/list?id=0')">
 					<image class="icon wait" src="../../static/user/user-icon-03.svg" mode="aspectFit"></image>
 					<view class="text">待付款</view>
+					<view class="count">{{ user.orderStatusNum.unpaid_count }}</view>
 				</view>
-				<view class="order-item">
+				<view class="order-item" @click="navigateTo('/pages/order/list?id=1')">
 					<image class="icon pay" src="../../static/user/user-icon-04.svg" mode="aspectFit"></image>
 					<view class="text">待发货</view>
+					<view class="count">{{ user.orderStatusNum.unshipped_count }}</view>
 				</view>
-				<view class="order-item">
+				<view class="order-item" @click="navigateTo('/pages/order/list?id=2')">
 					<image class="icon delivery" src="../../static/user/user-icon-05.svg" mode="aspectFit"></image>
 					<view class="text">待收货</view>
+					<view class="count">{{ user.orderStatusNum.received_count }}</view>
 				</view>
-				<view class="order-item">
+				<view class="order-item" @click="navigateTo('/pages/order/list?id=4')">
 					<image class="icon signed" src="../../static/user/user-icon-06.svg" mode="aspectFit"></image>
 					<view class="text">已签收</view>
+					<view class="count">{{ user.orderStatusNum.complete_count }}</view>
 				</view>
-				<view class="order-item">
+				<view class="order-item" @click="navigateTo('/pages/order/aftersale')">
 					<image class="icon aftersale" src="../../static/user/user-icon-07.svg" mode="aspectFit"></image>
 					<view class="text">退换/售后</view>
 				</view>
@@ -126,9 +130,39 @@
 </template>
 
 <script>
+import { getUser, getScore } from '@/api/user.js';
 export default {
 	data() {
-		return {};
+		return {
+			user: {
+				avatar: '',
+				nickname: '',
+				integral: 0,
+				score: 0,
+				orderStatusNum: {
+					complete_count: 0,
+					received_count: 0,
+					unpaid_count: 10,
+					unshipped_count: 0
+				}
+			}
+		};
+	},
+	onShow() {
+		getUser().then(
+			result => {
+				const { avatar, nickname, integral, orderStatusNum } = result;
+				this.user = { ...this.user, avatar, nickname, integral, orderStatusNum };
+			},
+			err => {}
+		);
+		getScore().then(
+			result => {
+				const { score } = result;
+				this.user.score = score;
+			},
+			err => {}
+		);
 	},
 	methods: {
 		navigateTo(url) {
@@ -230,8 +264,8 @@ page {
 					height: 32rpx;
 				}
 				.text {
-					width: 60rpx;
 					height: 24rpx;
+					padding: 0 10rpx;
 					background: #ffd6cb;
 					border-radius: 0 4rpx 4rpx 0;
 					font-size: 20rpx;
@@ -514,6 +548,7 @@ page {
 			justify-content: space-between;
 			margin: 40rpx 26rpx 0 54rpx;
 			.order-item {
+				position: relative;
 				.icon {
 					display: block;
 					margin: 0 auto;
@@ -549,6 +584,21 @@ page {
 					font-weight: 400;
 					color: #373d52;
 					line-height: 34rpx;
+				}
+				.count {
+					position: absolute;
+					top: -20rpx;
+					right: -10rpx;
+					width: 40rpx;
+					height: 40rpx;
+					line-height: 40rpx;
+					background-color: #ff0000;
+					border-radius: 50%;
+					font-size: 24rpx;
+					font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+					font-weight: 400;
+					color: #fff;
+					text-align: center;
 				}
 			}
 		}

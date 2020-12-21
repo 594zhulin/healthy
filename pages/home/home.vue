@@ -109,8 +109,10 @@ export default {
 		uni.hideTabBar();
 		this.isLogin = getApp().globalData.isLogin;
 		this.initGaugeChartOption();
-		this.getScore();
-		this.getListData('down');
+		if (this.isLogin) {
+			this.getScore();
+			this.getListData('down');
+		}
 	},
 	onPullDownRefresh() {
 		this.getScore();
@@ -130,7 +132,7 @@ export default {
 					this.score = score;
 					this.synthesis_lable = synthesis_lable;
 					this.create_at = create_at;
-					this.percent = parseFloat(score) + 0.9 * (100 - parseFloat(score)).toFixed(2);
+					this.percent = parseFloat(score) + 0.9 * (100 - parseFloat(score)).toFixed(1);
 				},
 				err => {}
 			);
@@ -167,8 +169,11 @@ export default {
 							login({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
 								result => {
 									uni.setStorageSync('token', result.token);
+									uni.setStorageSync('expires_time', result.expires_time);
 									uni.setStorageSync('user_id', result.userInfo.uid);
 									_this.isLogin = true;
+									_this.getScore();
+									_this.getListData('down');
 								},
 								err => {}
 							);

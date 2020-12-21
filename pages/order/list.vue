@@ -1,39 +1,54 @@
 <template>
 	<view class="page-list">
 		<view class="tab-content">
-			<view class="tab-item" v-for="item in tab" :key="item.id" :class="{ active: currentTabId == item.id }" @click="bindTabChange(item.id)">{{ item.text }}</view>
+			<view class="tab-item" v-for="item in tab" :key="item.id" :class="{ active: params.type === item.id }" @click="bindTabChange(item.id)">{{ item.text }}</view>
 		</view>
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in order" :key="item.id" @click="navigateTo('/pages/order/detail?id=' + item.order_id)">
 				<view class="title">
-					<view class="number">订单编号：12345555555555555555</view>
-					<view class="status">待付款</view>
+					<view class="number">订单编号：{{ item.order_id }}</view>
+					<view class="status" v-if="item.status == 0">待付款</view>
+					<view class="status" v-if="item.status == 1">待发货</view>
+					<view class="status" v-if="item.status == 2">待收货</view>
+					<view class="status" v-if="item.status == 4">已签收</view>
 				</view>
-				<view class="product">
-					<view class="pic"></view>
+				<view class="product" v-for="cart in item.cartInfo" :key="cart.id">
+					<image class="pic" :src="cart.productInfo.image" mode="aspectFit"></image>
 					<view class="detail">
-						<view class="name">做自己的心理医生</view>
-						<view class="count">×1</view>
+						<view class="name">{{ cart.productInfo.store_name }}</view>
+						<view class="specs">{{ cart.productInfo.attrInfo.suk }}</view>
+						<view class="count">×{{ cart.cart_num }}</view>
+						<view class="step" v-if="cart.productInfo.is_model == 1">{{ cart.productInfo.buy_credits }}</view>
+						<view class="text" v-else>{{ cart.productInfo.attrInfo.price }}</view>
 					</view>
 				</view>
-				<view class="step">-3万</view>
+				<view class="price">
+					<view class="total">
+						<view class="label">总价</view>
+						<view class="text">{{ item.total_price }}</view>
+					</view>
+					<view class="pay">
+						<view class="label">{{ item.status == 0 ? '需付款' : '实付款' }}</view>
+						<view class="text">{{ item.pay_price }}</view>
+					</view>
+				</view>
 				<view class="actionsheet">
-					<template v-if="currentTabId == 0">
-						<view class="btn">取消订单</view>
-						<view class="btn">去付款</view>
+					<template v-if="item.status == 0">
+						<view class="btn" @click.stop="cancelOrder(item.order_id)">取消订单</view>
+						<view class="btn" @click.stop="payOrder(item.order_id)">去付款</view>
 					</template>
-					<template v-if="currentTabId == 1">
-						<view class="btn">提醒发货</view>
-						<view class="btn">申请退款</view>
+					<template v-if="item.status == 1">
+						<view class="btn" @click.stop="alertOrder(item.order_id)">提醒发货</view>
+						<view class="btn" @click.stop="navigateTo('/pages/order/refund?id=' + item.order_id)">申请退款</view>
 					</template>
-					<template v-if="currentTabId == 2">
-						<view class="btn">查看物流</view>
-						<view class="btn">确认收货</view>
+					<template v-if="item.status == 2">
+						<view class="btn" @click.stop="navigateTo('/pages/order/logistics?id=' + item.order_id)">查看物流</view>
+						<view class="btn" @click.stop="confirmOrder(item.order_id)">确认收货</view>
 					</template>
-					<template v-if="currentTabId == 3">
-						<view class="btn">申请售后</view>
-						<view class="btn">查看物流</view>
-						<view class="btn">删除订单</view>
+					<template v-if="item.status == 4">
+						<view class="btn" @click.stop="navigateTo('/pages/order/refund?id=' + item.order_id)">申请售后</view>
+						<view class="btn" @click.stop="navigateTo('/pages/order/logistics?id=' + item.order_id)">查看物流</view>
+						<view class="btn" @click.stop="deleteOrder(item.order_id)">删除订单</view>
 					</template>
 				</view>
 			</view>
@@ -42,13 +57,13 @@
 </template>
 
 <script>
+import { getOrder, cancelOrder, payOrder, alertOrder, confirmOrder, deleteOrder } from '@/api/order.js';
 export default {
 	data() {
 		return {
-			currentTabId: -1,
 			tab: [
 				{
-					id: -1,
+					id: '',
 					text: '全部'
 				},
 				{
@@ -64,15 +79,171 @@ export default {
 					text: '待收货'
 				},
 				{
-					id: 3,
+					id: 4,
 					text: '已签收'
 				}
-			]
+			],
+			params: {
+				type: '',
+				page: 1,
+				limit: 20
+			},
+			order: [],
+			total: 0
 		};
 	},
+	onLoad(option) {
+		if (option.id) {
+			this.params.type = option.id;
+		}
+	},
+	onShow() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
 	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.page = 1;
+			} else {
+				if (this.order.length >= this.total) {
+					return false;
+				}
+				this.params.page += 1;
+			}
+			getOrder({ ...this.params }).then(
+				result => {
+					// const { list, total } = result;
+					this.order = direction == 'down' ? result : this.order.concat(result);
+					//this.total = total;
+				},
+				err => {}
+			);
+		},
+		cancelOrder(id) {
+			const _this = this;
+			uni.showModal({
+				content: '确定取消该订单？',
+				success: function(res) {
+					if (res.confirm) {
+						cancelOrder({ id }).then(
+							result => {
+								_this.getListData('down');
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		payOrder(uni) {
+			payOrder({ uni, paytype: 'weixin', from: 'routine' }).then(
+				result => {
+					console.log(result);
+					this.wxpay(result.jsConfig, result.orderId);
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		alertOrder(id) {
+			alertOrder({ id }).then(
+				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '已提醒商家发货'
+					});
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		confirmOrder(uni) {
+			const _this = this;
+			uni.showModal({
+				content: '确认收到商品？',
+				success: function(res) {
+					if (res.confirm) {
+						confirmOrder({ uni }).then(
+							result => {
+								_this.getListData('down');
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		deleteOrder(uni) {
+			const _this = this;
+			uni.showModal({
+				content: '确定删除该订单？',
+				success: function(res) {
+					if (res.confirm) {
+						deleteOrder({ uni }).then(
+							result => {
+								_this.getListData('down');
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
 		bindTabChange(id) {
-			this.currentTabId = id;
+			this.params.type = id;
+			this.getListData('down');
+		},
+		wxpay(params, orderId) {
+			const this_ = this;
+			uni.requestPayment({
+				provider: 'wxpay',
+				timeStamp: params.timestamp,
+				nonceStr: params.nonceStr,
+				package: params.package,
+				signType: params.signType,
+				paySign: params.paySign,
+				success: function(res) {
+					if (res.errMsg == 'requestPayment:ok') {
+						uni.redirectTo({
+							url: '/pages/order/detail?orderId=' + orderId
+						});
+					}
+				},
+				fail: function(err) {
+					console.log('fail:' + JSON.stringify(err));
+				}
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
 		}
 	}
 };
@@ -158,18 +329,97 @@ page {
 					background-color: #eee;
 				}
 				.detail {
+					position: relative;
 					display: flex;
 					flex-direction: column;
 					justify-content: space-between;
+					flex: 1;
 					height: 120rpx;
 					.name {
+						width: 70%;
 						font-size: 28rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						color: #333;
 						line-height: 40rpx;
+						word-break: break-all;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 2;
+						overflow: hidden;
+					}
+					.specs {
+						font-size: 24rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 34rpx;
 					}
 					.count {
+						position: absolute;
+						bottom: 0;
+						right: 0;
+						font-size: 24rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 34rpx;
+					}
+					.step {
+						position: absolute;
+						top: 0;
+						right: 0;
+						font-size: 28rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 40rpx;
+						&::after {
+							content: '步';
+							font-size: 18rpx;
+							font-family: PingFangSC-Regular, PingFang SC;
+							font-weight: 400;
+							color: #999;
+							line-height: 26rpx;
+						}
+					}
+					.text {
+						position: absolute;
+						top: 0;
+						right: 0;
+						font-size: 28rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 40rpx;
+						&::before {
+							content: '￥';
+							font-size: 24rpx;
+							font-family: PingFangSC-Regular, PingFang SC;
+							font-weight: 400;
+							color: #999;
+							line-height: 34rpx;
+						}
+					}
+				}
+			}
+			.price {
+				display: flex;
+				align-items: center;
+				padding: 0 30rpx 20rpx 0;
+				justify-content: flex-end;
+				.total {
+					display: flex;
+					align-items: center;
+					margin-right: 20rpx;
+					font-size: 32rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 46rpx;
+					.text::before {
+						content: '￥';
 						font-size: 24rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
@@ -177,23 +427,22 @@ page {
 						line-height: 34rpx;
 					}
 				}
-			}
-			.step {
-				position: absolute;
-				bottom: 130rpx;
-				right: 30rpx;
-				font-size: 36rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #fc6262;
-				line-height: 50rpx;
-				&::after {
-					content: '步';
-					font-size: 24rpx;
+				.pay {
+					display: flex;
+					align-items: center;
+					font-size: 32rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #fc6262;
-					line-height: 34rpx;
+					line-height: 46rpx;
+					.text::before {
+						content: '￥';
+						font-size: 24rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #fc6262;
+						line-height: 34rpx;
+					}
 				}
 			}
 			.actionsheet {

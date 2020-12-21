@@ -7,6 +7,7 @@ const api = {
 	confirmOrder: '/order/confirm',
 	getOrderPrice: '/order/computed',
 	createOrder: '/order/create',
+	getOrder: '/order/list',
 	payOrder: '/order/pay',
 	cancelOrder: '/order/cancel',
 	delOrder: '/order/del',
@@ -139,6 +140,23 @@ const createOrder = (data, key) => {
 	})
 }
 
+const getOrder = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.getOrder,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 const payOrder = data => {
 	return new Promise((resolve, reject) => {
 		service.request({
@@ -242,6 +260,7 @@ module.exports = {
 	confirmOrder,
 	getOrderPrice,
 	createOrder,
+	getOrder,
 	payOrder,
 	cancelOrder,
 	delOrder,

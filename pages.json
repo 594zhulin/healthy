@@ -235,6 +235,34 @@
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "申请退款"
 				}
+			}, {
+				"path": "aftersale",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "售后列表"
+				}
+			}, {
+				"path": "logistics",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "物流信息"
+				}
+			}, {
+				"path": "success",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "订单支付成功"
+				}
+			}, {
+				"path": "fail",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "订单支付失败"
+				}
 			}]
 		}, {
 			"root": "pages/personal/",
