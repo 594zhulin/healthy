@@ -1,16 +1,19 @@
 <template>
 	<view class="page-detail" :style="{ paddingBottom: bottom + 'px' }">
 		<view class="status-content">
-			<view class="text">待付款</view>
-			<view class="tip">12月11日10时27分服务商已发货</view>
-			<image v-if="status == 1" class="icon" src="../../static/order/order-icon-01.svg" mode="aspectFit"></image>
-			<image v-if="status == 2" class="icon" src="../../static/order/order-icon-02.svg" mode="aspectFit"></image>
-			<image v-if="status == 3" class="icon" src="../../static/order/order-icon-03.svg" mode="aspectFit"></image>
-			<image v-if="status == 4" class="icon" src="../../static/order/order-icon-04.svg" mode="aspectFit"></image>
-			<image v-if="status == 5" class="icon" src="../../static/order/order-icon-05.svg" mode="aspectFit"></image>
+			<view class="text" v-if="orderDetail.status == 0">待付款</view>
+			<view class="text" v-if="orderDetail.status == 1">待发货</view>
+			<view class="text" v-if="orderDetail.status == 2">待收货</view>
+			<view class="text" v-if="orderDetail.status == 4">已签收</view>
+			<view class="tip">{{ orderDetail._status._msg }}</view>
+			<image v-if="orderDetail.status == 0" class="icon" src="../../static/order/order-icon-01.svg" mode="aspectFit"></image>
+			<image v-if="orderDetail.status == 1" class="icon" src="../../static/order/order-icon-02.svg" mode="aspectFit"></image>
+			<image v-if="orderDetail.status == 2" class="icon" src="../../static/order/order-icon-03.svg" mode="aspectFit"></image>
+			<image v-if="orderDetail.status == 4" class="icon" src="../../static/order/order-icon-04.svg" mode="aspectFit"></image>
+			<!-- <image v-if="orderDetail.status == 5" class="icon" src="../../static/order/order-icon-05.svg" mode="aspectFit"></image> -->
 		</view>
 		<view class="address-content">
-			<view class="logistics">
+			<view class="logistics" v-if="orderDetail.status == 2">
 				<image class="icon" src="../../static/order/order-icon-06.svg" mode="aspectFit"></image>
 				<view class="content">
 					<view class="text">包裹正在等待揽收</view>
@@ -22,62 +25,66 @@
 				<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
 				<view class="content">
 					<view class="user">
-						<view class="name">朱琳</view>
-						<view class="phone">18375747474</view>
+						<view class="name">{{ orderDetail.real_name }}</view>
+						<view class="phone">{{ orderDetail.user_phone }}</view>
 					</view>
-					<view class="address">四川省成都市锦江区锦城逸景A区</view>
+					<view class="address">{{ orderDetail.user_address }}</view>
 				</view>
 			</view>
 		</view>
 		<view class="product-content">
-			<view class="product">
-				<view class="pic"></view>
+			<view class="product" v-for="item in orderDetail.cartInfo" :key="item.id">
+				<image class="pic" :src="item.productInfo.image" mode="aspectFit"></image>
 				<view class="detail">
-					<view class="name">做自己的心理医生</view>
-					<view class="count">×1</view>
+					<view class="name">{{ item.productInfo.store_name }}</view>
+					<view class="specs">{{ item.productInfo.attrInfo.suk }}</view>
+					<view class="count">×{{ item.cart_num }}</view>
+					<view class="step" v-if="item.productInfo.is_model == 1">{{ item.productInfo.buy_credits }}</view>
+					<view class="price" v-else>{{ item.productInfo.attrInfo.price }}</view>
 				</view>
-				<view class="price">￥299.00</view>
 			</view>
 			<view class="order">
 				<view class="row">
 					<view class="label">商品总价</view>
-					<view class="text">￥299.00</view>
+					<view class="text">￥{{ orderDetail.total_price }}</view>
 				</view>
 				<view class="row">
 					<view class="label">快递运费</view>
-					<view class="text">￥8.00</view>
+					<view class="text">￥{{ orderDetail.total_postage }}</view>
 				</view>
-				<view class="row">
+				<!-- <view class="row">
 					<view class="label">扣除步数</view>
 					<view class="text step">-3万</view>
-				</view>
+				</view> -->
 			</view>
 			<view class="price">
-				<view class="label">实付金额：</view>
-				<view class="text">￥0.00</view>
+				<view class="label">{{ orderDetail.status == 0 ? '待付金额' : '实付金额' }}</view>
+				<view class="text">{{ orderDetail.pay_price }}</view>
 			</view>
 		</view>
 		<view class="order-content">
 			<view class="row">
 				<view class="label">订单编号：</view>
-				<view class="text">1234567888888888</view>
+				<view class="text">{{ orderDetail.order_id }}</view>
 				<view class="btn-copy">复制</view>
 			</view>
 			<view class="row">
 				<view class="label">下单时间：</view>
-				<view class="text">2020-12-11 15:17:23</view>
+				<view class="text">{{ orderDetail._add_time }}</view>
 			</view>
-			<view class="row">
-				<view class="label">付款方式：</view>
-				<view class="text">微信支付</view>
-			</view>
-			<view class="row">
-				<view class="label">付款时间：</view>
-				<view class="text">2020-12-11 15:17:23</view>
-			</view>
+			<template v-if="orderDetail.status != 0">
+				<view class="row">
+					<view class="label">付款方式：</view>
+					<view class="text">{{ orderDetail._status._payType }}</view>
+				</view>
+				<view class="row">
+					<view class="label">付款时间：</view>
+					<view class="text">{{ orderDetail._pay_time }}</view>
+				</view>
+			</template>
 			<view class="row">
 				<view class="label">订单备注：</view>
-				<view class="text">无</view>
+				<view class="text">{{ orderDetail.mark || '无' }}</view>
 			</view>
 			<view class="btn-customer">
 				<image class="icon" src="../../static/order/order-icon-09.svg" mode="aspectFit"></image>
@@ -86,47 +93,183 @@
 			</view>
 		</view>
 		<view v-if="status != 5" id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
-			<template v-if="status == 1">
-				<view class="btn">取消订单</view>
-				<view class="btn">去付款</view>
+			<template v-if="orderDetail.status == 0">
+				<view class="btn" @click="cancelOrder(orderDetail.order_id)">取消订单</view>
+				<view class="btn" @click="payOrder(orderDetail.order_id)">去付款</view>
 			</template>
-			<template v-if="status == 2">
-				<view class="btn">提醒发货</view>
-				<view class="btn">申请退款</view>
+			<template v-if="orderDetail.status == 1">
+				<view class="btn" @click="alertOrder(orderDetail.order_id)">提醒发货</view>
+				<view class="btn" @click="navigateTo('/pages/order/refund?id=' + orderDetail.order_id)">申请退款</view>
 			</template>
-			<template v-if="status == 3">
-				<view class="btn">查看物流</view>
-				<view class="btn">确认收货</view>
+			<template v-if="orderDetail.status == 2">
+				<view class="btn" @click="navigateTo('/pages/order/logistics?id=' + orderDetail.order_id)">查看物流</view>
+				<view class="btn" @click="confirmOrder(orderDetail.order_id)">确认收货</view>
 			</template>
-			<template v-if="status == 4">
-				<view class="btn">申请售后</view>
-				<view class="btn">查看物流</view>
-				<view class="btn">删除订单</view>
+			<template v-if="orderDetail.status == 4">
+				<view class="btn" @click="navigateTo('/pages/order/refund?id=' + orderDetail.order_id)">申请售后</view>
+				<view class="btn" @click="navigateTo('/pages/order/logistics?id=' + orderDetail.order_id)">查看物流</view>
+				<view class="btn" @click="deleteOrder(orderDetail.order_id)">删除订单</view>
 			</template>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getOrderDetail, cancelOrder, payOrder, alertOrder, confirmOrder, deleteOrder } from '@/api/order.js';
 export default {
 	data() {
 		return {
-			status: 1,
 			isIphoneX: false,
-			paddingBottom: '',
-			bottom: ''
+			paddingBottom: 0,
+			bottom: 0,
+			orderDetail: null
 		};
 	},
-	onLoad() {
+	onLoad(option) {
 		this.isIphoneX = getApp().globalData.isIphoneX;
 		this.paddingBottom = getApp().globalData.paddingBottom;
 		const query = uni.createSelectorQuery().in(this);
 		query
 			.select('#bottom')
 			.boundingClientRect(data => {
-				this.bottom = data.height + 15;
+				this.bottom = data.height;
 			})
 			.exec();
+		this.getOrderDetail(option.id);
+	},
+	methods: {
+		getOrderDetail(id) {
+			getOrderDetail(id).then(
+				result => {
+					this.orderDetail = result;
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		cancelOrder(id) {
+			const _this = this;
+			uni.showModal({
+				content: '确定取消该订单？',
+				success: function(res) {
+					if (res.confirm) {
+						cancelOrder({ id }).then(
+							result => {
+								_this.getOrderDetail(id);
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		payOrder(id) {
+			payOrder({ uni: id, paytype: 'weixin', from: 'routine' }).then(
+				result => {
+					console.log(result);
+					this.wxpay(result.jsConfig, result.orderId);
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		alertOrder(id) {
+			alertOrder({ id }).then(
+				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '已提醒商家发货'
+					});
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		confirmOrder(id) {
+			const _this = this;
+			uni.showModal({
+				content: '确认收到商品？',
+				success: function(res) {
+					if (res.confirm) {
+						confirmOrder({ uni: id }).then(
+							result => {
+								_this.getOrderDetail(id);
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		deleteOrder(id) {
+			const _this = this;
+			uni.showModal({
+				content: '确定删除该订单？',
+				success: function(res) {
+					if (res.confirm) {
+						deleteOrder({ uni: id }).then(
+							result => {
+								uni.navigateBack({
+									delta: 1
+								});
+							},
+							err => {
+								uni.showToast({
+									icon: 'none',
+									title: err.text
+								});
+							}
+						);
+					}
+				}
+			});
+		},
+		wxpay(params, id) {
+			const _this = this;
+			uni.requestPayment({
+				provider: 'wxpay',
+				timeStamp: params.timestamp,
+				nonceStr: params.nonceStr,
+				package: params.package,
+				signType: params.signType,
+				paySign: params.paySign,
+				success: function(res) {
+					if (res.errMsg == 'requestPayment:ok') {
+						_this.getOrderDetail(id);
+					}
+				},
+				fail: function(err) {
+					console.log('fail:' + JSON.stringify(err));
+				}
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>
@@ -259,39 +402,83 @@ page {
 				height: 120rpx;
 				margin-right: 30rpx;
 				border-radius: 16rpx;
-				background-color: #eee;
 				flex-shrink: 0;
 			}
 			.detail {
+				position: relative;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
+				flex: 1;
 				height: 120rpx;
 				padding-right: 40rpx;
 				.name {
+					width: 90%;
 					font-size: 28rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #333;
 					line-height: 40rpx;
+					word-break: break-all;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
 				}
-				.count {
+				.specs {
 					font-size: 24rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #999;
 					line-height: 34rpx;
 				}
-			}
-			.price {
-				position: absolute;
-				top: 0;
-				right: 0;
-				font-size: 24rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #333;
-				line-height: 34rpx;
+				.count {
+					position: absolute;
+					bottom: 0;
+					right: 0;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 34rpx;
+				}
+				.step {
+					position: absolute;
+					top: 0;
+					right: 0;
+					font-size: 28rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 40rpx;
+					&::after {
+						content: '步';
+						font-size: 18rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 26rpx;
+					}
+				}
+				.price {
+					position: absolute;
+					top: 0;
+					right: 0;
+					font-size: 28rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 40rpx;
+					&::before {
+						content: '￥';
+						font-size: 24rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 34rpx;
+					}
+				}
 			}
 		}
 		.order {
@@ -342,17 +529,27 @@ page {
 				height: 2rpx;
 				background-color: #e8e8e8;
 			}
-			.label,
+			.label {
+				font-size: 28rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #333;
+				line-height: 40rpx;
+			}
 			.text {
 				font-size: 32rpx;
 				font-family: PingFangSC-Regular, PingFang SC;
 				font-weight: 400;
-				color: #333;
-				line-height: 44rpx;
-			}
-			.text {
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
+				color: #fc6262;
+				line-height: 46rpx;
+				&::before {
+					content: '￥';
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #fc6262;
+					line-height: 34rpx;
+				}
 			}
 		}
 	}
@@ -433,6 +630,7 @@ page {
 		left: 0;
 		right: 0;
 		bottom: 0;
+		min-height: 60rpx;
 		padding: 20rpx 30rpx 0 30rpx;
 		background-color: #fff;
 		text-align: right;

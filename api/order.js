@@ -157,6 +157,22 @@ const getOrder = data => {
 	})
 }
 
+const getOrderDetail = id => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: '/order/detail/' + id
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 const payOrder = data => {
 	return new Promise((resolve, reject) => {
 		service.request({
@@ -261,6 +277,7 @@ module.exports = {
 	getOrderPrice,
 	createOrder,
 	getOrder,
+	getOrderDetail,
 	payOrder,
 	cancelOrder,
 	delOrder,

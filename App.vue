@@ -4,7 +4,7 @@ export default {
 	globalData: {
 		isLogin: false,
 		isIphoneX: false,
-		paddingBottom: ''
+		paddingBottom: 0
 	},
 	onShow() {
 		let _this = this;
@@ -16,7 +16,7 @@ export default {
 				let bottom = res.safeArea.bottom;
 				if (res.safeArea.top > 20 && res.platform == 'ios') {
 					_this.globalData.isIphoneX = true;
-					_this.globalData.paddingBottom = '34px';
+					_this.globalData.paddingBottom = 34;
 				}
 			}
 		});

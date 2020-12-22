@@ -3,7 +3,7 @@ const service = require('@/utils/http');
 const api = {
 	login: '/wechat/mp_auth',
 	getScore: '/index/index',
-	getStep: '/user/getWxInfo',
+	getStep: '/pedometer/user_info',
 	getProduct: '/related'
 }
 
@@ -30,7 +30,7 @@ const getScore = () => {
 		service.http_({
 			url: api.getScore
 		}).then(result => {
-			if (result.state === 1) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -41,13 +41,12 @@ const getScore = () => {
 	})
 }
 
-const getStep = data => {
+const getStep = () => {
 	return new Promise((resolve, reject) => {
-		service.http({
-			url: api.getStep,
-			data
+		service.http_({
+			url: api.getStep
 		}).then(result => {
-			if (result.state === 1) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({

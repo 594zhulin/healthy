@@ -14,7 +14,7 @@ const getVideo = () => {
 		service.http_({
 			url: api.getVideo
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -31,7 +31,7 @@ const like = data => {
 			url: api.like,
 			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -48,7 +48,7 @@ const view = data => {
 			url: api.view,
 			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -65,7 +65,7 @@ const getVideoCategoryDetail = data => {
 			url: api.getVideoCategoryDetail,
 			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -82,7 +82,7 @@ const getVideoCategory = data => {
 			url: api.getVideoCategory,
 			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({
@@ -99,7 +99,7 @@ const getVideoDetail = data => {
 			url: api.getVideoDetail,
 			data
 		}).then(result => {
-			if (result.code === 0) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({

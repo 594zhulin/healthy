@@ -27,7 +27,7 @@ const getScore = () => {
 		service.http_({
 			url: api.getScore
 		}).then(result => {
-			if (result.state === 1) {
+			if (result.status === 200) {
 				resolve(result.data)
 			} else {
 				reject({

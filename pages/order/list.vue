@@ -94,7 +94,7 @@ export default {
 	},
 	onLoad(option) {
 		if (option.id) {
-			this.params.type = option.id;
+			this.params.type = parseInt(option.id);
 		}
 	},
 	onShow() {
@@ -143,11 +143,11 @@ export default {
 				}
 			});
 		},
-		payOrder(uni) {
-			payOrder({ uni, paytype: 'weixin', from: 'routine' }).then(
+		payOrder(id) {
+			payOrder({ uni: id, paytype: 'weixin', from: 'routine' }).then(
 				result => {
 					console.log(result);
-					this.wxpay(result.jsConfig, result.orderId);
+					this.wxpay(result.jsConfig);
 				},
 				err => {
 					uni.showToast({
@@ -173,13 +173,13 @@ export default {
 				}
 			);
 		},
-		confirmOrder(uni) {
+		confirmOrder(id) {
 			const _this = this;
 			uni.showModal({
 				content: '确认收到商品？',
 				success: function(res) {
 					if (res.confirm) {
-						confirmOrder({ uni }).then(
+						confirmOrder({ uni: id }).then(
 							result => {
 								_this.getListData('down');
 							},
@@ -194,13 +194,13 @@ export default {
 				}
 			});
 		},
-		deleteOrder(uni) {
+		deleteOrder(id) {
 			const _this = this;
 			uni.showModal({
 				content: '确定删除该订单？',
 				success: function(res) {
 					if (res.confirm) {
-						deleteOrder({ uni }).then(
+						deleteOrder({ uni: id }).then(
 							result => {
 								_this.getListData('down');
 							},
@@ -219,8 +219,8 @@ export default {
 			this.params.type = id;
 			this.getListData('down');
 		},
-		wxpay(params, orderId) {
-			const this_ = this;
+		wxpay(params) {
+			const _this = this;
 			uni.requestPayment({
 				provider: 'wxpay',
 				timeStamp: params.timestamp,
@@ -230,9 +230,7 @@ export default {
 				paySign: params.paySign,
 				success: function(res) {
 					if (res.errMsg == 'requestPayment:ok') {
-						uni.redirectTo({
-							url: '/pages/order/detail?orderId=' + orderId
-						});
+						_this.getListData('down');
 					}
 				},
 				fail: function(err) {

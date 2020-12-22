@@ -20,9 +20,9 @@
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
-					<view class="step">5.7万</view>
-					<view class="text total">共累计1000万步</view>
-					<view class="btn">点我存入</view>
+					<view class="step">{{ no_deposit_num }}</view>
+					<view class="text total">共累计{{ integral_num }}步</view>
+					<view class="btn" @click="navigateTo('/pages/bank/bank')">点我存入</view>
 				</view>
 			</view>
 			<view class="grid-content">
@@ -83,7 +83,7 @@
 <script>
 import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
 import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { login, getScore, getProduct } from '@/api/home.js';
+import { login, getScore, getStep, getProduct } from '@/api/home.js';
 export default {
 	components: {
 		mpvueEcharts
@@ -97,6 +97,8 @@ export default {
 			percent: 0,
 			synthesis_lable: '',
 			create_at: '',
+			integral_num: 0,
+			no_deposit_num: 0,
 			params: {
 				page: 1,
 				limit: 20
@@ -111,11 +113,13 @@ export default {
 		this.initGaugeChartOption();
 		if (this.isLogin) {
 			this.getScore();
+			this.getStep();
 			this.getListData('down');
 		}
 	},
 	onPullDownRefresh() {
 		this.getScore();
+		this.getStep();
 		this.getListData('down');
 		// setTimeout(function() {
 		// 	uni.stopPullDownRefresh();
@@ -133,6 +137,16 @@ export default {
 					this.synthesis_lable = synthesis_lable;
 					this.create_at = create_at;
 					this.percent = parseFloat(score) + 0.9 * (100 - parseFloat(score)).toFixed(1);
+				},
+				err => {}
+			);
+		},
+		getStep() {
+			getStep().then(
+				result => {
+					const { integral_num, no_deposit_num } = result;
+					this.integral_num = integral_num;
+					this.no_deposit_num = no_deposit_num;
 				},
 				err => {}
 			);
@@ -173,6 +187,7 @@ export default {
 									uni.setStorageSync('user_id', result.userInfo.uid);
 									_this.isLogin = true;
 									_this.getScore();
+									_this.getStep();
 									_this.getListData('down');
 								},
 								err => {}
@@ -424,12 +439,13 @@ page {
 				line-height: 46rpx;
 			}
 			.step {
-				margin-left: 110rpx;
+				margin-right: 30rpx;
 				font-size: 60rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
 				font-weight: 600;
 				color: #ffffff;
 				line-height: 84rpx;
+				text-align: right;
 				&::after {
 					content: '步';
 					margin-left: 12rpx;

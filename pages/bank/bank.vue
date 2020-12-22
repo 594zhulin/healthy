@@ -1,14 +1,14 @@
 <template>
 	<view class="page-bank">
 		<view class="user-content">
-			<view class="name">朱琳</view>
-			<view class="avatar"></view>
+			<view class="name">{{ nickName }}</view>
+			<image class="avatar" :src="avatarUrl" mode="aspectFit"></image>
 		</view>
 		<view class="overview-content">
 			<image class="background" src="../../static/bank/bank-bg-01.svg" mode="scaleToFill"></image>
 			<view class="title">余额</view>
-			<view class="step">76.8万</view>
-			<view class="text">待存步数：12.2万步</view>
+			<view class="step">{{ integral_num }}</view>
+			<view class="text">待存步数：{{ no_deposit_num }}步</view>
 			<view class="tip">未存入的步数，7天后自动过期</view>
 			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit"></image>
 		</view>
@@ -108,27 +108,40 @@
 </template>
 
 <script>
-import { getCategory } from '@/api/bank.js';
+import { getStep, getListData } from '@/api/bank.js';
 export default {
 	data() {
 		return {
-			category: []
+			avatarUrl: '',
+			nickName: '',
+			integral_num: 0,
+			no_deposit_num: 0
 		};
 	},
-	onShow() {
-		getCategory().then(
+	onLoad() {
+		wx.getWeRunData({
+			success(res) {
+				console.log(res);
+			}
+		});
+		getStep().then(
 			result => {
-				this.category = result;
+				const { avatarUrl, nickName, integral_num, no_deposit_num } = result;
+				this.avatarUrl = avatarUrl;
+				this.nickName = nickName;
+				this.integral_num = integral_num;
+				this.no_deposit_num = no_deposit_num;
 			},
 			err => {}
 		);
-	}
+	},
+	onShow() {}
 };
 </script>
 
 <style lang="less" scoped>
 .page-bank {
-	margin: 0 5.6vw;
+	margin: 0 42rpx;
 	.user-content {
 		display: flex;
 		align-items: center;
@@ -151,16 +164,15 @@ export default {
 	}
 	.overview-content {
 		position: relative;
-		width: 88.8vw;
-		height: 384rpx;
+		height: 382rpx;
 		border-radius: 12rpx;
-		box-shadow: 0px 0 20rpx 0px rgba(64, 38, 2, 0.2);
+		box-shadow: 0px 0px 12rpx 0px rgba(0, 0, 0, 0.06);
 		.background {
 			position: absolute;
 			top: 0;
 			left: 0;
-			width: 88.8vw;
-			height: 384rpx;
+			width: 100%;
+			height: 382rpx;
 			z-index: -1;
 		}
 		.title {

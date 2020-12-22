@@ -102,22 +102,22 @@
 				<view class="order-item" @click="navigateTo('/pages/order/list?id=0')">
 					<image class="icon wait" src="../../static/user/user-icon-03.svg" mode="aspectFit"></image>
 					<view class="text">待付款</view>
-					<view class="count">{{ user.orderStatusNum.unpaid_count }}</view>
+					<view class="count" v-if="user.orderStatusNum.unpaid_count > 0">{{ user.orderStatusNum.unpaid_count }}</view>
 				</view>
 				<view class="order-item" @click="navigateTo('/pages/order/list?id=1')">
 					<image class="icon pay" src="../../static/user/user-icon-04.svg" mode="aspectFit"></image>
 					<view class="text">待发货</view>
-					<view class="count">{{ user.orderStatusNum.unshipped_count }}</view>
+					<view class="count" v-if="user.orderStatusNum.unshipped_count > 0">{{ user.orderStatusNum.unshipped_count }}</view>
 				</view>
 				<view class="order-item" @click="navigateTo('/pages/order/list?id=2')">
 					<image class="icon delivery" src="../../static/user/user-icon-05.svg" mode="aspectFit"></image>
 					<view class="text">待收货</view>
-					<view class="count">{{ user.orderStatusNum.received_count }}</view>
+					<view class="count" v-if="user.orderStatusNum.received_count > 0">{{ user.orderStatusNum.received_count }}</view>
 				</view>
 				<view class="order-item" @click="navigateTo('/pages/order/list?id=4')">
 					<image class="icon signed" src="../../static/user/user-icon-06.svg" mode="aspectFit"></image>
 					<view class="text">已签收</view>
-					<view class="count">{{ user.orderStatusNum.complete_count }}</view>
+					<view class="count" v-if="user.orderStatusNum.complete_count > 0">{{ user.orderStatusNum.complete_count }}</view>
 				</view>
 				<view class="order-item" @click="navigateTo('/pages/order/aftersale')">
 					<image class="icon aftersale" src="../../static/user/user-icon-07.svg" mode="aspectFit"></image>
