@@ -118,7 +118,7 @@ export default {
 			no_deposit_num: 0
 		};
 	},
-	onLoad() {
+	onShow() {
 		wx.getWeRunData({
 			success(res) {
 				console.log(res);
@@ -134,8 +134,7 @@ export default {
 			},
 			err => {}
 		);
-	},
-	onShow() {}
+	}
 };
 </script>
 
