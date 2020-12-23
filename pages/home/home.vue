@@ -83,7 +83,7 @@
 <script>
 import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
 import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { login, getScore, getStep, getProduct } from '@/api/home.js';
+import { login, signIn, getScore, getStep, getProduct } from '@/api/home.js';
 export default {
 	components: {
 		mpvueEcharts
@@ -107,7 +107,7 @@ export default {
 			total: 0
 		};
 	},
-	onLoad() {
+	onLoad(option) {
 		uni.hideTabBar();
 		this.isLogin = getApp().globalData.isLogin;
 		this.initGaugeChartOption();
@@ -116,19 +116,28 @@ export default {
 			this.getStep();
 			this.getListData('down');
 		}
+		if (option.user_id) {
+			this.signIn(option.user_id);
+		}
 	},
 	onPullDownRefresh() {
 		this.getScore();
 		this.getStep();
 		this.getListData('down');
-		// setTimeout(function() {
-		// 	uni.stopPullDownRefresh();
-		// }, 1000);
 	},
 	onReachBottom() {
 		this.getListData('up');
 	},
 	methods: {
+		signIn(user_id) {
+			const _this = this;
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					signIn({ code: loginRes.code, trans_pond_user_id: user_id }).then(result => {}, err => {});
+				}
+			});
+		},
 		getScore() {
 			getScore().then(
 				result => {

@@ -42,12 +42,15 @@ const getStep = data => {
 
 const getFire = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
+		service.http_({
 			url: api.getFire,
 			data
 		}).then(result => {
 			if (result.status === 200) {
-				resolve(result.data)
+				resolve({
+					list: result.data,
+					total: result.total || 0
+				})
 			} else {
 				reject({
 					text: result.msg

@@ -2,6 +2,7 @@ const service = require('@/utils/http');
 
 const api = {
 	login: '/wechat/mp_auth',
+	signIn: '/login/getOpenid',
 	getScore: '/index/index',
 	getStep: '/pedometer/user_info',
 	getProduct: '/related'
@@ -13,6 +14,23 @@ const login = data => {
 			url: api.login,
 			data,
 			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const signIn = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.signIn,
+			data
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -79,6 +97,7 @@ const getProduct = data => {
 
 module.exports = {
 	login,
+	signIn,
 	getScore,
 	getStep,
 	getProduct

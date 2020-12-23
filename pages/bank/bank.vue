@@ -30,20 +30,21 @@
 				年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
 			</view>
 		</view>
-		<view class="banner-content">
+		<view class="banner-content" @click="switchTab">
 			<view class="title">步数商城</view>
 			<view class="text">行万步，破万卷 身心得健康</view>
 			<image class="background" src="../../static/bank/bank-img-03.png" mode="aspectFit"></image>
 			<image class="icon" src="../../static/bank/bank-img-02.png" mode="aspectFit"></image>
 		</view>
 		<view class="grid-content">
-			<view class="grid-item">
+			<view class="grid-item" @click="navigateTo('/pages/ranking/ranking')">
 				<image class="icon" src="../../static/bank/bank-icon-02.svg" mode="aspectFit"></image>
 				<view class="text">排行榜</view>
 			</view>
 			<view class="grid-item">
 				<image class="icon" src="../../static/bank/bank-icon-03.svg" mode="aspectFit"></image>
 				<view class="text">蹭火苗</view>
+				<button class="btn" type="default" open-type="share"></button>
 			</view>
 		</view>
 		<view class="list-content">
@@ -51,34 +52,24 @@
 			<view class="total">
 				<view class="fire">
 					<image class="icon" src="../../static/bank/bank-icon-04.svg" mode="aspectFit"></image>
-					<view class="text">我的火苗（X1）</view>
+					<view class="text">我的火苗（X{{ total }}）</view>
 				</view>
 				<view class="step">
 					<image class="icon" src="../../static/bank/bank-icon-05.svg" mode="aspectFit"></image>
-					<view class="text">可存步数（X1）</view>
+					<view class="text">可存步数（X{{ total }}）</view>
 				</view>
 			</view>
-			<view class="list-item">
+			<view class="list-item" v-for="item in fire" :key="item.create_at">
 				<view class="border"></view>
-				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
-				<view class="date">2011/12 15:30:27</view>
-			</view>
-			<view class="list-item">
-				<view class="border"></view>
-				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
-				<view class="date">2011/12 15:30:27</view>
-			</view>
-			<view class="list-item">
-				<view class="border"></view>
-				<view class="text">成功进行一次体能观测身体素质测量，恭喜您获得火苗</view>
-				<view class="date">2011/12 15:30:27</view>
+				<view class="text">{{ item.explain }}</view>
+				<view class="date">{{ item.create_at }}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-import { getUser, getStep } from '@/api/bank.js';
+import { getUser, getStep, getFire } from '@/api/bank.js';
 import { timestampToTime } from '@/utils/utils.js';
 export default {
 	data() {
@@ -87,10 +78,16 @@ export default {
 			nickName: '',
 			integral_num: 0,
 			no_deposit_num: 0,
-			step: []
+			step: [],
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			fire: [],
+			total: 0
 		};
 	},
-	onShow() {
+	onLoad() {
 		const _this = this;
 		uni.login({
 			provider: 'weixin',
@@ -133,6 +130,47 @@ export default {
 			},
 			err => {}
 		);
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	onShareAppMessage() {
+		const user_id = uni.getStorageSync('user_id');
+		return {
+			title: this.nickName + '邀请您使用体能观测',
+			path: '/pages/home/home?user_id=' + user_id
+		};
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.fire.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getFire({ ...this.params }).then(
+				result => {
+					const { list, total } = result;
+					this.fire = direction == 'down' ? list : this.fire.concat(list);
+					this.total = total;
+				},
+				err => {}
+			);
+		},
+		switchTab() {
+			uni.switchTab({
+				url: '/pages/mall/mall'
+			});
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>
@@ -376,6 +414,7 @@ export default {
 		align-items: center;
 		margin-top: 20rpx;
 		.grid-item {
+			position: relative;
 			width: 318rpx;
 			height: 200rpx;
 			background: #ffffff;
@@ -403,6 +442,14 @@ export default {
 				color: #000000;
 				line-height: 42rpx;
 				text-align: center;
+			}
+			.btn {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				opacity: 0;
 			}
 		}
 	}
