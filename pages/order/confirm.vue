@@ -131,7 +131,7 @@ export default {
 				success: function(res) {
 					if (res.errMsg == 'requestPayment:ok') {
 						uni.redirectTo({
-							url: '/pages/order/detail?orderId=' + orderId
+							url: '/pages/order/detail?id=' + orderId
 						});
 					}
 				},
