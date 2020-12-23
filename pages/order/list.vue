@@ -115,9 +115,9 @@ export default {
 			}
 			getOrder({ ...this.params }).then(
 				result => {
-					// const { list, total } = result;
-					this.order = direction == 'down' ? result : this.order.concat(result);
-					//this.total = total;
+					const { list, total } = result;
+					this.order = direction == 'down' ? list : this.order.concat(list);
+					this.total = total;
 				},
 				err => {}
 			);

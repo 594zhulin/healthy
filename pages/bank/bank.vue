@@ -15,40 +15,10 @@
 		<view class="chart-content">
 			<view class="title">近七日步数</view>
 			<view class="chart-list">
-				<view class="chart-item">
-					<view class="text">1.2w</view>
-					<view class="bar" style="height:45px"></view>
-					<view class="date">11.13</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">0.8w</view>
-					<view class="bar" style="height:30px"></view>
-					<view class="date">11.14</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">0.9w</view>
-					<view class="bar" style="height:34px"></view>
-					<view class="date">11.15</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">1.0w</view>
-					<view class="bar" style="height:38px"></view>
-					<view class="date">11.16</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">0.9w</view>
-					<view class="bar" style="height:34px"></view>
-					<view class="date">11.17</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">1.3w</view>
-					<view class="bar" style="height:49px"></view>
-					<view class="date">11.18</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">1.0w</view>
-					<view class="bar" style="height:38px"></view>
-					<view class="date">11.19</view>
+				<view class="chart-item" v-for="item in step" :key="item.date">
+					<view class="text">{{ item.step }}</view>
+					<view class="bar" :style="{ height: item.height }"></view>
+					<view class="date">{{ item.date }}</view>
 				</view>
 			</view>
 		</view>
@@ -108,29 +78,58 @@
 </template>
 
 <script>
-import { getStep, getListData } from '@/api/bank.js';
+import { getUser, getStep } from '@/api/bank.js';
+import { timestampToTime } from '@/utils/utils.js';
 export default {
 	data() {
 		return {
 			avatarUrl: '',
 			nickName: '',
 			integral_num: 0,
-			no_deposit_num: 0
+			no_deposit_num: 0,
+			step: []
 		};
 	},
 	onShow() {
-		wx.getWeRunData({
-			success(res) {
-				console.log(res);
+		const _this = this;
+		uni.login({
+			provider: 'weixin',
+			success: function(loginRes) {
+				console.log(loginRes);
+				wx.getWeRunData({
+					success(infoRes) {
+						console.log(infoRes);
+						getStep({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData }).then(
+							result => {
+								const arr = result.stepInfoList.slice(24);
+								const maxStep = Math.max.apply(
+									Math,
+									arr.map(item => {
+										return item.step;
+									})
+								);
+								arr.map(item => {
+									let obj = {
+										step: item.step,
+										height: parseInt((item.step / maxStep) * 57) + 'px',
+										date: timestampToTime(item.timestamp)
+									};
+									_this.step.push(obj);
+								});
+							},
+							err => {}
+						);
+					}
+				});
 			}
 		});
-		getStep().then(
+		getUser().then(
 			result => {
 				const { avatarUrl, nickName, integral_num, no_deposit_num } = result;
-				this.avatarUrl = avatarUrl;
-				this.nickName = nickName;
-				this.integral_num = integral_num;
-				this.no_deposit_num = no_deposit_num;
+				_this.avatarUrl = avatarUrl;
+				_this.nickName = nickName;
+				_this.integral_num = integral_num;
+				_this.no_deposit_num = no_deposit_num;
 			},
 			err => {}
 		);
@@ -184,12 +183,12 @@ export default {
 			text-align: center;
 		}
 		.step {
-			margin-left: 256rpx;
 			font-size: 54rpx;
 			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
 			font-weight: bold;
 			color: #ffffff;
 			line-height: 74rpx;
+			text-align: center;
 			&::after {
 				content: '步';
 				font-size: 36rpx;

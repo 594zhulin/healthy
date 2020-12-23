@@ -146,7 +146,7 @@ export default {
 				result => {
 					const { integral_num, no_deposit_num } = result;
 					this.integral_num = integral_num;
-					this.no_deposit_num = no_deposit_num;
+					this.no_deposit_num = parseFloat(no_deposit_num).toFixed(1);
 				},
 				err => {}
 			);
@@ -407,12 +407,14 @@ page {
 			}
 		}
 		.bank-item {
-			position: relative;
+			position: absolute;
+			right: 36rpx;
 			width: 326rpx;
 			height: 330rpx;
-			margin-left: -52rpx;
+			padding-left: 50rpx;
 			box-shadow: 0px 10rpx 20rpx 0px rgba(64, 38, 2, 0.2);
 			border-radius: 0px 12rpx 12rpx 0px;
+			box-sizing: border-box;
 			.background {
 				position: absolute;
 				top: 0;
@@ -430,22 +432,21 @@ page {
 			}
 			.title {
 				padding-top: 22rpx;
-				margin-left: 134rpx;
 				margin-bottom: 10rpx;
 				font-size: 32rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
 				font-weight: 600;
 				color: #ffffff;
 				line-height: 46rpx;
+				text-align: center;
 			}
 			.step {
-				margin-right: 30rpx;
 				font-size: 60rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
 				font-weight: 600;
 				color: #ffffff;
 				line-height: 84rpx;
-				text-align: right;
+				text-align: center;
 				&::after {
 					content: '步';
 					margin-left: 12rpx;
@@ -457,22 +458,21 @@ page {
 				}
 			}
 			.text {
-				margin-left: 146rpx;
 				font-size: 24rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
 				font-weight: 600;
 				color: rgba(255, 255, 255, 0.5);
 				line-height: 34rpx;
-			}
-			.text.total {
-				margin-left: 96rpx;
+				text-align: center;
 			}
 			.btn {
 				position: absolute;
-				right: 62rpx;
+				left: 50rpx;
+				right: 0;
 				bottom: 34rpx;
 				width: 160rpx;
 				height: 50rpx;
+				margin: auto;
 				background: #ffffff;
 				box-shadow: 0px 10rpx 10rpx 0px rgba(64, 2, 2, 0.1);
 				border-radius: 26rpx;

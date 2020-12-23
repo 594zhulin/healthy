@@ -19,9 +19,9 @@
 			</view>
 		</view>
 		<view class="chart-content">
-			<view class="title">近七日步数</view>
+			<view class="title">体能数据</view>
 			<view class="chart-list">
-				<view class="chart-item">
+				<view class="chart-item" v-for="item in items" :key="item.timestamp">
 					<view class="text">88′</view>
 					<view class="bar" style="height:53px"></view>
 					<view class="date">11.13</view>
@@ -137,6 +137,7 @@ export default {
 			user: {
 				avatar: '',
 				nickname: '',
+				items: [],
 				integral: 0,
 				score: 0,
 				orderStatusNum: {
@@ -149,17 +150,18 @@ export default {
 		};
 	},
 	onShow() {
+		const _this = this;
 		getUser().then(
 			result => {
 				const { avatar, nickname, integral, orderStatusNum } = result;
-				this.user = { ...this.user, avatar, nickname, integral, orderStatusNum };
+				_this.user = { ..._this.user, avatar, nickname, integral, orderStatusNum };
 			},
 			err => {}
 		);
 		getScore().then(
 			result => {
 				const { score } = result;
-				this.user.score = score;
+				_this.user.score = score;
 			},
 			err => {}
 		);

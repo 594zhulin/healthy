@@ -1,15 +1,15 @@
 const service = require('@/utils/http');
 
 const api = {
-	getStep: '/pedometer/user_info',
-	getListData: '/wechat/wxDecode',
+	getUser: '/pedometer/user_info',
+	getStep: '/wechat/wxDecode',
 	getFire: '/pedometer/flame_list'
 }
 
-const getStep = () => {
+const getUser = () => {
 	return new Promise((resolve, reject) => {
 		service.http_({
-			url: api.getStep
+			url: api.getUser
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -22,11 +22,12 @@ const getStep = () => {
 	})
 }
 
-const getListData = data => {
+const getStep = data => {
 	return new Promise((resolve, reject) => {
-		service.http({
-			url: api.getListData,
-			data
+		service.request({
+			url: api.getStep,
+			data,
+			method: 'POST'
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -57,7 +58,7 @@ const getFire = data => {
 }
 
 module.exports = {
+	getUser,
 	getStep,
-	getListData,
 	getFire
 }

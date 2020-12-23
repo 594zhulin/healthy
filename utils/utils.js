@@ -24,17 +24,16 @@ function formatRichText(html) {
 	return newContent;
 }
 
-function generateUUID() {
-	var d = new Date().getTime();
-	var uuid = 'xxxxxxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		var r = (d + Math.random() * 16) % 16 | 0;
-		d = Math.floor(d / 16);
-		return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-	});
-	return uuid;
+function timestampToTime(timestamp) {
+	const date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+	M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '.';
+	D = date.getDate();
+
+	return M + D;
+
 }
 
 module.exports = {
 	formatRichText,
-	generateUUID
+	timestampToTime
 }
