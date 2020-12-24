@@ -3,50 +3,85 @@
 		<view class="date-content">
 			<view class="row">
 				<view class="label">时间</view>
-				<picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
-					<view class="text">{{ date }}</view>
+				<picker class="picker" mode="date" :value="form.invite_time" :start="startDate" :end="endDate" @change="bindDateChange">
+					<view class="text">{{ form.invite_time }}</view>
 				</picker>
 				<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 			</view>
 			<view class="row">
 				<view class="label">具体时间</view>
-				<picker class="picker" mode="time" :value="time" start="09:01" end="21:01" @change="bindTimeChange">
-					<view class="text">{{ time }}</view>
+				<picker class="picker" mode="time" :value="form.time_quantum" :start="startTime" @change="bindTimeChange">
+					<view class="text">{{ form.time_quantum }}</view>
 				</picker>
 				<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 			</view>
 		</view>
-		<view class="address-content">
+		<view class="address-content" @click="handleClick">
 			<view class="label">地点</view>
-			<view class="text">成都市,天府一街01号</view>
+			<view class="text">{{ form.address }}</view>
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 		</view>
 		<view class="select-content">
 			<view class="label">运动类型</view>
-			<picker class="picker" @change="bindPickerChange" :value="index" :range="array">
+			<input class="text" type="text" v-model="form.title" />
+			<!-- <picker class="picker" @change="bindPickerChange" :value="index" :range="array">
 				<view class="text">{{ array[index] }}</view>
-			</picker>
-			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
+			</picker> -->
+			<!-- <image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image> -->
 		</view>
 		<view class="desc-content">
 			<view class="label">备注</view>
-			<textarea class="text" value="xxxxxxxxxxxxxxxxxx" placeholder="" />
+			<input class="text" type="text" v-model="remark" />
 		</view>
-		<view class="btn">邀约好友</view>
+		<button class="btn" v-if="validate" type="default" open-type="share">邀约好友</button>
+		<view class="btn" v-else @click="handleSubmit">邀约好友</view>
+		<custom-modal ref="authModal">
+			<view class="auth-modal">
+				<view class="title">"体能观测站"需要获取您的地理位置</view>
+				<view class="btn-group">
+					<view class="btn" @click="handleClose">取消</view>
+					<button class="btn confirm" type="default" open-type="openSetting" @click="handleClose">确定</button>
+				</view>
+			</view>
+		</custom-modal>
 	</view>
 </template>
 
 <script>
+import { addActivity } from '@/api/train.js';
 export default {
 	data() {
 		const currentDate = this.getDate({
 			format: true
 		});
+		const startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 10 ? new Date().getMinutes() : '0' + new Date().getMinutes());
 		return {
-			date: currentDate,
-			time: '12:01',
-			array: ['中国', '美国', '巴西', '日本'],
-			index: 0
+			startTime,
+			validate: false,
+			form: {
+				invite_time: currentDate,
+				time_quantum: startTime,
+				address: '',
+				longitude: '',
+				latitude: '',
+				title: ''
+			},
+			remark: ''
+		};
+	},
+	onShareAppMessage(option) {
+		const _this = this;
+		let id = '';
+		addActivity({ ..._this.form, remark: _this.remark }).then(
+			result => {
+				id = result;
+			},
+			err => {}
+		);
+		return {
+			title: '快来跟我一起组队运动吧',
+			path: '/pages/train/share?id=' + id,
+			imageUrl: '../../static/share/share-img-01.svg'
 		};
 	},
 	computed: {
@@ -57,15 +92,70 @@ export default {
 			return this.getDate('end');
 		}
 	},
+	watch: {
+		form(newForm) {
+			console.log(newForm);
+			Object.values(newForm).every(item => {
+				if (item == '') {
+					this.validate = false;
+				} else {
+					this.validate = true;
+				}
+			});
+		}
+	},
 	methods: {
-		bindDateChange: function(e) {
-			this.date = e.target.value;
+		bindDateChange(e) {
+			this.form.invite_time = e.target.value;
+			if (
+				this.getDate({
+					format: true
+				}) == this.form.invite_time
+			) {
+				this.startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 10 ? new Date().getMinutes() : '0' + new Date().getMinutes());
+				this.form.time_quantum = this.startTime;
+			} else {
+				this.startTime = '';
+				this.form.time_quantum = '';
+			}
 		},
-		bindTimeChange: function(e) {
-			this.time = e.target.value;
+		bindTimeChange(e) {
+			this.form.time_quantum = e.target.value;
 		},
-		bindPickerChange: function(e) {
-			this.index = e.target.value;
+		handleClick() {
+			const _this = this;
+			uni.chooseLocation({
+				latitude: _this.form.latitude,
+				longitude: _this.form.longitude,
+				success(res) {
+					const { address, latitude, longitude } = res;
+					_this.form = { ..._this.form, address, latitude, longitude };
+				},
+				fail(err) {
+					if (err.errMsg == 'chooseLocation:fail auth deny') {
+						_this.$refs['authModal'].open();
+					}
+				}
+			});
+		},
+		handleClose() {
+			this.$refs['authModal'].close();
+		},
+		handleSubmit() {
+			if (this.form.address == '') {
+				uni.showToast({
+					icon: 'none',
+					title: '请选择地点'
+				});
+				return false;
+			}
+			if (this.form.title == '') {
+				uni.showToast({
+					icon: 'none',
+					title: '请填写运动类型'
+				});
+				return false;
+			}
 		},
 		getDate(type) {
 			const date = new Date();
@@ -74,9 +164,9 @@ export default {
 			let day = date.getDate();
 
 			if (type === 'start') {
-				year = year - 60;
+				year = year;
 			} else if (type === 'end') {
-				year = year + 2;
+				year = year + 5;
 			}
 			month = month > 9 ? month : '0' + month;
 			day = day > 9 ? day : '0' + day;
@@ -148,6 +238,7 @@ export default {
 		padding: 0 32rpx 0 60rpx;
 		background-color: #ffffff;
 		.label {
+			flex-shrink: 0;
 			width: 112rpx;
 			font-size: 28rpx;
 			font-family: PingFangSC-Regular, PingFang SC;
@@ -164,6 +255,9 @@ export default {
 			font-weight: 400;
 			color: #999999;
 			text-align: right;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		.icon {
 			width: 19rpx;
@@ -186,14 +280,11 @@ export default {
 			color: #333333;
 			line-height: 40rpx;
 		}
-		.picker {
+		.text {
 			flex: 1;
 			height: 96rpx;
 			line-height: 96rpx;
-		}
-		.text {
-			height: 96rpx;
-			line-height: 96rpx;
+			padding-left: 40rpx;
 			font-size: 28rpx;
 			font-family: PingFangSC-Regular, PingFang SC;
 			font-weight: 400;
@@ -231,8 +322,10 @@ export default {
 			line-height: 40rpx;
 		}
 		.text {
+			flex: 1;
 			height: 96rpx;
 			line-height: 96rpx;
+			padding-left: 40rpx;
 			font-size: 28rpx;
 			font-family: PingFangSC-Regular, PingFang SC;
 			font-weight: 400;
@@ -240,7 +333,7 @@ export default {
 			text-align: right;
 		}
 	}
-	.btn {
+	& > .btn {
 		position: absolute;
 		left: 0;
 		right: 0;
@@ -248,6 +341,7 @@ export default {
 		width: 226rpx;
 		height: 72rpx;
 		margin: 0 auto;
+		padding: 0;
 		background: #2975ff;
 		border-radius: 4rpx;
 		font-size: 28rpx;
@@ -256,6 +350,66 @@ export default {
 		color: #ffffff;
 		line-height: 72rpx;
 		text-align: center;
+		&::after {
+			display: none;
+		}
+	}
+	.auth-modal {
+		width: 600rpx;
+		.title {
+			height: 250rpx;
+			padding: 70rpx 40rpx 0 40rpx;
+			box-sizing: border-box;
+			font-size: 36rpx;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #333;
+			text-align: center;
+		}
+		.btn-group {
+			position: relative;
+			display: flex;
+			align-items: center;
+			height: 110rpx;
+			&::before {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				content: '';
+				height: 2rpx;
+				background-color: #eee;
+			}
+			.btn {
+				flex: 1;
+				height: 110rpx;
+				line-height: 110rpx;
+				font-size: 36rpx;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 600;
+				color: #000;
+				text-align: center;
+			}
+			.btn.confirm {
+				position: relative;
+				padding: 0;
+				color: #3cc51f;
+				background: none;
+				&::before {
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					content: '';
+					width: 2rpx;
+					height: 110rpx;
+					background-color: #eee;
+				}
+				&::after {
+					display: none;
+				}
+			}
+		}
 	}
 }
 </style>

@@ -1,30 +1,16 @@
 <template>
 	<view class="page-record">
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in activity" :key="item.id">
 				<view class="title">
-					<view class="text">足球</view>
-					<view class="date">2020/11/11 15:30</view>
+					<view class="text">{{ item.title }}</view>
+					<view class="date">{{ item.create_at }}</view>
 				</view>
 				<view class="content join">
 					<image class="icon" src="../../static/record/record-icon-01.svg" mode="aspectFit"></image>
-					<view class="text">参与人数：2人</view>
+					<view class="text">参与人数：{{ item.join_num }}人</view>
 				</view>
-				<view class="content status">
-					<image class="icon" src="../../static/record/record-icon-02.svg" mode="aspectFit"></image>
-					<view class="text">成功打卡休闲运动</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="title">
-					<view class="text">足球</view>
-					<view class="date">2020/11/11 15:30</view>
-				</view>
-				<view class="content join">
-					<image class="icon" src="../../static/record/record-icon-01.svg" mode="aspectFit"></image>
-					<view class="text">参与人数：2人</view>
-				</view>
-				<view class="content status">
+				<view class="content status" v-if="item.is_sign == 1">
 					<image class="icon" src="../../static/record/record-icon-02.svg" mode="aspectFit"></image>
 					<view class="text">成功打卡休闲运动</view>
 				</view>
@@ -34,9 +20,48 @@
 </template>
 
 <script>
+import { getActivity } from '@/api/train.js';
+import { timestampToTime } from '@/utils/utils.js';
 export default {
 	data() {
-		return {};
+		return {
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			activity: [],
+			total: 0
+		};
+	},
+	onLoad() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.activity.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getActivity({ ...this.params }).then(
+				result => {
+					const { list, total } = result;
+					list.map(item => {
+						item.create_at = timestampToTime(item.create_at, 'long');
+					});
+					this.activity = direction == 'down' ? list : this.activity.concat(list);
+					this.total = total;
+					uni.stopPullDownRefresh();
+				},
+				err => {}
+			);
+		}
 	}
 };
 </script>

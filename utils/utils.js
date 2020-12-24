@@ -24,13 +24,22 @@ function formatRichText(html) {
 	return newContent;
 }
 
-function timestampToTime(timestamp) {
+function timestampToTime(timestamp, type) {
 	const date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-	M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '.';
-	D = date.getDate();
-
-	return M + D;
-
+	Y = date.getFullYear() + '-';
+	if (type == 'short') {
+		M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '.';
+	} else {
+		M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+	}
+	D = date.getDate() + ' ';
+	h = date.getHours() + ':';
+	m = date.getMinutes()
+	if (type == 'short') {
+		return M + D;
+	} else {
+		return Y + M + D + h + m;
+	}
 }
 
 module.exports = {

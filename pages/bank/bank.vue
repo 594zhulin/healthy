@@ -109,7 +109,7 @@ export default {
 									let obj = {
 										step: item.step,
 										height: parseInt((item.step / maxStep) * 57) + 'px',
-										date: timestampToTime(item.timestamp)
+										date: timestampToTime(item.timestamp, 'short')
 									};
 									_this.step.push(obj);
 								});
