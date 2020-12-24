@@ -2,61 +2,75 @@
 	<view class="page-share">
 		<view class="user-content">
 			<image class="img" src="../../static/share/share-img-01.svg" mode="aspectFit"></image>
-			<view class="avatar"></view>
-			<view class="text">朱琳</view>
+			<image class="avatar" :src="activity.avatarUrl" mode="aspectFit"></image>
+			<view class="text">{{ activity.nickName }}</view>
 			<view class="line"></view>
 		</view>
 		<view class="activity-content">
 			<view class="title">
 				<view class="text">活动项目</view>
-				<view class="name">足球</view>
+				<view class="name">{{ activity.title }}</view>
 			</view>
 			<view class="date">
 				<view class="text">活动时间</view>
-				<view class="day">11/11日 星期三</view>
-				<view class="time">15:30</view>
+				<view class="day">{{ activity.date }} {{ activity.week }}</view>
+				<view class="time">{{ activity.time_quantum }}</view>
 			</view>
-			<view class="status">三天后</view>
+			<view class="status">{{ activity.day }}</view>
 		</view>
 		<view class="map-content">
 			<view class="title">活动地点</view>
-			<map class="map" :latitude="0" :longitude="0"></map>
+			<map class="map" :latitude="activity.latitude" :longitude="activity.longitude"></map>
 		</view>
 		<view class="detail-content">
 			<view class="name">
 				<image class="icon" src="../../static/share/share-icon-01.svg" mode="aspectFit"></image>
-				<view class="text">成都市高新区大源中央公园</view>
+				<view class="text">{{ activity.address }}</view>
 			</view>
-			<button class="btn" type="default" open-type="share"></button>
+			<button class="btn share" type="default" open-type="share"></button>
 			<view class="btn">
 				<image class="icon" src="../../static/share/share-icon-02.svg" mode="aspectFit"></image>
 				<view class="text">转发邀约</view>
 			</view>
 			<view class="text">已参与</view>
 			<view class="member-list">
-				<view class="member-item"><view class="avatar"></view></view>
-				<view class="member-item"><view class="avatar"></view></view>
-				<view class="member-item"><view class="avatar"></view></view>
-				<view class="member-item"><view class="avatar"></view></view>
-				<view class="member-item"><view class="avatar"></view></view>
-				<view class="member-item">
+				<view class="member-item" v-for="item in activity.join" :key="item.nickName"><image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image></view>
+				<!-- <view class="member-item">
 					<view class="more">
 						<view class="dot"></view>
 						<view class="dot"></view>
 						<view class="dot"></view>
 					</view>
-				</view>
+				</view> -->
 			</view>
-			<view class="total">8人</view>
+			<view class="total">{{ activity.join_num }}人</view>
 		</view>
 		<view class="btn">立即参与</view>
 	</view>
 </template>
 
 <script>
+import { getActivityDetail } from '@/api/train.js';
 export default {
 	data() {
-		return {};
+		return {
+			activity: null
+		};
+	},
+	onLoad(option) {
+		getActivityDetail({ activity_id: option.id }).then(
+			result => {
+				this.activity = result;
+			},
+			err => {}
+		);
+	},
+	onShareAppMessage() {
+		return {
+			title: '快来跟我一起组队运动吧',
+			path: '/pages/train/share?id=' + this.activity.id,
+			imageUrl: '../../static/share/share-img-01.svg'
+		};
 	}
 };
 </script>
@@ -125,6 +139,7 @@ page {
 		position: relative;
 		display: flex;
 		align-items: flex-start;
+		justify-content: space-between;
 		.title {
 			margin-left: 60rpx;
 			.text {
@@ -144,7 +159,8 @@ page {
 			}
 		}
 		.date {
-			margin-left: 190rpx;
+			flex-shrink: 0;
+			margin: 0 40rpx;
 			.text {
 				font-size: 24rpx;
 				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
@@ -165,9 +181,8 @@ page {
 			}
 		}
 		.status {
-			position: absolute;
-			top: 56rpx;
-			right: 56rpx;
+			flex-shrink: 0;
+			margin: 56rpx 56rpx 0 0;
 			font-size: 24rpx;
 			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
 			font-weight: bold;
@@ -204,10 +219,11 @@ page {
 		.name {
 			display: flex;
 			align-items: center;
-			height: 60rpx;
+			padding-right: 200rpx;
 			.icon {
 				width: 32rpx;
 				height: 32rpx;
+				flex-shrink: 0;
 			}
 			.text {
 				margin-left: 18rpx;
@@ -245,6 +261,14 @@ page {
 				font-weight: 400;
 				color: #2975ff;
 				line-height: 34rpx;
+			}
+		}
+		.btn.share {
+			z-index: 1;
+			background: none;
+			padding: 0;
+			&::after {
+				display: none;
 			}
 		}
 		.member-list {

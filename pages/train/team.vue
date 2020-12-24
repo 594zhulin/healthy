@@ -54,7 +54,7 @@ export default {
 		const currentDate = this.getDate({
 			format: true
 		});
-		const startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 10 ? new Date().getMinutes() : '0' + new Date().getMinutes());
+		const startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 9 ? new Date().getMinutes() : '0' + new Date().getMinutes());
 		return {
 			startTime,
 			validate: false,
@@ -69,7 +69,7 @@ export default {
 			remark: ''
 		};
 	},
-	onShareAppMessage(option) {
+	onShareAppMessage() {
 		const _this = this;
 		let id = '';
 		addActivity({ ..._this.form, remark: _this.remark }).then(
@@ -112,7 +112,7 @@ export default {
 					format: true
 				}) == this.form.invite_time
 			) {
-				this.startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 10 ? new Date().getMinutes() : '0' + new Date().getMinutes());
+				this.startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 9 ? new Date().getMinutes() : '0' + new Date().getMinutes());
 				this.form.time_quantum = this.startTime;
 			} else {
 				this.startTime = '';

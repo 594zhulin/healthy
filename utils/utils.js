@@ -34,7 +34,7 @@ function timestampToTime(timestamp, type) {
 	}
 	D = date.getDate() + ' ';
 	h = date.getHours() + ':';
-	m = date.getMinutes()
+	m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
 	if (type == 'short') {
 		return M + D;
 	} else {
