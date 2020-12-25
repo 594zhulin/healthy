@@ -8,7 +8,7 @@
 			<image class="background" src="../../static/bank/bank-bg-01.svg" mode="scaleToFill"></image>
 			<view class="title">余额</view>
 			<view class="step">{{ integral_num }}</view>
-			<view class="text">待存步数：{{ no_deposit_num }}步</view>
+			<view class="text">待存步数：{{ no_deposit_str }}步</view>
 			<view class="tip">未存入的步数，7天后自动过期</view>
 			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit"></image>
 		</view>
@@ -77,7 +77,7 @@ export default {
 			avatarUrl: '',
 			nickName: '',
 			integral_num: 0,
-			no_deposit_num: 0,
+			no_deposit_str: 0,
 			step: [],
 			params: {
 				pageNo: 1,
@@ -122,11 +122,11 @@ export default {
 		});
 		getUser().then(
 			result => {
-				const { avatarUrl, nickName, integral_num, no_deposit_num } = result;
+				const { avatarUrl, nickName, integral_num, no_deposit_str } = result;
 				_this.avatarUrl = avatarUrl;
 				_this.nickName = nickName;
 				_this.integral_num = integral_num;
-				_this.no_deposit_num = no_deposit_num;
+				_this.no_deposit_str = no_deposit_str;
 			},
 			err => {}
 		);

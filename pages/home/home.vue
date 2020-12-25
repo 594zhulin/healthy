@@ -20,7 +20,7 @@
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
-					<view class="step">{{ no_deposit_num }}</view>
+					<view class="step">{{ no_deposit_str }}</view>
 					<view class="text total">共累计{{ integral_num }}步</view>
 					<view class="btn" @click="navigateTo('/pages/bank/bank')">点我存入</view>
 				</view>
@@ -98,7 +98,7 @@ export default {
 			synthesis_lable: '',
 			create_at: '',
 			integral_num: 0,
-			no_deposit_num: 0,
+			no_deposit_str: 0,
 			params: {
 				page: 1,
 				limit: 20
@@ -153,9 +153,9 @@ export default {
 		getStep() {
 			getStep().then(
 				result => {
-					const { integral_num, no_deposit_num } = result;
+					const { integral_num, no_deposit_str } = result;
 					this.integral_num = integral_num;
-					this.no_deposit_num = parseFloat(no_deposit_num).toFixed(1);
+					this.no_deposit_str = no_deposit_str;
 				},
 				err => {}
 			);

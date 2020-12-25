@@ -3,7 +3,9 @@ const service = require('@/utils/http');
 const api = {
 	getActivity: '/invite/activity_list',
 	getActivityDetail: '/invite/activity_info',
-	addActivity: '/invite/create_invite'
+	addActivity: '/invite/create_invite',
+	joinActivity: '/invite/join_activity'
+
 }
 
 const getActivity = data => {
@@ -60,8 +62,26 @@ const addActivity = data => {
 	})
 }
 
+const joinActivity = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.joinActivity,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getActivity,
 	getActivityDetail,
-	addActivity
+	addActivity,
+	joinActivity
 }
