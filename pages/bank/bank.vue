@@ -52,11 +52,11 @@
 			<view class="total">
 				<view class="fire">
 					<image class="icon" src="../../static/bank/bank-icon-04.svg" mode="aspectFit"></image>
-					<view class="text">我的火苗（X{{ total }}）</view>
+					<view class="text">我的火苗（X{{ flame_num }}）</view>
 				</view>
 				<view class="step">
 					<image class="icon" src="../../static/bank/bank-icon-05.svg" mode="aspectFit"></image>
-					<view class="text">可存步数（X{{ total }}）</view>
+					<view class="text">可存步数（X{{ flame_num }}）</view>
 				</view>
 			</view>
 			<view class="list-item" v-for="item in fire" :key="item.create_at">
@@ -78,6 +78,7 @@ export default {
 			nickName: '',
 			integral_num: 0,
 			no_deposit_str: 0,
+			flame_num: 0,
 			step: [],
 			params: {
 				pageNo: 1,
@@ -122,11 +123,12 @@ export default {
 		});
 		getUser().then(
 			result => {
-				const { avatarUrl, nickName, integral_num, no_deposit_str } = result;
+				const { avatarUrl, nickName, integral_num, no_deposit_str, flame_num } = result;
 				_this.avatarUrl = avatarUrl;
 				_this.nickName = nickName;
 				_this.integral_num = integral_num;
 				_this.no_deposit_str = no_deposit_str;
+				_this.flame_num = flame_num;
 			},
 			err => {}
 		);

@@ -45,12 +45,12 @@
 			</view>
 			<view class="total">{{ activity.join_num }}人</view>
 		</view>
-		<view class="btn">立即参与</view>
+		<view class="btn" @click="handleClick">立即参与</view>
 	</view>
 </template>
 
 <script>
-import { getActivityDetail } from '@/api/train.js';
+import { getActivityDetail, joinActivity } from '@/api/train.js';
 export default {
 	data() {
 		return {
@@ -71,6 +71,25 @@ export default {
 			path: '/pages/train/share?id=' + this.activity.id,
 			imageUrl: '../../static/share/share-img-01.svg'
 		};
+	},
+	methods: {
+		handleClick() {
+			const user_id = uni.getStorageSync('user_id');
+			joinActivity({ participator_user_id: user_id, activity_id: this.activity.id }).then(
+				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '参与成功'
+					});
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		}
 	}
 };
 </script>

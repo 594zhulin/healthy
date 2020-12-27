@@ -3,7 +3,8 @@ const service = require('@/utils/http');
 const api = {
 	getUser: '/pedometer/user_info',
 	getStep: '/wechat/wxDecode',
-	getFire: '/pedometer/flame_list'
+	getFire: '/pedometer/flame_list',
+	getRanking: '/pedometer/integral_ranking'
 }
 
 const getUser = () => {
@@ -60,8 +61,29 @@ const getFire = data => {
 	})
 }
 
+const getRanking = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getRanking,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve({
+					data: result.data,
+					total: result.total
+				})
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getUser,
 	getStep,
-	getFire
+	getFire,
+	getRanking
 }

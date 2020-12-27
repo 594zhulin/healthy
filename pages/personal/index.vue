@@ -7,19 +7,19 @@
 		</view>
 		<view class="name-content">
 			<view class="label">姓名</view>
-			<input class="text" type="text" v-model="name" />
+			<input class="text" type="text" v-model="nickname" />
 		</view>
-		<view class="sex-content">
+		<!-- <view class="sex-content">
 			<view class="label">性别</view>
 			<picker class="picker" @change="bindTagChange" :value="index" :range="array">
 				<view class="text">{{ array[index] }}</view>
 			</picker>
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
-		</view>
+		</view> -->
 		<view class="birthday-content">
 			<view class="label">出生日期</view>
-			<picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
-				<view class="text">{{ date }}</view>
+			<picker class="picker" mode="date" :value="birthday" @change="bindDateChange">
+				<view class="text">{{ birthday }}</view>
 			</picker>
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 		</view>
@@ -31,33 +31,24 @@
 import { getUser } from '@/api/personal.js';
 export default {
 	data() {
-		const currentDate = this.getDate({
-			format: true
-		});
 		return {
 			avatar: '',
-			name: '',
+			nickname: '',
 			array: ['男', '女'],
 			index: 0,
-			date: currentDate
+			birthday: ''
 		};
 	},
 	onLoad() {
 		getUser().then(
 			result => {
-				const { avatar, nickname, integral, complete_count } = result;
-				this.userInfo = { ...this.userInfo, avatar, nickname, integral, complete_count };
+				const { avatar, nickname, birthday } = result;
+				this.avatar = avatar;
+				this.nickname = nickname;
+				this.birthday = birthday;
 			},
 			err => {}
 		);
-	},
-	computed: {
-		startDate() {
-			return this.getDate('start');
-		},
-		endDate() {
-			return this.getDate('end');
-		}
 	},
 	methods: {
 		bindAvatarChange() {
@@ -88,25 +79,10 @@ export default {
 			});
 		},
 		bindDateChange(e) {
-			this.date = e.target.value;
+			this.birthday = e.target.value;
 		},
 		bindPickerChange(e) {
 			this.index = e.target.value;
-		},
-		getDate(type) {
-			const date = new Date();
-			let year = date.getFullYear();
-			let month = date.getMonth() + 1;
-			let day = date.getDate();
-
-			if (type === 'start') {
-				year = year - 60;
-			} else if (type === 'end') {
-				year = year + 2;
-			}
-			month = month > 9 ? month : '0' + month;
-			day = day > 9 ? day : '0' + day;
-			return `${year}-${month}-${day}`;
 		}
 	}
 };

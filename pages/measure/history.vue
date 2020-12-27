@@ -1,16 +1,16 @@
 <template>
 	<view class="page-history">
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in history" :key="item.calbe_id">
 				<view class="score">
 					<view class="tag">
 						<image class="icon" src="../../static/measure/measure-icon-13.png" mode="aspectFit"></image>
-						<view class="text">优</view>
+						<view class="text">{{ item.rank_label }}</view>
 					</view>
-					<view class="text">93.2分</view>
+					<view class="text">{{ item.score }}分</view>
 				</view>
 				<view class="date">
-					<view class="text">2019.06.02 12:00</view>
+					<view class="text">{{ item.create_at }}</view>
 					<image class="icon" src="../../static/measure/measure-icon-14.png" mode="aspectFit"></image>
 				</view>
 			</view>
@@ -19,9 +19,51 @@
 </template>
 
 <script>
+import { getHistory } from '@/api/measure.js';
 export default {
 	data() {
-		return {};
+		return {
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			history: []
+		};
+	},
+	onLoad() {
+		this.getListData('down');
+	},
+	onPullDownRefresh() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.history.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getHistory({ ...this.params }).then(
+				result => {
+					const { list, total } = result;
+					this.history = direction == 'down' ? list : this.history.concat(list);
+					this.total = total;
+					uni.stopPullDownRefresh();
+				},
+				err => {}
+			);
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

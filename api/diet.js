@@ -3,6 +3,7 @@ const service = require('@/utils/http');
 const api = {
 	getSurvey: '/survey/index',
 	submitSurvey: '/survey/submit',
+	getSurveyResult: '/survey/return_report',
 	getCategory: '/article/category/list'
 }
 
@@ -30,6 +31,22 @@ const submitSurvey = data => {
 			url: api.submitSurvey,
 			data,
 			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const getSurveyResult = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getSurveyResult,
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -93,6 +110,7 @@ const getCookbookDetail = id => {
 module.exports = {
 	getSurvey,
 	submitSurvey,
+	getSurveyResult,
 	getCategory,
 	getCookbook,
 	getCookbookDetail

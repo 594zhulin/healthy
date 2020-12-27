@@ -8,7 +8,7 @@
 			</view>
 			<view class="user-item">
 				<image class="avatar" :src="user.avatar" mode="aspectFit"></image>
-				<view class="name" @click="navigateTo('/pages/personal/index')">
+				<view class="name">
 					<view class="text">{{ user.nickname }}</view>
 					<image class="icon" src="../../static/user/user-icon-08.png" mode="aspectFit"></image>
 				</view>
@@ -21,61 +21,19 @@
 		<view class="chart-content">
 			<view class="title">体能数据</view>
 			<view class="chart-list">
-				<view class="chart-item" v-for="item in items" :key="item.timestamp">
-					<view class="text">88′</view>
-					<view class="bar" style="height:53px"></view>
-					<view class="date">11.13</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">72′</view>
-					<view class="bar" style="height:43px"></view>
-					<view class="date">11.14</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">76′</view>
-					<view class="bar" style="height:40px"></view>
-					<view class="date">11.15</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">75′</view>
-					<view class="bar" style="height:45px"></view>
-					<view class="date">11.16</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">69′</view>
-					<view class="bar" style="height:41px"></view>
-					<view class="date">11.17</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">91′</view>
-					<view class="bar" style="height:55px"></view>
-					<view class="date">11.18</view>
-				</view>
-				<view class="chart-item">
-					<view class="text">89′</view>
-					<view class="bar" style="height:53px"></view>
-					<view class="date">11.19</view>
+				<view class="chart-item" v-for="item in user.items" :key="item.calbe_id">
+					<view class="text">{{ item.score }}′</view>
+					<view class="bar" :style="{ height: item.height }"></view>
+					<view class="date">{{ item.create_at }}</view>
 				</view>
 			</view>
 		</view>
 		<view class="risk-content">
 			<view class="title">主流健康风险指数</view>
 			<view class="risk-list">
-				<view class="risk-item">
-					<view class="tag perfect">健康</view>
-					<view class="text">心脑血管</view>
-				</view>
-				<view class="risk-item">
-					<view class="tag perfect">健康</view>
-					<view class="text">骨关节</view>
-				</view>
-				<view class="risk-item">
-					<view class="tag bad">高风险</view>
-					<view class="text">抑郁</view>
-				</view>
-				<view class="risk-item">
-					<view class="tag good">中风险</view>
-					<view class="text">摔倒</view>
+				<view class="risk-item" v-for="item in user.risk" :key="item.risk_report_id">
+					<view class="tag perfect">{{ item.score_label }}</view>
+					<view class="text">{{ item.name }}</view>
 				</view>
 			</view>
 		</view>
@@ -130,7 +88,7 @@
 </template>
 
 <script>
-import { getUser, getScore } from '@/api/user.js';
+import { getUser, getScore, getRisk, getScoreList } from '@/api/user.js';
 export default {
 	data() {
 		return {
@@ -138,6 +96,7 @@ export default {
 				avatar: '',
 				nickname: '',
 				items: [],
+				risk: [],
 				integral: 0,
 				score: 0,
 				orderStatusNum: {
@@ -149,7 +108,7 @@ export default {
 			}
 		};
 	},
-	onShow() {
+	onLoad() {
 		const _this = this;
 		getUser().then(
 			result => {
@@ -162,6 +121,33 @@ export default {
 			result => {
 				const { score } = result;
 				_this.user.score = score;
+			},
+			err => {}
+		);
+		getScoreList().then(
+			result => {
+				const arr = result.slice(0, 7).reverse();
+				console.log(arr);
+				const maxScore = Math.max.apply(
+					Math,
+					arr.map(item => {
+						return item.score;
+					})
+				);
+				arr.map(item => {
+					let obj = {
+						score: item.score,
+						height: parseInt((item.score / maxScore) * 57) + 'px',
+						create_at: item.create_at.slice(5, 10)
+					};
+					_this.user.items.push(obj);
+				});
+			},
+			err => {}
+		);
+		getRisk().then(
+			result => {
+				_this.user.risk = result;
 			},
 			err => {}
 		);
@@ -344,6 +330,7 @@ page {
 			margin: 0 12rpx 0 14rpx;
 			.risk-item {
 				flex: 1;
+				overflow: hidden;
 				.tag {
 					width: 130rpx;
 					height: 48rpx;
@@ -372,6 +359,8 @@ page {
 					color: #666666;
 					line-height: 30rpx;
 					text-align: center;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 			}
 		}

@@ -5,11 +5,11 @@
 			<view class="tab-item" :class="{ active: tabId == 1 }" @click="bindTabChange(1)">步数余额排行</view>
 		</view>
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in ranking" :key="item.id">
 				<view class="order">01</view>
-				<view class="avatar"></view>
-				<view class="name">马莺晶</view>
-				<view class="step">15465.3万步</view>
+				<image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image>
+				<view class="name">{{ item.nickName }}</view>
+				<view class="step">{{ item.step_num }}步</view>
 			</view>
 		</view>
 		<view class="fix-content">
@@ -17,21 +17,60 @@
 			<view class="avatar"></view>
 			<view class="content">
 				<view class="name">马莺晶</view>
-				<view class="order">第2345名</view>
+				<view class="order">第{{ ranking_num }}名</view>
 			</view>
-			<view class="step">54.8万步</view>
+			<view class="step">{{ step_num }}步</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getRanking } from '@/api/bank.js';
 export default {
 	data() {
 		return {
-			tabId: 0
+			tabId: 0,
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			ranking_num: 0,
+			step_num: 0,
+			ranking: [],
+			total: 0
 		};
 	},
+	onLoad() {
+		this.getListData('down');
+	},
+	onPullDownRefresh() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
 	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.ranking.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getRanking({ ...this.params }).then(
+				result => {
+					const { data, total } = result;
+					this.ranking = direction == 'down' ? data.list : this.ranking.concat(data.list);
+					this.total = total;
+					this.ranking_num = data.ranking_num;
+					this.step_num = data.step_num;
+					uni.stopPullDownRefresh();
+				},
+				err => {}
+			);
+		},
 		bindTabChange(id) {
 			this.tabId = id;
 		}

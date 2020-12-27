@@ -2,14 +2,18 @@
 	<view class="page-result">
 		<view class="score-content">
 			<image class="background" src="../../static/diet/diet-bg-01.svg" mode="aspectFit"></image>
-			<view class="score">60′</view>
+			<view class="score">{{ score }}′</view>
 			<view class="title">
 				<image class="icon" src="../../static/diet/diet-icon-01.svg" mode="aspectFit"></image>
 				<view class="text">膳食评分</view>
 			</view>
-			<view class="tag">“刚及格哦”</view>
+			<view class="tag">“{{ score_lable }}”</view>
 		</view>
 		<view class="problem-content">
+			<image class="pic" :src="dietary_pagoda_picture" mode="aspectFit"></image>
+			<rich-text :nodes="report"></rich-text>
+		</view>
+		<!-- <view class="problem-content">
 			<view class="title">问题排查</view>
 			<view class="problem-list">
 				<view class="problem-item"><view class="text">碳水化合物摄入：</view></view>
@@ -36,15 +40,33 @@
 				<view class="desc-item"><view class="text">九：</view></view>
 				<view class="desc-item"><view class="text">十：</view></view>
 			</view>
-		</view>
+		</view> -->
 		<view class="btn">我要重测</view>
 	</view>
 </template>
 
 <script>
+import { getSurveyResult } from '@/api/diet.js';
 export default {
 	data() {
-		return {};
+		return {
+			score: '',
+			score_lable: '',
+			dietary_pagoda_picture: '',
+			report: ''
+		};
+	},
+	onLoad() {
+		getSurveyResult().then(
+			result => {
+				const { score, score_lable, dietary_pagoda_picture, report } = result;
+				this.score = score;
+				this.score_lable = score_lable;
+				this.dietary_pagoda_picture = dietary_pagoda_picture;
+				this.report = report;
+			},
+			err => {}
+		);
 	}
 };
 </script>
