@@ -23,47 +23,47 @@
 						<view class="count"></view>
 					</view>
 				</view>
-				<view class="btn">立即训练</view>
+				<view class="btn" @click="navigateTo('/pages/train/list')">立即训练</view>
 			</view>
 			<view class="week-item">
 				<view class="title">近七天运动量统计</view>
 				<view class="record">
 					<view class="label">活动量：</view>
 					<view class="value">
-						<view class="count">8,000</view>
+						<view class="count">{{ deposit_num }}</view>
 						<view class="unit">步</view>
 					</view>
 				</view>
 				<view class="record">
 					<view class="label">有氧运动：</view>
 					<view class="value">
-						<view class="count">3</view>
+						<view class="count">{{ aerobics }}</view>
 						<view class="unit">次</view>
 					</view>
 				</view>
 				<view class="record">
 					<view class="label">休闲运动：</view>
 					<view class="value">
-						<view class="count">0</view>
+						<view class="count">{{ leisure }}</view>
 						<view class="unit">次</view>
 					</view>
 				</view>
 				<view class="record">
 					<view class="label">力量训练：</view>
 					<view class="value">
-						<view class="count">5</view>
+						<view class="count">{{ force }}</view>
 						<view class="unit">次</view>
 					</view>
 				</view>
 				<view class="record">
 					<view class="label">柔韧训练：</view>
 					<view class="value">
-						<view class="count">3</view>
+						<view class="count">{{ pliable }}</view>
 						<view class="unit">次</view>
 					</view>
 				</view>
-				<view class="btn">休闲组队</view>
-				<view class="link">组队记录</view>
+				<view class="btn" @click="navigateTo('/pages/train/team')">休闲组队</view>
+				<view class="link" @click="navigateTo('/pages/train/record')">组队记录</view>
 			</view>
 		</view>
 		<view class="trend-content">
@@ -73,44 +73,12 @@
 		<view class="desc-content"><view class="title">AI智能训练简介</view></view>
 		<view class="list-content">
 			<view class="title">动作库</view>
-			<view class="list-item">
-				<view class="video"></view>
+			<view class="list-item" v-for="item in items" :key="item.id" @click="navigateTo('/pages/train/detail?id=' + item.id)">
+				<image class="video" :src="item.video_content_clouds" mode="aspectFit"></image>
 				<view class="content">
-					<view class="title">俯卧撑</view>
-					<view class="text">目标：手臂肌肉群，背部肌肉群</view>
-					<view class="text">好处：改善肩颈问题，增强手臂美…</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="video"></view>
-				<view class="content">
-					<view class="title">俯卧撑</view>
-					<view class="text">目标：手臂肌肉群，背部肌肉群</view>
-					<view class="text">好处：改善肩颈问题，增强手臂美…</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="video"></view>
-				<view class="content">
-					<view class="title">俯卧撑</view>
-					<view class="text">目标：手臂肌肉群，背部肌肉群</view>
-					<view class="text">好处：改善肩颈问题，增强手臂美…</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="video"></view>
-				<view class="content">
-					<view class="title">俯卧撑</view>
-					<view class="text">目标：手臂肌肉群，背部肌肉群</view>
-					<view class="text">好处：改善肩颈问题，增强手臂美…</view>
-				</view>
-			</view>
-			<view class="list-item">
-				<view class="video"></view>
-				<view class="content">
-					<view class="title">俯卧撑</view>
-					<view class="text">目标：手臂肌肉群，背部肌肉群</view>
-					<view class="text">好处：改善肩颈问题，增强手臂美…</view>
+					<view class="title">{{ item.motion_name }}</view>
+					<view class="text">目标：{{ item.cate_name }}</view>
+					<view class="text">好处：{{ item.advantage }}</view>
 				</view>
 			</view>
 		</view>
@@ -118,9 +86,64 @@
 </template>
 
 <script>
+import { getTrainData, getTrainList } from '@/api/train.js';
 export default {
 	data() {
-		return {};
+		return {
+			deposit_num: 0,
+			pliable: 0,
+			force: 0,
+			aerobics: 0,
+			leisure: 0,
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			items: [],
+			total: 0
+		};
+	},
+	onLoad() {
+		getTrainData().then(
+			result => {
+				const { deposit_num, pliable, force, aerobics, leisure } = result;
+				this.deposit_num = deposit_num || 0;
+				this.pliable = pliable;
+				this.force = force;
+				this.aerobics = aerobics;
+				this.leisure = leisure;
+			},
+			err => {}
+		);
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.items.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getTrainList({ ...this.params }).then(
+				result => {
+					const { list, total } = result;
+					this.items = direction == 'down' ? list : this.items.concat(list);
+					this.total = total;
+				},
+				err => {}
+			);
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

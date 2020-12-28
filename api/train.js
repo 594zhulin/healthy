@@ -4,8 +4,12 @@ const api = {
 	getActivity: '/invite/activity_list',
 	getActivityDetail: '/invite/activity_info',
 	addActivity: '/invite/create_invite',
-	joinActivity: '/invite/join_activity'
-
+	joinActivity: '/invite/join_activity',
+	getTrainList: '/motion/drill_list',
+	getTrainDetail: '/motion/info',
+	clocked: '/motion/immediately',
+	getTrainData: '/motion/drill_plan_stat',
+	getTrainPlanList: '/motion/drill_plan_list'
 }
 
 const getActivity = data => {
@@ -79,9 +83,104 @@ const joinActivity = data => {
 	})
 }
 
+const getTrainList = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.getTrainList,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve({
+					list: result.data,
+					total: result.total
+				})
+			} else {
+				reject({
+					text: result.message
+				})
+			}
+		}, reject)
+	})
+}
+
+const getTrainDetail = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.getTrainDetail,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.message
+				})
+			}
+		}, reject)
+	})
+}
+
+const clocked = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.clocked,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.message
+				})
+			}
+		}, reject)
+	})
+}
+
+const getTrainData = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getTrainData
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.message
+				})
+			}
+		}, reject)
+	})
+}
+
+const getTrainPlanList = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getTrainPlanList,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve({
+					list: result.data,
+					total: result.total
+				})
+			} else {
+				reject({
+					text: result.message
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getActivity,
 	getActivityDetail,
 	addActivity,
-	joinActivity
+	joinActivity,
+	getTrainList,
+	getTrainDetail,
+	clocked,
+	getTrainData,
+	getTrainPlanList
 }

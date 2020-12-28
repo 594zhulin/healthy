@@ -10,32 +10,60 @@
 			<image class="image" src="../../static/train/train-img-01.png" mode="aspectFit"></image>
 		</view>
 		<view class="list-content">
-			<view class="list-item">
+			<view class="list-item" v-for="item in items" :key="item.id" @click="navigateTo('/pages/train/detail?id=' + item.id)">
 				<view class="background"></view>
-				<view class="title">9分钟柔韧性练习</view>
+				<image class="background" :src="item.video_content_clouds" mode="aspectFit"></image>
+				<view class="title">{{ item.motion_name }}</view>
 				<view class="title">(不限场地）</view>
-				<view class="text">LEVEL 10 ·一字马</view>
-			</view>
-			<view class="list-item">
-				<view class="background"></view>
-				<view class="title">9分钟柔韧性练习</view>
-				<view class="title">(不限场地）</view>
-				<view class="text">LEVEL 10 ·一字马</view>
-			</view>
-			<view class="list-item">
-				<view class="background"></view>
-				<view class="title">9分钟柔韧性练习</view>
-				<view class="title">(不限场地）</view>
-				<view class="text">LEVEL 10 ·一字马</view>
+				<view class="text">LEVEL {{ item.rating }} ·{{ item.cate_name }}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import { getTrainPlanList } from '@/api/train.js';
 export default {
 	data() {
-		return {};
+		return {
+			params: {
+				pageNo: 1,
+				pageSize: 20
+			},
+			items: [],
+			total: 0
+		};
+	},
+	onLoad() {
+		this.getListData('down');
+	},
+	onReachBottom() {
+		this.getListData('up');
+	},
+	methods: {
+		getListData(direction) {
+			if (direction == 'down') {
+				this.params.pageNo = 1;
+			} else {
+				if (this.items.length >= this.total) {
+					return false;
+				}
+				this.params.pageNo += 1;
+			}
+			getTrainPlanList({ ...this.params }).then(
+				result => {
+					const { list, total } = result;
+					this.items = direction == 'down' ? list : this.items.concat(list);
+					this.total = total;
+				},
+				err => {}
+			);
+		},
+		navigateTo(url) {
+			uni.navigateTo({
+				url
+			});
+		}
 	}
 };
 </script>

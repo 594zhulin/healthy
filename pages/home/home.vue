@@ -26,10 +26,10 @@
 				</view>
 			</view>
 			<view class="grid-content">
-				<view class="grid-item plan">
+				<view class="grid-item plan" @click="navigateTo('/pages/train/plan')">
 					<image class="icon" src="../../static/home/home-icon-03.svg" mode="aspectFit"></image>
 					<view class="title">AI体能训练计划</view>
-					<view class="btn">立即制定</view>
+					<view class="btn" @click.stop="navigateTo('/pages/train/list')">立即制定</view>
 				</view>
 				<view class="grid-item mall" @click="switchTab">
 					<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>

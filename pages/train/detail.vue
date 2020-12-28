@@ -1,32 +1,57 @@
 <template>
 	<view class="page-detail">
-		<view class="video-content"><video src="" controls></video></view>
+		<view class="video-content"><video :src="detail.video_url_clouds" :poster="detail.video_content_clouds" controls></video></view>
 		<view class="detail-content">
-			<view class="title">9分钟柔韧性练习（不限场地）</view>
+			<view class="title">{{ detail.motion_name }}（不限场地）</view>
 			<view class="detail">
 				<view class="level">
 					<view class="text">LEVEL</view>
-					<view class="value">10</view>
+					<view class="value">{{ detail.rating }}</view>
 				</view>
-				<view class="name">一字马</view>
+				<view class="name">{{ detail.cate_name }}</view>
 			</view>
-			<view class="desc">年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。</view>
+			<view class="desc">{{ detail.gist_remark }}</view>
 		</view>
 		<view class="test-content">
 			<view class="title">
 				<image class="icon" src="../../static/train/train-icon-04.svg" mode="aspectFit"></image>
 				<view class="text">练习频次</view>
 			</view>
-			<view class="text">每周至少5次</view>
-			<view class="text">30分钟为一组</view>
+			<view class="text">{{ detail.exercise_frequency }}</view>
+			<!-- <view class="text">30分钟为一组</view> -->
 		</view>
+		<view class="btn" @click="clocked">免教学打卡</view>
 	</view>
 </template>
 
 <script>
+import { getTrainDetail, clocked } from '@/api/train.js';
 export default {
 	data() {
-		return {};
+		return {
+			detail: null
+		};
+	},
+	onLoad(option) {
+		getTrainDetail({ motion_id: option.id }).then(
+			result => {
+				this.detail = result;
+			},
+			err => {}
+		);
+	},
+	methods: {
+		clocked() {
+			clocked({ motion_id: this.detail.id, cat_id: this.detail.cat_id }).then(
+				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '打卡成功'
+					});
+				},
+				err => {}
+			);
+		}
 	}
 };
 </script>
@@ -122,6 +147,19 @@ export default {
 			line-height: 34rpx;
 			letter-spacing: 2rpx;
 		}
+	}
+	.btn {
+		width: 225rpx;
+		height: 72rpx;
+		line-height: 72rpx;
+		margin: 60rpx auto 0 auto;
+		background: #2975ff;
+		border-radius: 4rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		color: #ffffff;
+		text-align: center;
 	}
 }
 </style>

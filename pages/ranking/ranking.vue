@@ -1,9 +1,6 @@
 <template>
 	<view class="page-ranking">
-		<view class="tab-content">
-			<view class="tab-item" :class="{ active: tabId == 0 }" @click="bindTabChange(0)">总步数排行</view>
-			<view class="tab-item" :class="{ active: tabId == 1 }" @click="bindTabChange(1)">步数余额排行</view>
-		</view>
+		<view class="tab-content"><view class="tab-item" :class="{ active: tabId == 0 }" @click="bindTabChange(0)">总步数排行</view></view>
 		<view class="list-content">
 			<view class="list-item" v-for="item in ranking" :key="item.id">
 				<view class="order">01</view>
@@ -14,9 +11,9 @@
 		</view>
 		<view class="fix-content">
 			<view class="order">我</view>
-			<view class="avatar"></view>
+			<image class="avatar" :src="avatarUrl" mode="aspectFit"></image>
 			<view class="content">
-				<view class="name">马莺晶</view>
+				<view class="name">{{ nickName }}</view>
 				<view class="order">第{{ ranking_num }}名</view>
 			</view>
 			<view class="step">{{ step_num }}步</view>
@@ -36,6 +33,8 @@ export default {
 			},
 			ranking_num: 0,
 			step_num: 0,
+			avatarUrl: '',
+			nickName: '',
 			ranking: [],
 			total: 0
 		};
@@ -64,8 +63,10 @@ export default {
 					const { data, total } = result;
 					this.ranking = direction == 'down' ? data.list : this.ranking.concat(data.list);
 					this.total = total;
-					this.ranking_num = data.ranking_num;
-					this.step_num = data.step_num;
+					this.ranking_num = data.user.ranking_num;
+					this.step_num = data.user.step_num;
+					this.avatarUrl = data.user.avatarUrl;
+					this.nickName = data.user.nickName;
 					uni.stopPullDownRefresh();
 				},
 				err => {}
@@ -201,6 +202,7 @@ export default {
 			width: 72rpx;
 			height: 72rpx;
 			margin: 0 22rpx;
+			border-radius: 50%;
 		}
 		.content {
 			.name {
