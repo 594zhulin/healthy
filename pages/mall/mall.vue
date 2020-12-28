@@ -21,7 +21,7 @@
 					<view class="step">{{ userInfo.integral }}</view>
 					<view class="text">步</view>
 				</view>
-				<view class="exchange">已兑换书籍：{{ userInfo.complete_count }}本</view>
+				<view class="exchange">已兑换书籍：{{ userInfo.complete_count || 0 }}本</view>
 			</view>
 		</view>
 		<view class="menu-content">
