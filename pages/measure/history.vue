@@ -1,7 +1,7 @@
 <template>
 	<view class="page-history">
 		<view class="list-content">
-			<view class="list-item" v-for="item in history" :key="item.calbe_id">
+			<view class="list-item" v-for="item in history" :key="item.calbe_id" @click="navigateTo('/pages/measure/detail?id=' + item.calbe_id)">
 				<view class="score">
 					<view class="tag">
 						<image class="icon" src="../../static/measure/measure-icon-13.png" mode="aspectFit"></image>

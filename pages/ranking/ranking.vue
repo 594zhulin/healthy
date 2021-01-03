@@ -1,6 +1,6 @@
 <template>
 	<view class="page-ranking">
-		<view class="tab-content"><view class="tab-item" :class="{ active: tabId == 0 }" @click="bindTabChange(0)">总步数排行</view></view>
+		<!-- <view class="tab-content"><view class="tab-item" :class="{ active: tabId == 0 }" @click="bindTabChange(0)">总步数排行</view></view> -->
 		<view class="list-content">
 			<view class="list-item" v-for="item in ranking" :key="item.id">
 				<view class="order">01</view>
@@ -81,58 +81,58 @@ export default {
 
 <style lang="less">
 .page-ranking {
-	.tab-content {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 116rpx;
-		&::after {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			content: '';
-			height: 232rpx;
-			background-color: #0056ff;
-			z-index: -1;
-		}
-		.tab-item {
-			position: relative;
-			font-size: 36rpx;
-			font-family: PingFangSC-Semibold, PingFang SC;
-			font-weight: 600;
-			color: rgba(255, 255, 255, 0.7);
-			line-height: 50rpx;
-			&::after {
-				content: '';
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: -10rpx;
-				width: 32rpx;
-				height: 8rpx;
-				margin: auto;
-				background: #0056ff;
-				border-radius: 4rpx;
-			}
-			&:first-child {
-				margin-right: 84rpx;
-			}
-		}
-		.tab-item.active {
-			color: #fff;
-			&::after {
-				background-color: #fff;
-			}
-		}
-	}
+	// .tab-content {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: center;
+	// 	height: 116rpx;
+	// 	&::after {
+	// 		position: absolute;
+	// 		top: 0;
+	// 		left: 0;
+	// 		right: 0;
+	// 		content: '';
+	// 		height: 232rpx;
+	// 		background-color: #0056ff;
+	// 		z-index: -1;
+	// 	}
+	// 	.tab-item {
+	// 		position: relative;
+	// 		font-size: 36rpx;
+	// 		font-family: PingFangSC-Semibold, PingFang SC;
+	// 		font-weight: 600;
+	// 		color: rgba(255, 255, 255, 0.7);
+	// 		line-height: 50rpx;
+	// 		&::after {
+	// 			content: '';
+	// 			position: absolute;
+	// 			left: 0;
+	// 			right: 0;
+	// 			bottom: -10rpx;
+	// 			width: 32rpx;
+	// 			height: 8rpx;
+	// 			margin: auto;
+	// 			background: #0056ff;
+	// 			border-radius: 4rpx;
+	// 		}
+	// 		&:first-child {
+	// 			margin-right: 84rpx;
+	// 		}
+	// 	}
+	// 	.tab-item.active {
+	// 		color: #fff;
+	// 		&::after {
+	// 			background-color: #fff;
+	// 		}
+	// 	}
+	// }
 	.list-content {
-		position: absolute;
-		top: 116rpx;
-		left: 0;
-		right: 0;
-		background: #ffffff;
-		border-radius: 48rpx 48rpx 0px 0px;
+		// position: absolute;
+		// top: 116rpx;
+		// left: 0;
+		// right: 0;
+		// background: #ffffff;
+		// border-radius: 48rpx 48rpx 0px 0px;
 		.list-item {
 			position: relative;
 			display: flex;

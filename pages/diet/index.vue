@@ -1,8 +1,8 @@
 <template>
 	<view class="page-index">
-		<view class="banner-content"></view>
+		<view class="banner-content"><image class="img" src="../../static/diet/diet-img-01.png" mode="widthFix"></image></view>
 		<view class="test-content" @click="navigateTo('/pages/diet/one')">
-			<view class="pic"></view>
+			<image class="pic" src="../../static/diet/diet-icon-02.svg" mode="aspectFit"></image>
 			<view class="content">
 				<view class="title">膳食测评</view>
 				<view class="text">3分钟测试您吃的是否健康</view>
@@ -10,7 +10,7 @@
 			<image class="icon" src="../../static/train/train-icon-05.png" mode="aspectFit"></image>
 		</view>
 		<view class="cookbook-content" @click="navigateTo('/pages/diet/category')">
-			<view class="pic"></view>
+			<image class="pic" src="../../static/diet/diet-icon-03.svg" mode="aspectFit"></image>
 			<view class="content">
 				<view class="title">健康食谱</view>
 				<view class="text">教您如何安排健康膳食</view>
@@ -41,10 +41,12 @@ page {
 }
 .page-index {
 	.banner-content {
-		height: 700rpx;
 		margin: 30rpx 32rpx;
 		background: #ffffff;
 		border-radius: 16rpx;
+		.img {
+			width: 686rpx;
+		}
 	}
 	.test-content,
 	.cookbook-content {
@@ -61,7 +63,6 @@ page {
 			width: 120rpx;
 			height: 120rpx;
 			border-radius: 16rpx;
-			background-color: #eee;
 		}
 		.content {
 			flex: 1;

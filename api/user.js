@@ -5,7 +5,8 @@ const api = {
 	getScore: '/index/index',
 	getStep: '/wechat/wxDecode',
 	getRisk: '/risk/get_risk_info',
-	getScoreList: '/log/measure_calbe_list'
+	getScoreList: '/log/measure_calbe_list',
+	getAddress: '/address/list',
 }
 
 const getUser = data => {
@@ -91,10 +92,28 @@ const getRisk = () => {
 	})
 }
 
+const getAddress = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.getAddress,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getUser,
 	getScore,
 	getScoreList,
 	getStep,
-	getRisk
+	getRisk,
+	getAddress
 }

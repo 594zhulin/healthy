@@ -1,18 +1,19 @@
 <template>
 	<view class="page-confirm" :style="{ paddingBottom: bottom + 'px' }">
-		<view class="address-content" @click="navigateTo(order.addressInfo ? '/pages/personal/list' : '/pages/personal/detail')">
-			<template v-if="order.addressInfo">
+		<view class="address-content" @click="navigateTo(address ? '/pages/personal/list?type=confirm' : '/pages/personal/detail?type=confirm')">
+			<template v-if="address">
 				<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
 				<view class="content">
 					<view class="user">
-						<view class="name">{{ order.addressInfo.real_name }}</view>
-						<view class="phone">{{ order.addressInfo.phone }}</view>
+						<view class="name">{{ address.real_name }}</view>
+						<view class="phone">{{ address.phone }}</view>
 					</view>
-					<view class="address">{{ order.addressInfo.province }}{{ order.addressInfo.city }}{{ order.addressInfo.district }}{{ order.addressInfo.detail }}</view>
+					<view class="address">{{ address.province }}{{ address.city }}{{ address.district }}{{ address.detail }}</view>
 				</view>
 			</template>
 			<template v-else>
-				<view class="btn">添加地址</view>
+				<image class="icon" src="../../static/order/order-icon-07.svg" mode="aspectFit"></image>
+				<view class="content">添加地址</view>
 			</template>
 			<image class="icon arrow" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 		</view>
@@ -25,7 +26,7 @@
 				</view>
 				<image class="icon" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 			</view>
-			<view class="order">
+			<view class="order" v-if="order">
 				<view class="row">
 					<view class="label">商品总价</view>
 					<view class="text">￥{{ order.priceGroup.totalPrice }}</view>
@@ -78,22 +79,34 @@ export default {
 				this.bottom = data.height + 15;
 			})
 			.exec();
-		getAddress().then(
-			result => {
-				this.address = result;
-			},
-			err => {}
-		);
 	},
 	onShow() {
+		const address = uni.getStorageSync('tempAddress');
 		confirmOrder({ cartId: this.cartId }).then(
 			result => {
 				this.order = result;
+				if (address) {
+					this.address = JSON.parse(address);
+				} else {
+					if (result.addressInfo) {
+						this.address = result.addressInfo;
+					} else {
+						this.getAddress();
+					}
+				}
 			},
 			err => {}
 		);
 	},
 	methods: {
+		getAddress() {
+			getAddress().then(
+				result => {
+					this.address = result[0];
+				},
+				err => {}
+			);
+		},
 		handleSubmit() {
 			createOrder(
 				{
@@ -130,12 +143,15 @@ export default {
 				paySign: params.paySign,
 				success: function(res) {
 					if (res.errMsg == 'requestPayment:ok') {
-						uni.redirectTo({
-							url: '/pages/order/detail?id=' + orderId
+						uni.reLaunch({
+							url: '/pages/order/result?id=' + orderId + '&type=success'
 						});
 					}
 				},
 				fail: function(err) {
+					uni.reLaunch({
+						url: '/pages/order/result?id=' + orderId + '&type=fail'
+					});
 					console.log('fail:' + JSON.stringify(err));
 				}
 			});

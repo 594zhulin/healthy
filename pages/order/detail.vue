@@ -10,7 +10,7 @@
 			<image v-if="orderDetail.status == 1" class="icon" src="../../static/order/order-icon-02.svg" mode="aspectFit"></image>
 			<image v-if="orderDetail.status == 2" class="icon" src="../../static/order/order-icon-03.svg" mode="aspectFit"></image>
 			<image v-if="orderDetail.status == 4" class="icon" src="../../static/order/order-icon-04.svg" mode="aspectFit"></image>
-			<!-- <image v-if="orderDetail.status == 5" class="icon" src="../../static/order/order-icon-05.svg" mode="aspectFit"></image> -->
+			<image v-if="orderDetail.status == -3" class="icon" src="../../static/order/order-icon-05.svg" mode="aspectFit"></image>
 		</view>
 		<view class="address-content">
 			<view class="logistics" v-if="orderDetail.status == 2">

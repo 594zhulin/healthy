@@ -39,17 +39,17 @@
 		</view>
 		<view class="balance-content">
 			<view class="title">我的余额</view>
-			<view class="link">余额明细></view>
+			<view class="link" @click="navigateTo('/pages/personal/step?integral=' + user.integral)">余额明细></view>
 			<view class="step">{{ user.integral }}</view>
-			<view class="btn">去使用</view>
+			<view class="btn" @click="switchTab">去使用</view>
 		</view>
 		<view class="address-content">
 			<view class="title">地址管理</view>
 			<view class="link" @click="navigateTo('/pages/personal/list')">管理></view>
 			<view class="address-list">
-				<view class="address-item">家</view>
-				<view class="address-item">公司</view>
-				<view class="address-item">学校</view>
+				<view class="address-item" @click="navigateTo('/pages/personal/detail?id=' + homeAddressId)">家</view>
+				<view class="address-item" @click="navigateTo('/pages/personal/detail?id=' + companyAddressId)">公司</view>
+				<view class="address-item" @click="navigateTo('/pages/personal/detail?id=' + schoolAddressId)">学校</view>
 				<view class="address-item" @click="navigateTo('/pages/personal/detail')"></view>
 			</view>
 		</view>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { getUser, getScore, getRisk, getScoreList } from '@/api/user.js';
+import { getUser, getScore, getRisk, getScoreList, getAddress } from '@/api/user.js';
 export default {
 	data() {
 		return {
@@ -105,7 +105,10 @@ export default {
 					unpaid_count: 10,
 					unshipped_count: 0
 				}
-			}
+			},
+			homeAddressId: '',
+			schoolAddressId: '',
+			companyAddressId: ''
 		};
 	},
 	onLoad() {
@@ -151,11 +154,33 @@ export default {
 			},
 			err => {}
 		);
+		getAddress().then(
+			result => {
+				const homeAddress = result.find(item => item.addr_name == '家');
+				const companyAddress = result.find(item => item.addr_name == '公司');
+				const schoolAddress = result.find(item => item.addr_name == '学校');
+				if (homeAddress) {
+					_this.homeAddressId = homeAddress.id;
+				}
+				if (companyAddress) {
+					_this.companyAddressId = companyAddress.id;
+				}
+				if (schoolAddress) {
+					_this.schoolAddressId = schoolAddress.id;
+				}
+			},
+			err => {}
+		);
 	},
 	methods: {
 		navigateTo(url) {
 			uni.navigateTo({
 				url
+			});
+		},
+		switchTab() {
+			uni.switchTab({
+				url: '/pages/mall/mall'
 			});
 		}
 	}

@@ -9,7 +9,8 @@ const api = {
 	getTrainDetail: '/motion/info',
 	clocked: '/motion/immediately',
 	getTrainData: '/motion/drill_plan_stat',
-	getTrainPlanList: '/motion/drill_plan_list'
+	getTrainPlanList: '/motion/drill_plan_list',
+	getFitnessData: '/log/measure_calbe_up',
 }
 
 const getActivity = data => {
@@ -173,6 +174,22 @@ const getTrainPlanList = data => {
 	})
 }
 
+const getFitnessData = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getFitnessData
+		}).then(result => {
+			if (result.code === 0) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getActivity,
 	getActivityDetail,
@@ -182,5 +199,6 @@ module.exports = {
 	getTrainDetail,
 	clocked,
 	getTrainData,
-	getTrainPlanList
+	getTrainPlanList,
+	getFitnessData
 }

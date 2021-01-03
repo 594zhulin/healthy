@@ -1,9 +1,9 @@
 <template>
 	<view class="page-step">
 		<view class="overview-content">
-			<view class="step">200,0000</view>
+			<view class="step">{{ integral }}</view>
 			<view class="text">当前步数</view>
-			<view class="tip">1000步将于2020-02-29过期</view>
+			<!-- <view class="tip">1000步将于2020-02-29过期</view> -->
 		</view>
 		<view class="list-content">
 			<view class="list-item" v-for="(item, index) in step" :key="index">
@@ -20,6 +20,7 @@ import { getStep } from '@/api/personal.js';
 export default {
 	data() {
 		return {
+			integral: 0,
 			params: {
 				page: 1,
 				limit: 20
@@ -27,7 +28,8 @@ export default {
 			step: []
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		this.integral = option.integral;
 		this.getListData('down');
 	},
 	onReachBottom() {

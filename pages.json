@@ -70,6 +70,18 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "体能排行榜"
 			}
+		},
+		{
+			"path": "pages/launch/launch",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/race/race",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"subPackages": [{
@@ -250,18 +262,11 @@
 					"navigationBarTitleText": "物流信息"
 				}
 			}, {
-				"path": "success",
+				"path": "result",
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "订单支付成功"
-				}
-			}, {
-				"path": "fail",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "订单支付失败"
+					"navigationBarTitleText": "订单支付结果"
 				}
 			}]
 		}, {
@@ -303,7 +308,9 @@
 			"pages": [{
 				"path": "index",
 				"style": {
-					"navigationStyle": "custom"
+					"navigationBarBackgroundColor": "#0056ff",
+					"navigationBarTextStyle": "white",
+					"navigationBarTitleText": "体能观测"
 				}
 			}, {
 				"path": "history",
@@ -313,10 +320,17 @@
 					"navigationBarTitleText": "历史数据"
 				}
 			}, {
+				"path": "detail",
+				"style": {
+					"navigationBarBackgroundColor": "#0056ff",
+					"navigationBarTextStyle": "white",
+					"navigationBarTitleText": "我的数据"
+				}
+			}, {
 				"path": "rank",
 				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
+					"navigationBarBackgroundColor": "#0056ff",
+					"navigationBarTextStyle": "white",
 					"navigationBarTitleText": "体能排行榜"
 				}
 			}]

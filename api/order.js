@@ -3,7 +3,7 @@ const service = require('@/utils/http');
 const api = {
 	getProduct: '/products',
 	addCart: '/cart/add',
-	getAddress: '/address/default',
+	getAddress: '/address/list',
 	confirmOrder: '/order/confirm',
 	getOrderPrice: '/order/computed',
 	createOrder: '/order/create',

@@ -54,4 +54,31 @@ export default {
 
 <style>
 /*每个页面公共css */
+button {
+	padding: 0;
+}
+button::after {
+	display: none;
+}
+view {
+	box-sizing: border-box;
+}
+open-data {
+	display: block;
+}
+.flex {
+	display: flex;
+	align-items: center;
+}
+.flex-vertical {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+.flex-horizontal {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
 </style>

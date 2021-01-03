@@ -32,7 +32,7 @@ function timestampToTime(timestamp, type) {
 	} else {
 		M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
 	}
-	D = date.getDate() + ' ';
+	D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' ';
 	h = date.getHours() + ':';
 	m = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
 	if (type == 'short') {

@@ -1,7 +1,7 @@
 <template>
 	<view class="page-list" :style="{ paddingBottom: bottom + 'px' }">
 		<view class="list-content">
-			<view class="list-item" v-for="item in address" :key="item.id">
+			<view class="list-item" v-for="item in address" :key="item.id" @click="handleClick(item)">
 				<view class="user">
 					<view class="name">{{ item.real_name }}</view>
 					<view class="phone">{{ item.phone }}</view>
@@ -13,11 +13,11 @@
 						<text class="text" :class="{ checked: item.is_default == 1 }">{{ item.is_default == 1 ? '已设为默认' : '设为默认' }}</text>
 					</label>
 					<view class="btn-group">
-						<view class="btn-modify" @click="navigateTo('/pages/personal/detail?id=' + item.id)">
+						<view class="btn-modify" @click.stop="navigateTo('/pages/personal/detail?id=' + item.id)">
 							<image class="icon" src="../../static/address/address-icon-01.png" mode="aspectFit"></image>
 							<view class="text">编辑</view>
 						</view>
-						<view class="btn-delete" @click="handleDelete(item.id)">
+						<view class="btn-delete" @click.stop="handleDelete(item.id)">
 							<image class="icon" src="../../static/address/address-icon-02.png" mode="aspectFit"></image>
 							<view class="text">删除</view>
 						</view>
@@ -43,10 +43,11 @@ export default {
 				page: 1,
 				limit: 20
 			},
-			address: []
+			address: [],
+			type: ''
 		};
 	},
-	onLoad() {
+	onLoad(option) {
 		this.isIphoneX = getApp().globalData.isIphoneX;
 		this.paddingBottom = getApp().globalData.paddingBottom;
 		const query = uni.createSelectorQuery().in(this);
@@ -56,6 +57,7 @@ export default {
 				this.bottom = data.height + 15;
 			})
 			.exec();
+		this.type = option.type;
 	},
 	onShow() {
 		this.getListData('down');
@@ -65,6 +67,9 @@ export default {
 	},
 	onReachBottom() {
 		this.getListData('up');
+	},
+	onUnload() {
+		uni.clearStorageSync('tempAddress');
 	},
 	methods: {
 		getListData(direction) {
@@ -84,6 +89,14 @@ export default {
 					});
 				}
 			);
+		},
+		handleClick(item) {
+			if (this.type == 'confirm') {
+				uni.setStorageSync('tempAddress', JSON.stringify(item));
+				uni.navigateBack({
+					delta: 1
+				});
+			}
 		},
 		handleChange(id) {
 			setDefaultAddress({ id }).then(

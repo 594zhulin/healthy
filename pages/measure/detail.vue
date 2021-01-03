@@ -1,5 +1,5 @@
 <template>
-	<view class="page-measure">
+	<view class="page-detail">
 		<view class="user-content">
 			<image class="avatar" :src="avatar" mode="aspectFit"></image>
 			<view class="content">
@@ -7,10 +7,6 @@
 				<view class="text">{{ nickName }}</view>
 			</view>
 			<view class="date">{{ measureData.create_at }}</view>
-			<view class="link" @click="navigateTo('/pages/measure/history')">
-				<image class="icon" src="../../static/measure/measure-icon-01.png" mode="aspectFit"></image>
-				<view class="text">历史数据</view>
-			</view>
 		</view>
 		<view class="echarts-content">
 			<view class="echarts">
@@ -22,24 +18,8 @@
 			</view>
 			<button class="btn-share" v-if="measureData.score" open-type="share">炫耀一下</button>
 		</view>
-		<view class="fix-content">
-			<view class="ranking-item" @click="navigateTo('/pages/measure/rank')">
-				<image class="icon rank" src="../../static/measure/measure-icon-12.svg" mode="aspectFit"></image>
-				<view class="text">体能排行榜</view>
-				<image class="icon arrow" src="../../static/measure/measure-icon-11.svg" mode="aspectFit"></image>
-			</view>
-			<view class="customer-item">
-				<image class="icon" src="../../static/measure/measure-icon-10.svg" mode="aspectFit"></image>
-				<view class="text">客服</view>
-				<button class="btn" type="default" open-type="contact"></button>
-			</view>
-		</view>
 		<view class="data-content">
 			<view class="data-title">数据指标</view>
-			<view class="btn-delete" @click="onDelete">
-				<view class="icon"><image class="image" src="../../static/measure/measure-icon-20.svg" mode="aspectFit"></image></view>
-				<view class="text">删除本条</view>
-			</view>
 			<view class="tip">{{ measureData.statement }}</view>
 			<view class="data-item">
 				<view class="flex-horizontal">
@@ -48,7 +28,6 @@
 						<view class="name">体重：</view>
 						<view class="value">{{ measureData.weight }}kg</view>
 					</view>
-					<view class="percent">{{ measureData.weight_differ }}</view>
 				</view>
 				<view class="desc">体重可以反映一个人的营养状况，保持合理与稳定的体重有益健康。</view>
 			</view>
@@ -70,21 +49,7 @@
 						<view class="value">{{ measureData.bmi }}</view>
 					</view>
 				</view>
-				<view class="standard bmi-standard">
-					<view class="flex inherit">
-						<view class="value" v-for="item in measureData.bmi_segment_num" :key="item">{{ item }}</view>
-					</view>
-					<view class="flex">
-						<view class="scale purple"></view>
-						<view class="scale green"></view>
-						<view class="scale blue"></view>
-						<view class="scale yellow"></view>
-						<view class="scale red"></view>
-					</view>
-					<view class="flex">
-						<view class="text" v-for="item in measureData.bmi_segment_lable" :key="item">{{ item }}</view>
-					</view>
-				</view>
+				<view class="desc">{{ measureData.report_data[3].descr }}</view>
 			</view>
 			<view class="data-item">
 				<view class="flex-horizontal">
@@ -93,21 +58,8 @@
 						<view class="name">反应时间：</view>
 						<view class="value">{{ measureData.response_speed }}s</view>
 					</view>
-					<view class="percent">{{ measureData.formula_differ }}</view>
 				</view>
-				<view class="standard action-standard">
-					<view class="flex inherit">
-						<view class="value" v-for="item in measureData.formula_segment_num" :key="item">{{ item }}</view>
-					</view>
-					<view class="flex">
-						<view class="scale green"></view>
-						<view class="scale purple"></view>
-						<view class="scale yellow"></view>
-					</view>
-					<view class="flex inherit">
-						<view class="text" v-for="item in measureData.formula_segment_lable" :key="item">{{ item }}</view>
-					</view>
-				</view>
+				<view class="desc">{{ measureData.report_data[4].descr }}</view>
 			</view>
 			<view class="data-item">
 				<view class="flex-horizontal">
@@ -116,21 +68,8 @@
 						<view class="name">握力：</view>
 						<view class="value">{{ measureData.force }}kg</view>
 					</view>
-					<view class="percent">{{ measureData.force_differ }}</view>
 				</view>
-				<view class="standard action-standard grip-standard">
-					<view class="flex inherit">
-						<view class="value" v-for="item in measureData.force_segment_num" :key="item">{{ item }}</view>
-					</view>
-					<view class="flex">
-						<view class="scale green"></view>
-						<view class="scale purple"></view>
-						<view class="scale yellow"></view>
-					</view>
-					<view class="flex inherit">
-						<view class="text" v-for="item in measureData.force_segment_lable" :key="item">{{ item }}</view>
-					</view>
-				</view>
+				<view class="desc">{{ measureData.report_data[0].descr }}</view>
 			</view>
 			<view class="data-item">
 				<view class="flex-horizontal">
@@ -139,21 +78,8 @@
 						<view class="name">单脚闭眼站立时间：</view>
 						<view class="value">{{ measureData.poise }}s</view>
 					</view>
-					<view class="percent">{{ measureData.poise_differ }}</view>
 				</view>
-				<view class="standard action-standard single-standard">
-					<view class="flex inherit">
-						<view class="value" v-for="item in measureData.poise_segment_num" :key="item">{{ item }}</view>
-					</view>
-					<view class="flex">
-						<view class="scale yellow"></view>
-						<view class="scale purple"></view>
-						<view class="scale green"></view>
-					</view>
-					<view class="flex inherit">
-						<view class="text" v-for="item in measureData.poise_segment_lable" :key="item">{{ item }}</view>
-					</view>
-				</view>
+				<view class="desc">{{ measureData.report_data[2].descr }}</view>
 			</view>
 			<view class="data-item">
 				<view class="flex-horizontal">
@@ -162,47 +88,11 @@
 						<view class="name">体下曲：</view>
 						<view class="value">{{ measureData.flexility }}cm</view>
 					</view>
-					<view class="percent">{{ measureData.flexility_differ }}</view>
 				</view>
-				<view class="standard action-standard bend-standard">
-					<view class="flex inherit">
-						<view class="value" v-for="item in measureData.flexility_segment_num" :key="item">{{ item }}</view>
-					</view>
-					<view class="flex">
-						<view class="scale yellow"></view>
-						<view class="scale purple"></view>
-						<view class="scale green"></view>
-					</view>
-					<view class="flex inherit">
-						<view class="text" v-for="item in measureData.flexility_segment_lable" :key="item">{{ item }}</view>
-					</view>
-				</view>
+				<view class="desc">{{ measureData.report_data[1].descr }}</view>
 			</view>
 			<view class="data-title">体能总览</view>
 			<view class="echarts-content"><mpvue-echarts ref="barChart" :echarts="echarts" @onInit="initBarChart" /></view>
-		</view>
-		<view class="risk-content">
-			<view class="title">主流健康风险</view>
-			<view class="risk-item" v-for="item in risk" :key="item.risk_report_id">
-				<view class="risk-title">
-					<view class="name">
-						<view class="tag">{{ item.score_label }}</view>
-						<view class="text">{{ item.name }}</view>
-					</view>
-					<view class="score">{{ item.score }}分</view>
-				</view>
-				<view class="content">{{ item.descr }}</view>
-			</view>
-		</view>
-		<view class="btn-content">
-			<view class="btn" @click="navigateTo('/pages/train/list')">
-				<view class="text">立即制定</view>
-				<view class="text">AI体能增强计划</view>
-			</view>
-			<view class="btn-delete" @click="onDelete">
-				<view class="text">数据有误</view>
-				<view class="text">删除重测</view>
-			</view>
 		</view>
 	</view>
 </template>
@@ -210,7 +100,7 @@
 <script>
 import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
 import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { getUser, getData, getRisk } from '@/api/measure.js';
+import { getUser, getMeasureDetail } from '@/api/measure.js';
 export default {
 	components: {
 		mpvueEcharts
@@ -223,8 +113,7 @@ export default {
 			userId: '',
 			avatar: '',
 			nickName: '',
-			measureData: '',
-			risk: []
+			measureData: ''
 		};
 	},
 	onLoad(option) {
@@ -234,11 +123,10 @@ export default {
 				this.avatar = result.avatar;
 				this.nickName = result.nickname;
 				if (option.user_id) {
-					this.getMeasureData(option.user_id);
+					this.getMeasureDetail(option.user_id, option.id);
 				} else {
-					this.getMeasureData(result.uid);
+					this.getMeasureDetail(result.uid, option.id);
 				}
-				this.getRisk();
 			},
 			err => {
 				uni.showToast({
@@ -251,12 +139,12 @@ export default {
 	onShareAppMessage() {
 		return {
 			title: '我的数据',
-			path: 'pages/measure/index?user_id=' + this.userId
+			path: 'pages/measure/detail?user_id=' + this.userId
 		};
 	},
 	methods: {
-		getMeasureData(user_id) {
-			getData({ user_id }).then(
+		getMeasureDetail(user_id, calbe_id) {
+			getMeasureDetail({ user_id, calbe_id }).then(
 				result => {
 					this.measureData = result;
 					this.initGaugeChartOption(result);
@@ -270,20 +158,6 @@ export default {
 				}
 			);
 		},
-		getRisk() {
-			getRisk().then(
-				result => {
-					this.risk = result;
-				},
-				err => {
-					uni.showToast({
-						icon: 'none',
-						title: err.text
-					});
-				}
-			);
-		},
-		onDelete() {},
 		initGaugeChartOption(data) {
 			this.gagugeOption = {
 				series: [
@@ -535,7 +409,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.page-measure {
+.page-detail {
+	padding-bottom: 72rpx;
 	&::after {
 		position: absolute;
 		top: 0;
@@ -589,39 +464,12 @@ export default {
 		.date {
 			position: absolute;
 			top: 82rpx;
-			right: 140rpx;
+			right: 16rpx;
 			font-size: 28rpx;
 			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
 			font-weight: 400;
 			color: #ffffff;
 			line-height: 38rpx;
-			&::after {
-				display: inline-block;
-				content: '';
-				width: 2rpx;
-				height: 18rpx;
-				margin-left: 16rpx;
-				background-color: #fff;
-			}
-		}
-		.link {
-			display: flex;
-			align-items: center;
-			position: absolute;
-			top: 88rpx;
-			right: 16rpx;
-			.icon {
-				width: 26rpx;
-				height: 24rpx;
-			}
-			.text {
-				margin-left: 10rpx;
-				font-size: 18rpx;
-				font-family: PingFangSC-Medium, PingFang SC;
-				font-weight: 500;
-				color: #ffffff;
-				line-height: 26rpx;
-			}
 		}
 	}
 	& > .echarts-content {
@@ -680,69 +528,6 @@ export default {
 			}
 		}
 	}
-	.fix-content {
-		position: relative;
-		height: 60rpx;
-		margin-bottom: 50rpx;
-		.ranking-item {
-			position: absolute;
-			top: 0;
-			left: 0;
-			display: flex;
-			align-items: center;
-			height: 60rpx;
-			background: #ffffff;
-			border-radius: 0px 30rpx 30rpx 0px;
-			.rank {
-				width: 44rpx;
-				height: 44rpx;
-				margin: 0 20rpx 0 24rpx;
-			}
-			.text {
-				font-size: 28rpx;
-				font-family: PingFangSC-Medium, PingFang SC;
-				font-weight: 500;
-				color: #000000;
-				line-height: 40rpx;
-			}
-			.arrow {
-				width: 10rpx;
-				height: 15rpx;
-				margin: 0 22rpx 0 14rpx;
-			}
-		}
-		.customer-item {
-			position: absolute;
-			right: 16rpx;
-			top: 0;
-			display: flex;
-			align-items: center;
-			width: 180rpx;
-			height: 60rpx;
-			background: rgba(255, 255, 255, 0.19);
-			border-radius: 30rpx;
-			.icon {
-				width: 40rpx;
-				height: 40rpx;
-				margin: 0 12rpx 0 32rpx;
-			}
-			.text {
-				font-size: 28rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #ffffff;
-				line-height: 40rpx;
-			}
-			.btn {
-				position: absolute;
-				top: 0;
-				right: 0;
-				width: 180rpx;
-				height: 60rpx;
-				opacity: 0;
-			}
-		}
-	}
 	.data-content {
 		position: relative;
 		padding: 0 60rpx 0 40rpx;
@@ -754,33 +539,6 @@ export default {
 			font-family: PingFang SC;
 			font-weight: bold;
 			color: rgba(102, 102, 102, 1);
-		}
-		.btn-delete {
-			position: absolute;
-			top: 54rpx;
-			right: 36rpx;
-			display: flex;
-			align-items: center;
-			.icon {
-				width: 50rpx;
-				height: 36rpx;
-				background: #f8f8f8;
-				border-radius: 11rpx;
-				.image {
-					display: block;
-					width: 18rpx;
-					height: 18rpx;
-					margin: 9rpx auto;
-				}
-			}
-			.text {
-				margin-left: 10rpx;
-				font-size: 20rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #f8a6a6;
-				line-height: 28rpx;
-			}
 		}
 		.tip {
 			margin-bottom: -6rpx;
@@ -850,112 +608,12 @@ export default {
 				color: rgba(48, 137, 255, 1);
 				white-space: nowrap;
 			}
-			.percent {
-				font-size: 26rpx;
-				font-family: PingFang SC;
-				font-weight: 400;
-				color: rgba(153, 153, 153, 1);
-				white-space: nowrap;
-			}
 			.desc {
 				margin-top: 34rpx;
 				font-size: 28rpx;
 				font-family: PingFang SC;
 				font-weight: 400;
 				color: rgba(153, 153, 153, 1);
-			}
-			.standard {
-				.flex {
-					justify-content: space-around;
-				}
-				.inherit {
-					justify-content: inherit;
-				}
-				.value {
-					margin-left: 0;
-					font-size: 16rpx;
-					font-family: PingFang SC;
-					font-weight: 400;
-					color: rgba(102, 102, 102, 1);
-					text-align: right;
-					&:first-child {
-						margin-left: 36rpx;
-					}
-				}
-				.scale {
-					flex: 1;
-					height: 10rpx;
-					margin: 10rpx 0 14rpx 0;
-				}
-				.text {
-					flex: 1;
-					font-size: 20rpx;
-					font-family: PingFang SC;
-					font-weight: 400;
-					color: rgba(102, 102, 102, 1);
-				}
-				.purple {
-					background: rgba(116, 57, 240, 1);
-				}
-				.green {
-					background: rgba(7, 201, 105, 1);
-				}
-				.blue {
-					background: rgba(33, 183, 236, 1);
-				}
-				.yellow {
-					background: rgba(252, 220, 44, 1);
-				}
-				.red {
-					background: rgba(251, 103, 123, 1);
-				}
-			}
-			.bmi-standard {
-				margin: 20rpx 0 -8rpx 0;
-				.value {
-					width: 124rpx;
-				}
-				.scale {
-					margin-left: 4rpx;
-					&:first-child {
-						margin-left: 16rpx;
-					}
-				}
-				.text {
-					margin-left: 4rpx;
-					text-align: center;
-					&:first-child {
-						margin-left: 16rpx;
-					}
-				}
-			}
-			.action-standard,
-			.grip-standard {
-				margin: 30rpx 0 -8rpx 0;
-				.value {
-					width: 206rpx;
-				}
-				.scale {
-					margin-left: 10rpx;
-					&:first-child {
-						margin-left: 16rpx;
-					}
-				}
-				.text {
-					flex: none;
-					width: 206rpx;
-					text-align: right;
-					&:first-child {
-						margin-left: 56rpx;
-					}
-				}
-			}
-			.grip-standard,
-			.single-standard {
-				margin-top: 22rpx;
-			}
-			.bend-standard {
-				margin-top: 28rpx;
 			}
 		}
 		.echarts-content {
@@ -970,109 +628,6 @@ export default {
 				width: 750rpx;
 				height: 430rpx;
 				visibility: hidden;
-			}
-		}
-	}
-	.risk-content {
-		padding: 34rpx 37rpx 33rpx 37rpx;
-		.title {
-			margin: 0 0 24rpx 20rpx;
-			font-size: 30rpx;
-			font-family: PingFang SC;
-			font-weight: bold;
-			color: #666666;
-			line-height: 42rpx;
-		}
-		.risk-item {
-			padding: 18rpx 27rpx 25rpx 28rpx;
-			margin-bottom: 24rpx;
-			background: #f7f7f7;
-			border-radius: 12rpx;
-			.risk-title {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				margin-bottom: 21rpx;
-				.name {
-					display: flex;
-					align-items: center;
-					.tag {
-						padding: 0 10rpx;
-						height: 30rpx;
-						background: #ff8484;
-						border-radius: 4rpx;
-						font-size: 20rpx;
-						font-family: PingFangSC-Regular, PingFang SC;
-						font-weight: 400;
-						color: #ffffff;
-						line-height: 28rpx;
-						text-align: center;
-					}
-					.text {
-						margin-left: 10rpx;
-						font-size: 24rpx;
-						font-family: PingFangSC-Regular, PingFang SC;
-						font-weight: 400;
-						color: #000000;
-						line-height: 33rpx;
-					}
-				}
-				.score {
-					font-size: 24rpx;
-					font-family: PingFangSC-Regular, PingFang SC;
-					font-weight: 400;
-					color: #000000;
-					line-height: 33rpx;
-				}
-			}
-			.content {
-				font-size: 24rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #bebebe;
-				line-height: 30rpx;
-				letter-spacing: 3rpx;
-				text-align: justify;
-			}
-		}
-	}
-	.btn-content {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin-bottom: 72rpx;
-		.btn {
-			width: 256rpx;
-			height: 82rpx;
-			padding: 8rpx 0;
-			margin-right: 50rpx;
-			background: #2975ff;
-			border-radius: 16rpx;
-			box-sizing: border-box;
-			.text {
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #ffffff;
-				line-height: 33rpx;
-				text-align: center;
-			}
-		}
-		.btn-delete {
-			width: 256rpx;
-			height: 82rpx;
-			padding: 8rpx 0;
-			background: #cfe0ff;
-			border-radius: 16rpx;
-			border: 1rpx solid #74a5ff;
-			box-sizing: border-box;
-			.text {
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #7291de;
-				line-height: 33rpx;
-				text-align: center;
 			}
 		}
 	}

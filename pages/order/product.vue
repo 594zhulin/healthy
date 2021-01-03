@@ -149,6 +149,7 @@ export default {
 			}
 		},
 		handleConfirm() {
+			console.log(this.sku)
 			addCart({ productId: this.product.id, cartNum: this.cartNum, uniqueId: this.sku.unique, new: 1 }).then(
 				result => {
 					this.$refs['specsModal'].close();
@@ -156,7 +157,12 @@ export default {
 						url: '/pages/order/confirm?cartId=' + result.cartId
 					});
 				},
-				err => {}
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
 			);
 		}
 	}

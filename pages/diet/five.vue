@@ -19,7 +19,7 @@
 		</view>
 		<view class="btn-content">
 			<view class="prev-btn" @click="navigateBack">上一步</view>
-			<view class="next-btn" @click="navigateTo('/pages/diet/result')">提交</view>
+			<view class="next-btn" @click="relaunchTo('/pages/diet/result')">提交</view>
 		</view>
 	</view>
 </template>
@@ -59,10 +59,10 @@ export default {
 				delta: 1
 			});
 		},
-		navigateTo(url) {
+		relaunchTo(url) {
 			submitSurvey({ is_model: 5, data: JSON.stringify(this.answer) }).then(
 				result => {
-					uni.navigateTo({
+					uni.reLaunch({
 						url
 					});
 				},

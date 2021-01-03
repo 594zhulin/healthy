@@ -10,7 +10,7 @@
 			<view class="step">{{ integral_num }}</view>
 			<view class="text">待存步数：{{ no_deposit_str }}步</view>
 			<view class="tip">未存入的步数，7天后自动过期</view>
-			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit"></image>
+			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit" @click="handleClick"></image>
 		</view>
 		<view class="chart-content">
 			<view class="title">近七日步数</view>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getUser, getStep, getFire } from '@/api/bank.js';
+import { getUser, getStep, getFire, getLastTime, cacheStep, setStep } from '@/api/bank.js';
 import { timestampToTime } from '@/utils/utils.js';
 export default {
 	data() {
@@ -79,6 +79,7 @@ export default {
 			integral_num: 0,
 			no_deposit_str: 0,
 			flame_num: 0,
+			lastTime: '',
 			step: [],
 			params: {
 				pageNo: 1,
@@ -99,7 +100,7 @@ export default {
 						console.log(infoRes);
 						getStep({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData }).then(
 							result => {
-								const arr = result.stepInfoList.slice(24);
+								const arr = result.stepInfoList.slice(23, 30);
 								const maxStep = Math.max.apply(
 									Math,
 									arr.map(item => {
@@ -121,14 +122,12 @@ export default {
 				});
 			}
 		});
-		getUser().then(
+		_this.getUser();
+		getLastTime({ pageNo: 1, pageSize: 1 }).then(
 			result => {
-				const { avatarUrl, nickName, integral_num, no_deposit_str, flame_num } = result;
-				_this.avatarUrl = avatarUrl;
-				_this.nickName = nickName;
-				_this.integral_num = integral_num;
-				_this.no_deposit_str = no_deposit_str;
-				_this.flame_num = flame_num;
+				if (result.length > 0) {
+					_this.lastTime = result[0].create_at.slice(0, 10);
+				}
 			},
 			err => {}
 		);
@@ -145,6 +144,89 @@ export default {
 		};
 	},
 	methods: {
+		getUser() {
+			getUser().then(
+				result => {
+					const { avatarUrl, nickName, integral_num, no_deposit_str, flame_num } = result;
+					this.avatarUrl = avatarUrl;
+					this.nickName = nickName;
+					this.integral_num = integral_num;
+					this.no_deposit_str = no_deposit_str;
+					this.flame_num = flame_num;
+				},
+				err => {}
+			);
+		},
+		handleClick() {
+			if (this.flame_num == 0) {
+				uni.showToast({
+					icon: 'none',
+					title: '可存步数次数不足'
+				});
+			} else {
+				const startDate = this.getCurrentDate();
+				const lastTime = this.lastTime;
+				if (lastTime == '') {
+					const step = this.getSum(this.step);
+					const timestamp = new Date(startDate).getTime() / 1000;
+					this.cacheStep(step, timestamp);
+				} else {
+					const day = 24 * 60 * 60 * 1000;
+					let diff = (new Date(startDate).getTime() - new Date(lastTime).getTime()) / day;
+					if (diff > 7) {
+						const step = this.getSum(this.step);
+						const timestamp = new Date(startDate).getTime() / 1000;
+						this.cacheStep(step, timestamp);
+					}
+					if (diff > 0 && diff < 7) {
+						const arr = JSON.parse(JSON.stringify(this.step))
+							.reverse()
+							.slice(0, diff);
+						const step = this.getSum(arr);
+						const timestamp = new Date(startDate).getTime() / 1000;
+						this.cacheStep(step, timestamp);
+					}
+					if (diff == 0) {
+						uni.showToast({
+							icon: 'none',
+							title: '可存步数为0'
+						});
+					}
+				}
+			}
+		},
+		cacheStep(deposit_num, timestamp) {
+			cacheStep({ deposit_num, timestamp }).then(
+				result => {
+					this.setStep(deposit_num);
+				},
+				err => {}
+			);
+		},
+		setStep(deposit_num) {
+			setStep({ deposit_num }).then(
+				result => {
+					this.getUser();
+					thhis.getLastTime();
+					this.getListData();
+				},
+				err => {}
+			);
+		},
+		getCurrentDate() {
+			const date = new Date();
+			const YYYY = date.getFullYear();
+			const MM = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+			const DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+			return YYYY + '-' + MM + '-' + DD;
+		},
+		getSum(arr) {
+			let sum = 0;
+			arr.map(item => {
+				sum += item.step;
+			});
+			return sum;
+		},
 		getListData(direction) {
 			if (direction == 'down') {
 				this.params.pageNo = 1;

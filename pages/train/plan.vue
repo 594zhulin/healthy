@@ -2,7 +2,7 @@
 	<view class="page-plan">
 		<view class="radar-content">
 			<image class="background" src="../../static/train/train-bg-01.svg" mode="scaleToFill"></image>
-			<view class="chart"></view>
+			<view class="echarts"><mpvue-echarts ref="radarChart" :echarts="echarts" @onInit="initRadarChart" /></view>
 		</view>
 		<view class="train-content">
 			<view class="today-item">
@@ -68,9 +68,16 @@
 		</view>
 		<view class="trend-content">
 			<view class="title">您的身体素质趋势</view>
-			<view class="date">2020/11/11 20:00</view>
+			<view class="date">{{ create_at }}</view>
+			<view class="echarts"><mpvue-echarts ref="lineChart" :echarts="echarts" @onInit="initLineChart" /></view>
 		</view>
-		<view class="desc-content"><view class="title">AI智能训练简介</view></view>
+		<view class="desc-content">
+			<view class="title">AI智能训练简介</view>
+			<image class="image" src="../../static/train/train-img-02.png" mode="widthFix"></image>
+			<view class="text">
+				黑石AI智能训练体系，结合运动金字塔建议，专业医生研究，运动学，行为学，以身体素质水平为数据基础，制作一整套针对于公众健康促进的体能训练系统，让不同身体素质的人能轻松上手，易于长期坚持，并且高效率的改善体能，并且结合我们的体能测量系统，数字化的看到自己身体素质的增强。
+			</view>
+		</view>
 		<view class="list-content">
 			<view class="title">动作库</view>
 			<view class="list-item" v-for="item in items" :key="item.id" @click="navigateTo('/pages/train/detail?id=' + item.id)">
@@ -86,15 +93,24 @@
 </template>
 
 <script>
-import { getTrainData, getTrainList } from '@/api/train.js';
+import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
+import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
+import { getTrainData, getTrainList, getFitnessData } from '@/api/train.js';
 export default {
+	components: {
+		mpvueEcharts
+	},
 	data() {
 		return {
+			echarts,
+			lineOption: null,
+			radarOption: null,
 			deposit_num: 0,
 			pliable: 0,
 			force: 0,
 			aerobics: 0,
 			leisure: 0,
+			create_at: '',
 			params: {
 				pageNo: 1,
 				pageSize: 20
@@ -114,6 +130,20 @@ export default {
 				this.leisure = leisure;
 			},
 			err => {}
+		);
+		getFitnessData().then(
+			result => {
+				this.initLineChartOption(result.sheet);
+				const { bodily_type, grip_num, sit_reach, foot_closed, response_at } = result.lately_data;
+				this.initRadarChartOption([bodily_type, grip_num, sit_reach, foot_closed, response_at]);
+				this.create_at = result.lately_data.create_at;
+			},
+			err => {
+				uni.showToast({
+					icon: 'none',
+					title: err.text
+				});
+			}
 		);
 		this.getListData('down');
 	},
@@ -138,6 +168,235 @@ export default {
 				},
 				err => {}
 			);
+		},
+		initRadarChartOption(data) {
+			const _this = this;
+			const data_1 = [
+				{
+					name: '体型',
+					max: 100
+				},
+				{
+					name: '力量',
+					max: 100
+				},
+				{
+					name: '柔韧性',
+					max: 100
+				},
+				{
+					name: '平衡能力',
+					max: 100
+				},
+				{
+					name: '反应能力',
+					max: 100
+				}
+			];
+			this.radarOption = {
+				radar: {
+					radius: '50%',
+					splitNumber: 6,
+					name: {
+						formatter: function(value) {
+							var i = _this.contains(data_1, value);
+							var percent = data[i];
+							return '{a|' + value + '}\n' + '{b|' + percent + '′' + '}';
+						},
+						textStyle: {
+							rich: {
+								b: {
+									height: 15,
+									color: '#2975FF',
+									fontSize: 12,
+									padding: [0, 3, 3, 3],
+									align: 'center',
+									backgroundColor: '#fff',
+									borderRadius: 10,
+									verticalAlign: 'middle'
+								},
+								a: {
+									color: '#CAEEFF',
+									fontSize: 12,
+									fontWeight: 'bold',
+									padding: 0,
+									lineHeight: 20,
+									align: 'center'
+								}
+							}
+						}
+					},
+					nameGap: '10',
+					indicator: data_1, // 数据的数量代表展示什么形状的图形
+					splitArea: {
+						areaStyle: {
+							color: [
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(60, 183, 255, 1)'
+							],
+							shadowColor: 'rgba(0, 95, 255, 0.36)',
+							shadowBlur: 10,
+							opacity: 0.19
+						}
+					},
+					axisLine: {
+						//指向外圈文本的分隔线样式
+						lineStyle: {
+							color: 'rgba(255,255,255,0.25)'
+						}
+					},
+					splitLine: {
+						lineStyle: {
+							width: 1,
+							color: [
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(255, 255, 255,1)',
+								'rgba(255, 255, 255, 1)',
+								'rgba(60, 183, 255, 1)'
+							],
+							shadowColor: 'rgba(0, 95, 255, 0.36)',
+							shadowBlur: 10,
+
+							opacity: 0.19
+						}
+					}
+				},
+				series: [
+					{
+						type: 'radar',
+						areaStyle: {
+							normal: {
+								color: 'rgba(255, 211, 45, 0.15)'
+							}
+						},
+						symbol: 'circle',
+						symbolSize: 6,
+						itemStyle: {
+							color: '#FFDD00',
+							borderColor: '#fff',
+							borderWidth: 1
+						},
+						lineStyle: {
+							normal: {
+								color: 'rgba(255, 221, 0, 1)',
+								width: 2
+							}
+						},
+						data: [
+							{
+								value: data
+							}
+						]
+					}
+				]
+			};
+			this.$refs.radarChart.init();
+		},
+		initRadarChart(e) {
+			let { canvas, width, height } = e;
+			echarts.setCanvasCreator(() => canvas);
+			const chart = echarts.init(canvas, null, {
+				width: width,
+				height: height
+			});
+			canvas.setChart(chart);
+			if (this.radarOption) {
+				chart.setOption(this.radarOption);
+			}
+			return chart;
+		},
+		initLineChartOption(data) {
+			this.lineOption = {
+				grid: {
+					top: 20,
+					right: 10,
+					bottom: 20,
+					left: 33
+				},
+				xAxis: {
+					type: 'category',
+					show: false
+				},
+				yAxis: {
+					type: 'value',
+					axisLine: {
+						show: false
+					},
+					axisTick: {
+						show: false
+					},
+					axisLabel: {
+						verticalAlign: 'middle',
+						color: '#666666',
+						fontSize: 12
+					},
+					splitLine: {
+						lineStyle: {
+							color: '#E8E8E8'
+						}
+					}
+				},
+				series: [
+					{
+						type: 'line',
+						smooth: true,
+						showSymbol: false,
+						itemStyle: {
+							normal: {
+								lineStyle: {
+									width: 2,
+									type: 'solid',
+									color: '#FFBF00'
+								}
+							}
+						},
+						areaStyle: {
+							normal: {
+								color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+									{
+										offset: 0,
+										color: 'rgba(255, 191, 0, 0.39)'
+									},
+									{
+										offset: 1,
+										color: 'rgba(255, 191, 0, 0)'
+									}
+								])
+							}
+						},
+						data: data
+					}
+				]
+			};
+			this.$refs.lineChart.init();
+		},
+		initLineChart(e) {
+			let { canvas, width, height } = e;
+			echarts.setCanvasCreator(() => canvas);
+			const chart = echarts.init(canvas, null, {
+				width: width,
+				height: height
+			});
+			canvas.setChart(chart);
+			if (this.lineOption) {
+				chart.setOption(this.lineOption);
+			}
+			return chart;
+		},
+		contains(arrays, obj) {
+			var i = arrays.length;
+			while (i--) {
+				if (arrays[i].name === obj) {
+					return i;
+				}
+			}
+			return false;
 		},
 		navigateTo(url) {
 			uni.navigateTo({
@@ -164,6 +423,9 @@ page {
 			width: 100%;
 			height: 600rpx;
 			z-index: -1;
+		}
+		.echarts {
+			height: 600rpx;
 		}
 	}
 	.train-content {
@@ -364,9 +626,14 @@ page {
 			color: #a3a7b9;
 			line-height: 34rpx;
 		}
+		.echarts {
+			width: 100%;
+			height: 330rpx;
+			margin-top: 10rpx;
+		}
 	}
 	.desc-content {
-		height: 906rpx;
+		padding-bottom: 24rpx;
 		margin: 4vw;
 		background: #ffffff;
 		border-radius: 10rpx;
@@ -377,6 +644,17 @@ page {
 			font-weight: bold;
 			color: #373d52;
 			line-height: 34rpx;
+		}
+		.image {
+			width: 600rpx;
+		}
+		.text {
+			padding: 0 20rpx;
+			font-size: 24rpx;
+			font-family: PingFangSC-Regular, PingFang SC;
+			font-weight: 400;
+			color: rgba(0, 0, 0, 0.5);
+			line-height: 33rpx;
 		}
 	}
 	.list-content {
