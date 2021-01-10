@@ -1,10 +1,8 @@
 <template>
 	<view class="page-three">
-		<view class="desc-content">
-			年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
-		</view>
+		<view class="desc-content">鱼，禽，蛋和瘦肉属于动物性食物，是人体优质蛋白，脂类，脂类维生素，B族卫生，矿物质的重要来源，但脂肪含量比较高，不宜摄入过多。</view>
 		<view class="form-content">
-			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
+			<view class="title">请根据您日常的饮食习惯以及认知如实回答：</view>
 			<view class="form-list">
 				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
 					<view class="question">{{ index + 1 }}、{{ item.content }}</view>

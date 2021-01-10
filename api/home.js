@@ -5,7 +5,7 @@ const api = {
 	signIn: '/login/getOpenid',
 	getScore: '/index/index',
 	getStep: '/pedometer/user_info',
-	getProduct: '/related'
+	getProduct: '/products'
 }
 
 const login = data => {
@@ -75,11 +75,10 @@ const getStep = () => {
 	})
 }
 
-const getProduct = data => {
+const getProduct = () => {
 	return new Promise((resolve, reject) => {
 		service.request({
-			url: api.getProduct,
-			data
+			url: api.getProduct
 		}).then(result => {
 			if (result.status === 200) {
 				resolve({

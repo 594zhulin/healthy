@@ -68,7 +68,7 @@
 			"style": {
 				"navigationBarBackgroundColor": "#0056ff",
 				"navigationBarTextStyle": "white",
-				"navigationBarTitleText": "体能排行榜"
+				"navigationBarTitleText": "步数银行-步数排行榜"
 			}
 		},
 		{
@@ -92,6 +92,13 @@
 					"navigationBarBackgroundColor": "#52ADFF",
 					"navigationBarTextStyle": "white",
 					"navigationBarTitleText": "AI体能训练计划"
+				}
+			}, {
+				"path": "recommend",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "训练推荐"
 				}
 			}, {
 				"path": "list",

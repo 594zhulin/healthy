@@ -20,7 +20,7 @@
 		</view>
 		<view class="map-content">
 			<view class="title">活动地点</view>
-			<map class="map" :latitude="activity.latitude" :longitude="activity.longitude"></map>
+			<map class="map" :latitude="activity.latitude" :longitude="activity.longitude" @click="openLocation"></map>
 		</view>
 		<view class="detail-content">
 			<view class="name">
@@ -68,8 +68,7 @@ export default {
 	onShareAppMessage() {
 		return {
 			title: '快来跟我一起组队运动吧',
-			path: '/pages/train/share?id=' + this.activity.id,
-			imageUrl: '../../static/share/share-img-01.svg'
+			path: '/pages/train/share?id=' + this.activity.id
 		};
 	},
 	methods: {
@@ -89,6 +88,13 @@ export default {
 					});
 				}
 			);
+		},
+		openLocation() {
+			wx.openLocation({
+				latitude: parseFloat(this.activity.latitude),
+				longitude: parseFloat(this.activity.longitude),
+				scale: 18
+			});
 		}
 	}
 };

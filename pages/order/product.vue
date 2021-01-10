@@ -13,7 +13,7 @@
 		<view class="title-content"><view class="text">商品详情</view></view>
 		<view class="desc-content"><rich-text :nodes="product.description"></rich-text></view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
-			<view class="btn" v-if="product.stock > 0" @click="handleOpen">立即兑换</view>
+			<view class="btn" v-if="product.stock > 0" @click="handleOpen">{{ product.is_model == 1 ? '立即兑换' : '立即购买' }}</view>
 			<view class="btn disabled" v-else>库存不足</view>
 		</view>
 		<custom-modal ref="specsModal" direction="bottom" maskClick>
@@ -149,7 +149,7 @@ export default {
 			}
 		},
 		handleConfirm() {
-			console.log(this.sku)
+			console.log(this.sku);
 			addCart({ productId: this.product.id, cartNum: this.cartNum, uniqueId: this.sku.unique, new: 1 }).then(
 				result => {
 					this.$refs['specsModal'].close();

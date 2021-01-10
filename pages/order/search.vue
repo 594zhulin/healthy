@@ -50,8 +50,19 @@ export default {
 			getProduct({ ...this.params }).then(
 				result => {
 					this.product = direction == 'down' ? result : this.product.concat(result);
+					if (result.length == 0) {
+						uni.showToast({
+							icon: 'none',
+							title: '不好意思，暂无相关内容'
+						});
+					}
 				},
-				err => {}
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: '不好意思，暂无相关内容'
+					});
+				}
 			);
 		},
 		navigateTo(url) {
@@ -80,6 +91,7 @@ page {
 		background-color: #fff;
 		box-shadow: 0px 0px 12rpx 0px rgba(0, 0, 0, 0.06);
 		z-index: 9;
+		box-sizing: content-box;
 		.content {
 			flex: 1;
 			display: flex;

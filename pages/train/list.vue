@@ -14,7 +14,7 @@
 				<view class="background"></view>
 				<image class="background" :src="item.video_content_clouds" mode="aspectFit"></image>
 				<view class="title">{{ item.motion_name }}</view>
-				<view class="title">(不限场地）</view>
+				<view class="title">{{item.duration}}</view>
 				<view class="text">LEVEL {{ item.rating }} ·{{ item.cate_name }}</view>
 			</view>
 		</view>

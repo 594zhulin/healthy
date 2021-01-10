@@ -46,7 +46,10 @@ const getProduct = data => {
 			data
 		}).then(result => {
 			if (result.status === 200) {
-				resolve(result.data)
+				resolve({
+					list: result.data,
+					total: result.total
+				})
 			} else {
 				reject({
 					text: result.msg
@@ -63,7 +66,10 @@ const getRecommend = data => {
 			data
 		}).then(result => {
 			if (result.status === 200) {
-				resolve(result.data)
+				resolve({
+					list: result.data,
+					total: result.total
+				})
 			} else {
 				reject({
 					text: result.msg

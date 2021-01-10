@@ -46,7 +46,7 @@
 						<view class="text" v-else>￥{{ item.price }}</view>
 						<!-- <view class="price">¥{{ item.ot_price }}</view> -->
 					</view>
-					<view class="btn">去兑换</view>
+					<view class="btn">{{ item.is_model == 1 ? '去兑换' : '去购买' }}</view>
 					<!-- <view class="status" v-else>已售罄</view> -->
 				</view>
 			</view>
@@ -72,7 +72,8 @@ export default {
 				page: 1,
 				limit: 20
 			},
-			product: []
+			product: [],
+			total: 0
 		};
 	},
 	onShow() {
@@ -103,19 +104,26 @@ export default {
 			if (direction == 'down') {
 				this.params.page = 1;
 			} else {
+				if (this.product.length >= this.total) {
+					return false;
+				}
 				this.params.page += 1;
 			}
 			if (this.params.cid == '') {
 				getRecommend({ page: this.params.page, limit: this.params.limit }).then(
 					result => {
-						this.product = direction == 'down' ? result : this.product.concat(result);
+						const { list, total } = result;
+						this.product = direction == 'down' ? list : this.product.concat(list);
+						this.total = total;
 					},
 					err => {}
 				);
 			} else {
 				getProduct({ ...this.params }).then(
 					result => {
-						this.product = direction == 'down' ? result : this.product.concat(result);
+						const { list, total } = result;
+						this.product = direction == 'down' ? list : this.product.concat(list);
+						this.total = total;
 					},
 					err => {}
 				);

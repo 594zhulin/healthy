@@ -1,10 +1,8 @@
 <template>
 	<view class="page-five">
-		<view class="desc-content">
-			年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
-		</view>
+		<view class="desc-content">吃什么很重要，怎么吃也同样重要，不良的饮食习惯，会导致多种身体疾病的发生，要注意科学管理饮食习惯。</view>
 		<view class="form-content">
-			<view class="title">请按照大多数情况下，进行选择</view>
+			<view class="title">请根据您日常的饮食习惯以及认知如实回答：</view>
 			<view class="form-list">
 				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
 					<view class="question">{{ index + 1 }}、{{ item.content }}</view>

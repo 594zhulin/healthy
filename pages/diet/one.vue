@@ -1,10 +1,10 @@
 <template>
 	<view class="page-one">
 		<view class="desc-content">
-			年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
+			谷类是传统膳食的主食，薯类，杂豆类，同谷类营养成分相近，是人体能量的最经济的来源，按干重计算，是食物中摄入量最大的一类，可为人体提供50~70%的能量，一半左右的蛋白质和维生素B１。
 		</view>
 		<view class="form-content">
-			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
+			<view class="title">请根据您日常的饮食习惯以及认知如实回答：</view>
 			<view class="form-list">
 				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
 					<view class="question">{{ index + 1 }}、{{ item.content }}</view>

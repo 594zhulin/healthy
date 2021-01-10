@@ -1,6 +1,8 @@
 const service = require('@/utils/http');
 
 const api = {
+	register: '/login/getOpenid',
+	login: '/wechat/mp_auth',
 	getUser: '/pedometer/user_info',
 	getStep: '/wechat/wxDecode',
 	getFire: '/pedometer/flame_list',
@@ -8,6 +10,41 @@ const api = {
 	getLastTime: '/pedometer/integral_list',
 	cacheStep: '/pedometer/cache_step_num',
 	setStep: '/pedometer/deposit_step_num'
+}
+
+const register = data => {
+	return new Promise((resolve, reject) => {
+		service.http({
+			url: api.register,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const login = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.login,
+			data,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
 }
 
 const getUser = () => {
@@ -137,6 +174,8 @@ const setStep = data => {
 
 
 module.exports = {
+	register,
+	login,
 	getUser,
 	getStep,
 	getFire,

@@ -8,6 +8,7 @@
 					:id="item.id"
 					:ref="item.id"
 					:src="item.video_url_clouds"
+					:autoplay="true"
 					:loop="true"
 					:controls="false"
 					:show-play-btn="false"
@@ -15,9 +16,9 @@
 					:show-center-play-btn="true"
 					object-fit="fill"
 				></video>
-				<view class="content">
+				<view class="content" @touchend="getListData">
 					<view class="row">
-						<view class="category" @click="navigateTo('/pages/video/detail?cat_id=' + item.cat_id)">
+						<view class="category" @click.stop="navigateTo('/pages/video/detail?cat_id=' + item.cat_id)">
 							<view class="logo" :style="{ background: 'url(' + item.logo + ') no-repeat center', backgroundSize: '100% auto' }"></view>
 							<view class="name">{{ item.video_name }}</view>
 						</view>
@@ -26,7 +27,7 @@
 					<view class="title">{{ item.descr }}</view>
 				</view>
 				<view class="btn-group">
-					<view class="view-btn">{{ item.like_num }}</view>
+					<!-- <view class="view-btn">{{ item.like_num }}</view> -->
 					<view class="support-btn" @click="support(item)">{{ item.hits }}</view>
 				</view>
 			</view>
@@ -43,19 +44,16 @@ export default {
 		};
 	},
 	onLoad() {
-		this.getListData('down');
+		this.getListData();
 	},
 	onPullDownRefresh() {
-		this.getListData('down');
-	},
-	onReachBottom() {
-		this.getListData('up');
+		this.getListData();
 	},
 	methods: {
-		getListData(direction) {
+		getListData() {
 			getVideo().then(
 				result => {
-					this.video = direction == 'down' ? result : this.product.concat(result);
+					this.video = result;
 				},
 				err => {}
 			);

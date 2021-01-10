@@ -23,7 +23,7 @@
 						<view class="count"></view>
 					</view>
 				</view>
-				<view class="btn" @click="navigateTo('/pages/train/list')">立即训练</view>
+				<view class="btn" @click="navigateTo('/pages/train/recommend')">立即训练</view>
 			</view>
 			<view class="week-item">
 				<view class="title">近七天运动量统计</view>

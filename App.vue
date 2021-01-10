@@ -14,7 +14,7 @@ export default {
 				console.log(res);
 				let screenHeight = res.screenHeight;
 				let bottom = res.safeArea.bottom;
-				if (res.safeArea.top > 20 && res.platform == 'ios') {
+				if (res.safeArea.top > 20 && res.system.indexOf('iOS')>-1) {
 					_this.globalData.isIphoneX = true;
 					_this.globalData.paddingBottom = 34;
 				}

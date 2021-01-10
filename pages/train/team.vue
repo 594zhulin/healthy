@@ -66,22 +66,14 @@ export default {
 				latitude: '',
 				title: ''
 			},
-			remark: ''
+			remark: '',
+			id: ''
 		};
 	},
 	onShareAppMessage() {
-		const _this = this;
-		let id = '';
-		addActivity({ ..._this.form, remark: _this.remark }).then(
-			result => {
-				id = result;
-			},
-			err => {}
-		);
 		return {
 			title: '快来跟我一起组队运动吧',
-			path: '/pages/train/share?id=' + id,
-			imageUrl: '../../static/share/share-img-01.svg'
+			path: '/pages/train/share?id=' + this.id
 		};
 	},
 	computed: {
@@ -93,15 +85,23 @@ export default {
 		}
 	},
 	watch: {
-		form(newForm) {
-			console.log(newForm);
-			Object.values(newForm).every(item => {
-				if (item == '') {
-					this.validate = false;
-				} else {
-					this.validate = true;
+		form: {
+			deep: true,
+			handler(newForm) {
+				console.log(newForm);
+				this.validate = Object.values(newForm).every(item => {
+					return item != '';
+				});
+				console.log(this.validate);
+				if (this.validate) {
+					addActivity({ ...this.form, remark: this.remark }).then(
+						result => {
+							this.id = result;
+						},
+						err => {}
+					);
 				}
-			});
+			}
 		}
 	},
 	methods: {

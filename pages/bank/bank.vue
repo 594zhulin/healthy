@@ -77,6 +77,7 @@ export default {
 			avatarUrl: '',
 			nickName: '',
 			integral_num: 0,
+			no_deposit_num: 0,
 			no_deposit_str: 0,
 			flame_num: 0,
 			lastTime: '',
@@ -123,15 +124,8 @@ export default {
 			}
 		});
 		_this.getUser();
-		getLastTime({ pageNo: 1, pageSize: 1 }).then(
-			result => {
-				if (result.length > 0) {
-					_this.lastTime = result[0].create_at.slice(0, 10);
-				}
-			},
-			err => {}
-		);
-		this.getListData('down');
+		_this.getLastTime();
+		_this.getListData('down');
 	},
 	onReachBottom() {
 		this.getListData('up');
@@ -139,7 +133,7 @@ export default {
 	onShareAppMessage() {
 		const user_id = uni.getStorageSync('user_id');
 		return {
-			title: this.nickName + '邀请您使用体能观测',
+			title: this.nickName + '邀请您帮助Ta点亮收集步数的小火苗',
 			path: '/pages/home/home?user_id=' + user_id
 		};
 	},
@@ -147,12 +141,23 @@ export default {
 		getUser() {
 			getUser().then(
 				result => {
-					const { avatarUrl, nickName, integral_num, no_deposit_str, flame_num } = result;
+					const { avatarUrl, nickName, integral_num, no_deposit_num, no_deposit_str, flame_num } = result;
 					this.avatarUrl = avatarUrl;
 					this.nickName = nickName;
 					this.integral_num = integral_num;
+					this.no_deposit_num = no_deposit_num;
 					this.no_deposit_str = no_deposit_str;
 					this.flame_num = flame_num;
+				},
+				err => {}
+			);
+		},
+		getLastTime() {
+			getLastTime({ pageNo: 1, pageSize: 1 }).then(
+				result => {
+					if (result.length > 0) {
+						this.lastTime = result[0].create_at.slice(0, 10);
+					}
 				},
 				err => {}
 			);
@@ -196,18 +201,22 @@ export default {
 			}
 		},
 		cacheStep(deposit_num, timestamp) {
+			const _this = this
 			cacheStep({ deposit_num, timestamp }).then(
 				result => {
-					this.setStep(deposit_num);
+					_this.getUser();
+					setTimeout(function() {
+						_this.setStep();
+					}, 10);
 				},
 				err => {}
 			);
 		},
-		setStep(deposit_num) {
-			setStep({ deposit_num }).then(
+		setStep() {
+			setStep({ deposit_num: parseInt(this.no_deposit_num) }).then(
 				result => {
 					this.getUser();
-					thhis.getLastTime();
+					this.getLastTime();
 					this.getListData();
 				},
 				err => {}

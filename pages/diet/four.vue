@@ -1,10 +1,8 @@
 <template>
 	<view class="page-four">
-		<view class="desc-content">
-			年太清重当队王动快切府队物者叫多养时六火清第断内热识片照素据西识一象活连结如众以则看酸派办化易分术出布布它。花历建身适经需等快白发合便没复增影便
-		</view>
+		<view class="desc-content">奶类是膳食中最容易被吸收的钙的来源，坚果营养丰富，是不饱和必须脂肪酸的重要来源，大豆也是，还额外含有黄酮类活性物质，磷脂等，是理想食品。</view>
 		<view class="form-content">
-			<view class="title">请按照大多数情况下，您一天会不会吃下列食物？</view>
+			<view class="title">请根据您日常的饮食习惯以及认知如实回答：</view>
 			<view class="form-list">
 				<view class="form-item" v-for="(item, index) in question" :key="item.question_id">
 					<view class="question">{{ index + 1 }}、{{ item.content }}</view>

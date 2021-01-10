@@ -41,7 +41,7 @@
 				<view class="desc-item"><view class="text">十：</view></view>
 			</view>
 		</view> -->
-		<view class="btn">我要重测</view>
+		<view class="btn" @click="handleReset">我要重测</view>
 	</view>
 </template>
 
@@ -67,6 +67,13 @@ export default {
 			},
 			err => {}
 		);
+	},
+	methods: {
+		handleReset() {
+			uni.reLaunch({
+				url: '/pages/diet/one'
+			});
+		}
 	}
 };
 </script>
@@ -88,7 +95,7 @@ page {
 			position: absolute;
 			top: 78rpx;
 			left: 68rpx;
-			font-size: 120rpx;
+			font-size: 86rpx;
 			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
 			font-weight: bold;
 			color: #ffffff;

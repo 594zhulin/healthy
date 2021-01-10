@@ -3,7 +3,7 @@
 		<!-- <view class="tab-content"><view class="tab-item" :class="{ active: tabId == 0 }" @click="bindTabChange(0)">总步数排行</view></view> -->
 		<view class="list-content">
 			<view class="list-item" v-for="item in ranking" :key="item.id">
-				<view class="order">01</view>
+				<view class="order">{{ item.ranking_num > 9 ? item.ranking_num : '0' + item.ranking_num }}</view>
 				<image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image>
 				<view class="name">{{ item.nickName }}</view>
 				<view class="step">{{ item.step_num }}步</view>

@@ -10,7 +10,8 @@ const api = {
 	getCommunityMineRank: '/user/ranking',
 	getUserInfo: '/user/getWxInfo',
 	getRisk: '/risk/get_risk_info',
-	getMeasureDetail: '/user/measure_calbe_details'
+	getMeasureDetail: '/user/measure_calbe_details',
+	deleteMeasure: '/log/del_measure_calbe'
 }
 
 const getData = data => {
@@ -182,6 +183,23 @@ const getMeasureDetail = data => {
 	})
 }
 
+const deleteMeasure = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.deleteMeasure,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getData,
 	getHistory,
@@ -191,5 +209,7 @@ module.exports = {
 	getCommunityRankList,
 	getCommunityMineRank,
 	getUserInfo,
-	getMeasureDetail
+	getMeasureDetail,
+	getRisk,
+	deleteMeasure
 }

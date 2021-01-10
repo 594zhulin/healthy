@@ -36,7 +36,7 @@
 		</view>
 		<view class="data-content">
 			<view class="data-title">数据指标</view>
-			<view class="btn-delete" @click="onDelete">
+			<view class="btn-delete" @click="onDelete" v-if="userId !== ''">
 				<view class="icon"><image class="image" src="../../static/measure/measure-icon-20.svg" mode="aspectFit"></image></view>
 				<view class="text">删除本条</view>
 			</view>
@@ -199,7 +199,7 @@
 				<view class="text">立即制定</view>
 				<view class="text">AI体能增强计划</view>
 			</view>
-			<view class="btn-delete" @click="onDelete">
+			<view class="btn-delete" @click="onDelete" v-if="userId !== ''">
 				<view class="text">数据有误</view>
 				<view class="text">删除重测</view>
 			</view>
@@ -210,7 +210,7 @@
 <script>
 import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
 import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { getUser, getData, getRisk } from '@/api/measure.js';
+import { getUser, getData, getRisk, deleteMeasure } from '@/api/measure.js';
 export default {
 	components: {
 		mpvueEcharts
@@ -283,7 +283,20 @@ export default {
 				}
 			);
 		},
-		onDelete() {},
+		onDelete() {
+			deleteMeasure({ calbe_id: this.measureData.calbe_id }).then(
+				result => {
+					this.getMeasureData(this.userId);
+					this.getRisk();
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
 		initGaugeChartOption(data) {
 			this.gagugeOption = {
 				series: [

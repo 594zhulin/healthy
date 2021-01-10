@@ -29,7 +29,7 @@
 				<view class="grid-item plan" @click="navigateTo('/pages/train/plan')">
 					<image class="icon" src="../../static/home/home-icon-03.svg" mode="aspectFit"></image>
 					<view class="title">AI体能训练计划</view>
-					<view class="btn" @click.stop="navigateTo('/pages/train/list')">立即制定</view>
+					<view class="btn" @click.stop="navigateTo('/pages/train/recommend')">立即制定</view>
 				</view>
 				<view class="grid-item mall" @click="switchTab">
 					<image class="icon" src="../../static/home/home-icon-04.svg" mode="aspectFit"></image>
@@ -104,7 +104,8 @@ export default {
 				limit: 20
 			},
 			product: [],
-			total: 0
+			total: 0,
+			isNew: false
 		};
 	},
 	onLoad(option) {
@@ -134,7 +135,19 @@ export default {
 			uni.login({
 				provider: 'weixin',
 				success: function(loginRes) {
-					signIn({ code: loginRes.code, trans_pond_user_id: user_id }).then(result => {}, err => {});
+					signIn({ code: loginRes.code, trans_pond_user_id: user_id }).then(
+						result => {
+							_this.isNew = result.is_news;
+							if (!result.is_news) {
+								uni.showToast({
+									icon: 'none',
+									title: '您已经不是新用户了，无法帮Ta点亮，请督促Ta多多观测自己的身体素质吧！',
+									duration: 2000
+								});
+							}
+						},
+						err => {}
+					);
 				}
 			});
 		},
@@ -145,7 +158,7 @@ export default {
 					this.score = score;
 					this.synthesis_lable = synthesis_lable;
 					this.create_at = create_at;
-					this.percent = parseFloat(score) + 0.9 * (100 - parseFloat(score)).toFixed(1);
+					this.percent = (parseFloat(score) + 0.9 * (100 - parseFloat(score))).toFixed(1);
 				},
 				err => {}
 			);
@@ -172,8 +185,14 @@ export default {
 			getProduct({ ...this.params }).then(
 				result => {
 					const { list, total } = result;
-					this.product = direction == 'down' ? list : this.product.concat(list);
-					this.total = total;
+					const arr = list.filter(item => item.is_home == 1);
+					if (direction == 'down') {
+						this.product = arr;
+						this.total = arr.length;
+					} else {
+						this.product = this.product.concat(arr);
+						this.total += arr.length;
+					}
 					uni.stopPullDownRefresh();
 				},
 				err => {}
@@ -198,6 +217,12 @@ export default {
 									_this.getScore();
 									_this.getStep();
 									_this.getListData('down');
+									if (_this.isNew) {
+										uni.showToast({
+											icon: 'none',
+											title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
+										});
+									}
 								},
 								err => {}
 							);

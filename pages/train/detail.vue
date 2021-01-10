@@ -20,7 +20,7 @@
 			<view class="text">{{ detail.exercise_frequency }}</view>
 			<!-- <view class="text">30分钟为一组</view> -->
 		</view>
-		<view class="btn" @click="clocked">免教学打卡</view>
+		<view class="btn" @click="clocked">下一个动作</view>
 	</view>
 </template>
 
@@ -149,12 +149,14 @@ export default {
 		}
 	}
 	.btn {
-		width: 225rpx;
-		height: 72rpx;
-		line-height: 72rpx;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100rpx;
+		line-height: 100rpx;
 		margin: 60rpx auto 0 auto;
 		background: #2975ff;
-		border-radius: 4rpx;
 		font-size: 28rpx;
 		font-family: PingFangSC-Semibold, PingFang SC;
 		font-weight: 600;

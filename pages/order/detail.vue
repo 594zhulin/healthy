@@ -176,7 +176,7 @@ export default {
 			payOrder({ uni: id, paytype: 'weixin', from: 'routine' }).then(
 				result => {
 					console.log(result);
-					this.wxpay(result.jsConfig, result.orderId);
+					this.wxpay(result.jsConfig, result.order_id);
 				},
 				err => {
 					uni.showToast({
@@ -630,7 +630,7 @@ page {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		min-height: 60rpx;
+		min-height: 100rpx;
 		padding: 20rpx 30rpx 0 30rpx;
 		background-color: #fff;
 		text-align: right;

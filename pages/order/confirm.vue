@@ -22,9 +22,11 @@
 				<image class="pic" :src="item.productInfo.image" mode="aspectFit"></image>
 				<view class="detail">
 					<view class="name">{{ item.productInfo.store_name }}</view>
+					<view class="specs">{{ item.productInfo.attrInfo.suk }}</view>
 					<view class="count">×{{ item.cart_num }}</view>
+					<view class="step" v-if="item.productInfo.is_model == 1">{{ item.productInfo.buy_credits }}</view>
+					<view class="price" v-else>{{ item.productInfo.attrInfo.price }}</view>
 				</view>
-				<image class="icon" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 			</view>
 			<view class="order" v-if="order">
 				<view class="row">
@@ -48,7 +50,7 @@
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
 				<view class="text">合计:</view>
-				<view class="value">￥{{ order.priceGroup.totalPrice }}</view>
+				<view class="value">￥{{ price }}</view>
 			</view>
 			<view class="btn" @click="handleSubmit">提交订单</view>
 		</view>
@@ -56,7 +58,7 @@
 </template>
 
 <script>
-import { getAddress, confirmOrder, createOrder } from '@/api/order.js';
+import { getAddress, confirmOrder, getOrderPrice, createOrder } from '@/api/order.js';
 export default {
 	data() {
 		return {
@@ -65,7 +67,8 @@ export default {
 			paddingBottom: '',
 			bottom: '',
 			address: null,
-			order: null
+			order: null,
+			price: ''
 		};
 	},
 	onLoad(option) {
@@ -85,6 +88,17 @@ export default {
 		confirmOrder({ cartId: this.cartId }).then(
 			result => {
 				this.order = result;
+				if (result.cartInfo[0].productInfo.is_model == 1) {
+					if (result.priceGroup.storeFreePostage > parseFloat(result.priceGroup.totalPrice)) {
+						this.price = parseFloat(result.priceGroup.storePostage);
+					}
+				} else {
+					if (result.priceGroup.storeFreePostage > parseFloat(result.priceGroup.totalPrice)) {
+						this.price = parseFloat(result.priceGroup.storePostage) + parseFloat(result.priceGroup.totalPrice);
+					} else {
+						this.price = parseFloat(result.priceGroup.totalPrice);
+					}
+				}
 				if (address) {
 					this.address = JSON.parse(address);
 				} else {
@@ -108,14 +122,40 @@ export default {
 			);
 		},
 		handleSubmit() {
+			this.getOrderPrice();
+		},
+		getOrderPrice() {
+			getOrderPrice(
+				{
+					addressId: this.address.id,
+					couponId: '',
+					payType: 'weixin',
+					useIntegral: this.order.cartInfo[0].productInfo.is_model,
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits),
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice)
+				},
+				this.order.orderKey
+			).then(
+				result => {
+					this.createOrder();
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
+		},
+		createOrder() {
 			createOrder(
 				{
 					addressId: this.address.id,
 					couponId: '',
 					payType: 'weixin',
-					useIntegral: 0,
-					integral_num: 0,
-					deductionPrice: 0,
+					useIntegral: this.order.cartInfo[0].productInfo.is_model,
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits),
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice),
 					mark: this.desc,
 					from: 'routine'
 				},
@@ -236,34 +276,80 @@ page {
 				flex-shrink: 0;
 			}
 			.detail {
+				position: relative;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
+				flex: 1;
 				height: 120rpx;
 				padding-right: 40rpx;
 				.name {
+					width: 90%;
 					font-size: 28rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #333;
 					line-height: 40rpx;
+					word-break: break-all;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
 				}
-				.count {
+				.specs {
 					font-size: 24rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #999;
 					line-height: 34rpx;
 				}
-			}
-			.icon {
-				position: absolute;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				width: 19rpx;
-				height: 30rpx;
-				margin: auto;
+				.count {
+					position: absolute;
+					bottom: 0;
+					right: 0;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 34rpx;
+				}
+				.step {
+					position: absolute;
+					top: 0;
+					right: 0;
+					font-size: 28rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 40rpx;
+					&::after {
+						content: '步';
+						font-size: 18rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 26rpx;
+					}
+				}
+				.price {
+					position: absolute;
+					top: 0;
+					right: 0;
+					font-size: 28rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #999;
+					line-height: 40rpx;
+					&::before {
+						content: '￥';
+						font-size: 24rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #999;
+						line-height: 34rpx;
+					}
+				}
 			}
 		}
 		.order {

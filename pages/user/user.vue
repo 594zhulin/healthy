@@ -32,7 +32,12 @@
 			<view class="title">主流健康风险指数</view>
 			<view class="risk-list">
 				<view class="risk-item" v-for="item in user.risk" :key="item.risk_report_id">
-					<view class="tag perfect">{{ item.score_label }}</view>
+					<view
+						class="tag"
+						:class="{ perfect: item.score_label == '健康', good: item.score_label == '低风险', bad: item.score_label == '中风险' || item.score_label == '高风险' }"
+					>
+						{{ item.score_label }}
+					</view>
 					<view class="text">{{ item.name }}</view>
 				</view>
 			</view>
@@ -351,7 +356,6 @@ page {
 		}
 		.risk-list {
 			display: flex;
-			align-items: center;
 			margin: 0 12rpx 0 14rpx;
 			.risk-item {
 				flex: 1;
@@ -384,8 +388,6 @@ page {
 					color: #666666;
 					line-height: 30rpx;
 					text-align: center;
-					white-space: nowrap;
-					overflow: hidden;
 				}
 			}
 		}
