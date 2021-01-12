@@ -2,7 +2,7 @@
 	<view class="page-detail">
 		<view class="video-content"><video :src="detail.video_url_clouds" :poster="detail.video_content_clouds" controls></video></view>
 		<view class="detail-content">
-			<view class="title">{{ detail.motion_name }}（不限场地）</view>
+			<view class="title">{{ detail.motion_name }}</view>
 			<view class="detail">
 				<view class="level">
 					<view class="text">LEVEL</view>

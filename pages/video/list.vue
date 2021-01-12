@@ -161,8 +161,8 @@
 				.view-btn {
 					margin: 26rpx 0 35rpx 0;
 					padding-top: 63rpx;
-					background: url(../../static/video/view.png) no-repeat center top;
-					background-size: 67rpx 50rpx;
+					// background: url(../../static/video/view.png) no-repeat center top;
+					// background-size: 67rpx 50rpx;
 				}
 
 				.support-btn {

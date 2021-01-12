@@ -33,8 +33,7 @@
 			<view class="label">备注</view>
 			<input class="text" type="text" v-model="remark" />
 		</view>
-		<button class="btn" v-if="validate" type="default" open-type="share">邀约好友</button>
-		<view class="btn" v-else @click="handleSubmit">邀约好友</view>
+		<view class="btn" @click="handleSubmit">立即发起</view>
 		<custom-modal ref="authModal">
 			<view class="auth-modal">
 				<view class="title">"体能观测站"需要获取您的地理位置</view>
@@ -57,7 +56,6 @@ export default {
 		const startTime = new Date().getHours() + ':' + (new Date().getMinutes() > 9 ? new Date().getMinutes() : '0' + new Date().getMinutes());
 		return {
 			startTime,
-			validate: false,
 			form: {
 				invite_time: currentDate,
 				time_quantum: startTime,
@@ -66,14 +64,7 @@ export default {
 				latitude: '',
 				title: ''
 			},
-			remark: '',
-			id: ''
-		};
-	},
-	onShareAppMessage() {
-		return {
-			title: '快来跟我一起组队运动吧',
-			path: '/pages/train/share?id=' + this.id
+			remark: ''
 		};
 	},
 	computed: {
@@ -82,26 +73,6 @@ export default {
 		},
 		endDate() {
 			return this.getDate('end');
-		}
-	},
-	watch: {
-		form: {
-			deep: true,
-			handler(newForm) {
-				console.log(newForm);
-				this.validate = Object.values(newForm).every(item => {
-					return item != '';
-				});
-				console.log(this.validate);
-				if (this.validate) {
-					addActivity({ ...this.form, remark: this.remark }).then(
-						result => {
-							this.id = result;
-						},
-						err => {}
-					);
-				}
-			}
 		}
 	},
 	methods: {
@@ -156,6 +127,14 @@ export default {
 				});
 				return false;
 			}
+			addActivity({ ...this.form, remark: this.remark }).then(
+				result => {
+					uni.redirectTo({
+						url: '/pages/train/share?id=' + result
+					});
+				},
+				err => {}
+			);
 		},
 		getDate(type) {
 			const date = new Date();

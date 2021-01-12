@@ -195,7 +195,7 @@
 			</view>
 		</view>
 		<view class="btn-content">
-			<view class="btn" @click="navigateTo('/pages/train/list')">
+			<view class="btn" @click="navigateTo('/pages/train/plan')">
 				<view class="text">立即制定</view>
 				<view class="text">AI体能增强计划</view>
 			</view>

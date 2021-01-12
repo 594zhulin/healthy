@@ -17,14 +17,16 @@
 			</template>
 			<image class="icon arrow" src="../../static/order/order-icon-08.png" mode="aspectFit"></image>
 		</view>
-		<view class="product-content">
+		<view class="product-content" v-if="order">
 			<view class="product" v-for="item in order.cartInfo" :key="item.id">
 				<image class="pic" :src="item.productInfo.image" mode="aspectFit"></image>
 				<view class="detail">
 					<view class="name">{{ item.productInfo.store_name }}</view>
 					<view class="specs">{{ item.productInfo.attrInfo.suk }}</view>
 					<view class="count">×{{ item.cart_num }}</view>
-					<view class="step" v-if="item.productInfo.is_model == 1">{{ item.productInfo.buy_credits }}</view>
+					<view class="step" v-if="item.productInfo.is_model == 1">
+						{{ item.productInfo.buy_credits >= 1000 ? (item.productInfo.buy_credits / 10000).toFixed(2) + '万' : item.productInfo.buy_credits }}
+					</view>
 					<view class="price" v-else>{{ item.productInfo.attrInfo.price }}</view>
 				</view>
 			</view>
@@ -45,7 +47,7 @@
 			<view class="desc">
 				<view class="text">备注信息</view>
 				<textarea class="textarea" v-model="desc" placeholder="请添加备注(150字以内)" />
-				</view>
+			</view>
 		</view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
@@ -58,7 +60,7 @@
 </template>
 
 <script>
-import { getAddress, confirmOrder, getOrderPrice, createOrder,payOrderCallback } from '@/api/order.js';
+import { getAddress, confirmOrder, getOrderPrice, createOrder, payOrderCallback } from '@/api/order.js';
 export default {
 	data() {
 		return {
@@ -183,7 +185,7 @@ export default {
 				paySign: params.paySign,
 				success: function(res) {
 					if (res.errMsg == 'requestPayment:ok') {
-						payOrderCallback(orderId).then(result=>{},err=>{})
+						payOrderCallback(orderId).then(result => {}, err => {});
 						uni.reLaunch({
 							url: '/pages/order/result?id=' + orderId + '&type=success'
 						});

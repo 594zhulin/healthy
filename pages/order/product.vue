@@ -7,7 +7,7 @@
 		</view>
 		<view class="detail-content">
 			<view class="name">{{ product.store_name }}</view>
-			<view class="step" v-if="product.is_model == 1">{{ product.buy_credits }}</view>
+			<view class="step" v-if="product.is_model == 1">{{ product.buy_credits >= 1000 ? (product.buy_credits / 10000).toFixed(2) + '万' : product.buy_credits }}</view>
 			<view class="text" v-else>￥{{ product.price }}</view>
 		</view>
 		<view class="title-content"><view class="text">商品详情</view></view>
@@ -22,7 +22,9 @@
 					<image class="pic" :src="sku.image" mode="aspectFit"></image>
 					<view class="content">
 						<view class="name">{{ product.store_name }}</view>
-						<view class="step" v-if="product.is_model == 1">{{ product.buy_credits }}</view>
+						<view class="step" v-if="product.is_model == 1">
+							{{ product.buy_credits >= 1000 ? (product.buy_credits / 10000).toFixed(2) + '万' : product.buy_credits }}
+						</view>
 						<view class="text" v-else>￥{{ sku.price }}</view>
 					</view>
 				</view>

@@ -1,6 +1,7 @@
 const service = require('@/utils/http');
 
 const api = {
+	getStep: '/wechat/wxDecode',
 	getActivity: '/invite/activity_list',
 	getActivityDetail: '/invite/activity_info',
 	addActivity: '/invite/create_invite',
@@ -11,6 +12,24 @@ const api = {
 	getTrainData: '/motion/drill_plan_stat',
 	getTrainPlanList: '/motion/drill_recommend_list',
 	getFitnessData: '/log/measure_calbe_up',
+}
+
+const getStep = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.getStep,
+			data,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
 }
 
 const getActivity = data => {
@@ -191,6 +210,7 @@ const getFitnessData = () => {
 }
 
 module.exports = {
+	getStep,
 	getActivity,
 	getActivityDetail,
 	addActivity,

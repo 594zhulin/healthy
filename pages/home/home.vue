@@ -21,7 +21,7 @@
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
 					<view class="step">{{ no_deposit_str }}</view>
-					<view class="text total">共累计{{ integral_num }}步</view>
+					<view class="text total">共累计{{ integral_num_str }}</view>
 					<view class="btn" @click="navigateTo('/pages/bank/bank')">点我存入</view>
 				</view>
 			</view>
@@ -63,7 +63,7 @@
 					<view class="content">
 						<view class="title">{{ item.store_name }}</view>
 						<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
-						<view class="step" v-if="item.is_model == 1">{{ item.buy_credits }}</view>
+						<view class="step" v-if="item.is_model == 1">{{ item.buy_credits >= 1000 ? (item.buy_credits / 10000).toFixed(2) + '万' : item.buy_credits }}</view>
 						<view class="text" v-else>￥{{ item.price }}</view>
 					</view>
 				</view>
@@ -97,8 +97,8 @@ export default {
 			percent: 0,
 			synthesis_lable: '',
 			create_at: '',
-			integral_num: 0,
-			no_deposit_str: 0,
+			integral_num_str: '0万步',
+			no_deposit_str: '0万步',
 			params: {
 				page: 1,
 				limit: 20
@@ -166,8 +166,8 @@ export default {
 		getStep() {
 			getStep().then(
 				result => {
-					const { integral_num, no_deposit_str } = result;
-					this.integral_num = integral_num;
+					const { integral_num_str, no_deposit_str } = result;
+					this.integral_num_str = integral_num_str;
 					this.no_deposit_str = no_deposit_str;
 				},
 				err => {}
@@ -481,15 +481,15 @@ page {
 				color: #ffffff;
 				line-height: 84rpx;
 				text-align: center;
-				&::after {
-					content: '步';
-					margin-left: 12rpx;
-					font-size: 24rpx;
-					font-family: PingFangSC-Semibold, PingFang SC;
-					font-weight: 600;
-					color: rgba(255, 255, 255, 0.5);
-					line-height: 34rpx;
-				}
+				// &::after {
+				// 	content: '步';
+				// 	margin-left: 12rpx;
+				// 	font-size: 24rpx;
+				// 	font-family: PingFangSC-Semibold, PingFang SC;
+				// 	font-weight: 600;
+				// 	color: rgba(255, 255, 255, 0.5);
+				// 	line-height: 34rpx;
+				// }
 			}
 			.text {
 				font-size: 24rpx;

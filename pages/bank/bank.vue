@@ -7,8 +7,8 @@
 		<view class="overview-content">
 			<image class="background" src="../../static/bank/bank-bg-01.svg" mode="scaleToFill"></image>
 			<view class="title">余额</view>
-			<view class="step">{{ integral_num }}</view>
-			<view class="text">待存步数：{{ no_deposit_str }}步</view>
+			<view class="step">{{ integral_num_str }}</view>
+			<view class="text">待存步数：{{ no_deposit_str }}</view>
 			<view class="tip">未存入的步数，7天后自动过期</view>
 			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit" @click="handleClick"></image>
 		</view>
@@ -77,8 +77,9 @@ export default {
 			avatarUrl: '',
 			nickName: '',
 			integral_num: 0,
+			integral_num_str: '0万步',
 			no_deposit_num: 0,
-			no_deposit_str: 0,
+			no_deposit_str: '0万步',
 			flame_num: 0,
 			lastTime: '',
 			step: [],
@@ -141,10 +142,11 @@ export default {
 		getUser() {
 			getUser().then(
 				result => {
-					const { avatarUrl, nickName, integral_num, no_deposit_num, no_deposit_str, flame_num } = result;
+					const { avatarUrl, nickName, integral_num, no_deposit_num, integral_num_str, no_deposit_str, flame_num } = result;
 					this.avatarUrl = avatarUrl;
 					this.nickName = nickName;
 					this.integral_num = integral_num;
+					this.integral_num_str = integral_num_str;
 					this.no_deposit_num = no_deposit_num;
 					this.no_deposit_str = no_deposit_str;
 					this.flame_num = flame_num;
@@ -166,7 +168,8 @@ export default {
 			if (this.flame_num == 0) {
 				uni.showToast({
 					icon: 'none',
-					title: '可存步数次数不足'
+					title: '快点击找黑石，进行一次体能测试，可以获得一枚火苗',
+					duration: 2000
 				});
 			} else {
 				const startDate = this.getCurrentDate();
@@ -201,13 +204,13 @@ export default {
 			}
 		},
 		cacheStep(deposit_num, timestamp) {
-			const _this = this
+			const _this = this;
 			cacheStep({ deposit_num, timestamp }).then(
 				result => {
 					_this.getUser();
 					setTimeout(function() {
 						_this.setStep();
-					}, 10);
+					}, 500);
 				},
 				err => {}
 			);
@@ -215,6 +218,10 @@ export default {
 		setStep() {
 			setStep({ deposit_num: parseInt(this.no_deposit_num) }).then(
 				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '恭喜您使用一枚火苗成功存入步数！'
+					});
 					this.getUser();
 					this.getLastTime();
 					this.getListData();
@@ -320,14 +327,14 @@ export default {
 			color: #ffffff;
 			line-height: 74rpx;
 			text-align: center;
-			&::after {
-				content: '步';
-				font-size: 36rpx;
-				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-				font-weight: 400;
-				color: #ffffff;
-				line-height: 50rpx;
-			}
+			// &::after {
+			// 	content: '步';
+			// 	font-size: 36rpx;
+			// 	font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			// 	font-weight: 400;
+			// 	color: #ffffff;
+			// 	line-height: 50rpx;
+			// }
 		}
 		.text {
 			margin-top: 2rpx;

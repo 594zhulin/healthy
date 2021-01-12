@@ -45,7 +45,7 @@
 		<view class="balance-content">
 			<view class="title">我的余额</view>
 			<view class="link" @click="navigateTo('/pages/personal/step?integral=' + user.integral)">余额明细></view>
-			<view class="step">{{ user.integral }}</view>
+			<view class="step">{{ (user.integral / 10000).toFixed(2) }}万</view>
 			<view class="btn" @click="switchTab">去使用</view>
 		</view>
 		<view class="address-content">

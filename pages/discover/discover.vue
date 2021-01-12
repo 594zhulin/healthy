@@ -1,7 +1,7 @@
 <template>
 	<view class="page-discover">
 		<view class="device-content">
-			<view class="device-item" v-for="item in device" :key="item.device_id" @click="handleOpen(item.latitude, item.longitude)">
+			<view class="device-item" v-for="item in device" :key="item.device_id" @click="handleOpen(item)">
 				<view class="point"><image class="icon" src="../../static/discover/discover-icon-01.svg" mode="aspectFit"></image></view>
 				<view class="content">
 					<view class="name">{{ item.community_plot_name }}</view>
@@ -36,10 +36,12 @@ export default {
 		});
 	},
 	methods: {
-		handleOpen(latitude, longitude) {
+		handleOpen(address) {
 			uni.openLocation({
-				latitude,
-				longitude,
+				latitude: address.latitude,
+				longitude: address.longitude,
+				name: address.community_plot_name,
+				address: address.address,
 				success: function() {
 					console.log('success');
 				}

@@ -1,7 +1,7 @@
 <template>
 	<view class="page-step">
 		<view class="overview-content">
-			<view class="step">{{ integral }}</view>
+			<view class="step">{{ (integral / 10000).toFixed(2) }}万步</view>
 			<view class="text">当前步数</view>
 			<!-- <view class="tip">1000步将于2020-02-29过期</view> -->
 		</view>

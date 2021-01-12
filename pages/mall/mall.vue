@@ -42,7 +42,7 @@
 				<view class="name">{{ item.store_name }}</view>
 				<view class="content">
 					<view class="step">
-						<view class="text" v-if="item.is_model == 1">{{ item.buy_credits }}步</view>
+						<view class="text" v-if="item.is_model == 1">{{ item.buy_credits >= 1000 ? (item.buy_credits / 10000).toFixed(2) + '万' : item.buy_credits }}步</view>
 						<view class="text" v-else>￥{{ item.price }}</view>
 						<!-- <view class="price">¥{{ item.ot_price }}</view> -->
 					</view>
