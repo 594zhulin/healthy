@@ -9,7 +9,7 @@ const api = {
 	getTrainDetail: '/motion/info',
 	clocked: '/motion/immediately',
 	getTrainData: '/motion/drill_plan_stat',
-	getTrainPlanList: '/motion/drill_plan_list',
+	getTrainPlanList: '/motion/drill_recommend_list',
 	getFitnessData: '/log/measure_calbe_up',
 }
 

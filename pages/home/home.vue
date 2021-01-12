@@ -158,7 +158,7 @@ export default {
 					this.score = score;
 					this.synthesis_lable = synthesis_lable;
 					this.create_at = create_at;
-					this.percent = (parseFloat(score) + 0.9 * (100 - parseFloat(score))).toFixed(1);
+					this.percent = (parseFloat(score) + 0.2 * (100 - parseFloat(score))).toFixed(1);
 				},
 				err => {}
 			);

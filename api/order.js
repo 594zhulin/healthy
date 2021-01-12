@@ -12,7 +12,9 @@ const api = {
 	cancelOrder: '/order/cancel',
 	delOrder: '/order/del',
 	takeOrder: '/order/take',
-	remindOrder: '/order/remind'
+	remindOrder: '/order/remind',
+	getRefundReason: '/order/refund/reason',
+	refundOrder: '/order/refund/verify'
 }
 
 const getProduct = data => {
@@ -271,6 +273,73 @@ const remindOrder = data => {
 	})
 }
 
+const payOrderCallback = (id) => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: '/order/notify/' + id,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const getRefundReason = () => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.getRefundReason
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const getExpress = (id) => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: '/order/express/' + id
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const refundOrder = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.refundOrder,
+			data,
+			method: 'POST'
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getProduct,
 	getProductDetail,
@@ -285,5 +354,9 @@ module.exports = {
 	cancelOrder,
 	delOrder,
 	takeOrder,
-	remindOrder
+	remindOrder,
+	payOrderCallback,
+	getRefundReason,
+	refundOrder,
+	getExpress
 }

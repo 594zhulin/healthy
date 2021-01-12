@@ -77,10 +77,10 @@
 					<view class="text">待收货</view>
 					<view class="count" v-if="user.orderStatusNum.received_count > 0">{{ user.orderStatusNum.received_count }}</view>
 				</view>
-				<view class="order-item" @click="navigateTo('/pages/order/list?id=4')">
+				<view class="order-item" @click="navigateTo('/pages/order/list?id=3')">
 					<image class="icon signed" src="../../static/user/user-icon-06.svg" mode="aspectFit"></image>
 					<view class="text">已签收</view>
-					<view class="count" v-if="user.orderStatusNum.complete_count > 0">{{ user.orderStatusNum.complete_count }}</view>
+					<view class="count" v-if="user.orderStatusNum.evaluated_count > 0">{{ user.orderStatusNum.evaluated_count }}</view>
 				</view>
 				<view class="order-item" @click="navigateTo('/pages/order/aftersale')">
 					<image class="icon aftersale" src="../../static/user/user-icon-07.svg" mode="aspectFit"></image>
@@ -105,7 +105,7 @@ export default {
 				integral: 0,
 				score: 0,
 				orderStatusNum: {
-					complete_count: 0,
+					evaluated_count: 0,
 					received_count: 0,
 					unpaid_count: 10,
 					unshipped_count: 0

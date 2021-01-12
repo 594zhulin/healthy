@@ -45,7 +45,7 @@
 			<view class="desc">
 				<view class="text">备注信息</view>
 				<textarea class="textarea" v-model="desc" placeholder="请添加备注(150字以内)" />
-			</view>
+				</view>
 		</view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getAddress, confirmOrder, getOrderPrice, createOrder } from '@/api/order.js';
+import { getAddress, confirmOrder, getOrderPrice, createOrder,payOrderCallback } from '@/api/order.js';
 export default {
 	data() {
 		return {
@@ -183,6 +183,7 @@ export default {
 				paySign: params.paySign,
 				success: function(res) {
 					if (res.errMsg == 'requestPayment:ok') {
+						payOrderCallback(orderId).then(result=>{},err=>{})
 						uni.reLaunch({
 							url: '/pages/order/result?id=' + orderId + '&type=success'
 						});
