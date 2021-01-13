@@ -107,7 +107,7 @@
 							title: '参与成功'
 						});
 						const params = {
-							activity_id: this.activity.id
+							activity_id: this.activity.id,
 							user_id
 						}
 						this.getActivityDetail(params)
