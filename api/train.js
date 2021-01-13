@@ -54,7 +54,7 @@ const getActivity = data => {
 
 const getActivityDetail = data => {
 	return new Promise((resolve, reject) => {
-		service.http_({
+		service.http({
 			url: api.getActivityDetail,
 			data
 		}).then(result => {
