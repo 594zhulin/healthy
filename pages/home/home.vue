@@ -2,7 +2,7 @@
 	<view class="page-home">
 		<template v-if="isLogin">
 			<view class="overview-content">
-				<view class="score-item">
+				<view class="score-item" @click="navigateTo('/pages/measure/index')">
 					<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
 					<image class="icon" src="../../static/home/home-icon-01.svg" mode="aspectFit"></image>
 					<view class="title">体能评分</view>
@@ -13,16 +13,16 @@
 					</view>
 					<view class="tag">{{ synthesis_lable }}</view>
 					<view class="text">超过{{ percent }}%的用户</view>
-					<view class="btn" @click="navigateTo('/pages/measure/index')">数据报告</view>
+					<view class="btn">数据报告</view>
 				</view>
-				<view class="bank-item">
+				<view class="bank-item" @click="navigateTo('/pages/bank/bank')">
 					<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
 					<view class="step">{{ no_deposit_str }}</view>
 					<view class="text total">共累计{{ integral_num_str }}</view>
-					<view class="btn" @click="navigateTo('/pages/bank/bank')">点我存入</view>
+					<view class="btn">点我存入</view>
 				</view>
 			</view>
 			<view class="grid-content">
@@ -63,7 +63,7 @@
 					<view class="content">
 						<view class="title">{{ item.store_name }}</view>
 						<!-- <view class="price">原价：{{ item.ot_price }}元</view> -->
-						<view class="step" v-if="item.is_model == 1">{{ item.buy_credits >= 1000 ? (item.buy_credits / 10000).toFixed(2) + '万' : item.buy_credits }}</view>
+						<view class="step" v-if="item.is_model == 1">{{ item.buy_credits }}万</view>
 						<view class="text" v-else>￥{{ item.price }}</view>
 					</view>
 				</view>

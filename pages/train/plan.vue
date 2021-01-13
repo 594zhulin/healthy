@@ -30,7 +30,7 @@
 				<view class="record">
 					<view class="label">活动量：</view>
 					<view class="value">
-						<view class="count">{{ (deposit_num / 10000).toFixed(2) }}万</view>
+						<view class="count">{{ deposit_num }}万</view>
 						<view class="unit">步</view>
 					</view>
 				</view>

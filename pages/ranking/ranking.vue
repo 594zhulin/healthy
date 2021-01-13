@@ -6,7 +6,7 @@
 				<view class="order">{{ item.ranking_num > 9 ? item.ranking_num : '0' + item.ranking_num }}</view>
 				<image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image>
 				<view class="name">{{ item.nickName }}</view>
-				<view class="step">{{ item.step_num }}步</view>
+				<view class="step">{{ item.step_num }}万步</view>
 			</view>
 		</view>
 		<view class="fix-content">
@@ -16,7 +16,7 @@
 				<view class="name">{{ nickName }}</view>
 				<view class="order">第{{ ranking_num }}名</view>
 			</view>
-			<view class="step">{{ step_num }}步</view>
+			<view class="step">{{ step_num }}万步</view>
 		</view>
 	</view>
 </template>
@@ -50,6 +50,7 @@ export default {
 	},
 	methods: {
 		getListData(direction) {
+			uni.showLoading();
 			if (direction == 'down') {
 				this.params.pageNo = 1;
 			} else {
@@ -68,8 +69,11 @@ export default {
 					this.avatarUrl = data.user.avatarUrl;
 					this.nickName = data.user.nickName;
 					uni.stopPullDownRefresh();
+					uni.hideLoading();
 				},
-				err => {}
+				err => {
+					uni.hideLoading();
+				}
 			);
 		},
 		bindTabChange(id) {

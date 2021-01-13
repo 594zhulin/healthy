@@ -12,9 +12,7 @@
 						<view class="name">{{ cart.productInfo.store_name }}</view>
 						<view class="specs">{{ cart.productInfo.attrInfo.suk }}</view>
 						<view class="count">×{{ cart.cart_num }}</view>
-						<view class="step" v-if="cart.productInfo.is_model == 1">
-							{{ cart.productInfo.buy_credits >= 1000 ? (cart.productInfo.buy_credits / 10000).toFixed(2) + '万' : cart.productInfo.buy_credits }}
-						</view>
+						<view class="step" v-if="cart.productInfo.is_model == 1">{{ cart.productInfo.buy_credits }}万</view>
 						<view class="text" v-else>{{ cart.productInfo.attrInfo.price }}</view>
 					</view>
 				</view>
