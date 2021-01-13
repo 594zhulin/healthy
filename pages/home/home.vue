@@ -81,160 +81,186 @@
 </template>
 
 <script>
-import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
-import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { login, signIn, getScore, getStep, getProduct } from '@/api/home.js';
-export default {
-	components: {
-		mpvueEcharts
-	},
-	data() {
-		return {
-			isLogin: false,
-			echarts,
-			gagugeOption: null,
-			score: 0,
-			percent: 0,
-			synthesis_lable: '',
-			create_at: '',
-			integral_num_str: '0万步',
-			no_deposit_str: '0万步',
-			params: {
-				page: 1,
-				limit: 20
-			},
-			product: [],
-			total: 0,
-			isNew: false
-		};
-	},
-	onLoad(option) {
-		uni.hideTabBar();
-		this.isLogin = getApp().globalData.isLogin;
-		this.initGaugeChartOption();
-		if (this.isLogin) {
+	import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
+	import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
+	import {
+		login,
+		signIn,
+		getScore,
+		getStep,
+		getProduct
+	} from '@/api/home.js';
+	export default {
+		components: {
+			mpvueEcharts
+		},
+		data() {
+			return {
+				isLogin: false,
+				echarts,
+				gagugeOption: null,
+				score: 0,
+				percent: 0,
+				synthesis_lable: '',
+				create_at: '',
+				integral_num_str: '0万步',
+				no_deposit_str: '0万步',
+				params: {
+					page: 1,
+					limit: 20
+				},
+				product: [],
+				total: 0,
+				isNew: false
+			};
+		},
+		onLoad(option) {
+			uni.hideTabBar();
+			if (option.user_id) {
+				this.signIn(option.user_id);
+			}
+		},
+		onShow() {
+			this.isLogin = getApp().globalData.isLogin;
+			this.initGaugeChartOption();
+			if (this.isLogin) {
+				this.getScore();
+				this.getStep();
+				this.getListData('down');
+			}
+		},
+		onPullDownRefresh() {
 			this.getScore();
 			this.getStep();
 			this.getListData('down');
-		}
-		if (option.user_id) {
-			this.signIn(option.user_id);
-		}
-	},
-	onPullDownRefresh() {
-		this.getScore();
-		this.getStep();
-		this.getListData('down');
-	},
-	onReachBottom() {
-		this.getListData('up');
-	},
-	methods: {
-		signIn(user_id) {
-			const _this = this;
-			uni.login({
-				provider: 'weixin',
-				success: function(loginRes) {
-					signIn({ code: loginRes.code, trans_pond_user_id: user_id }).then(
-						result => {
-							_this.isNew = result.is_news;
-							if (!result.is_news) {
-								uni.showToast({
-									icon: 'none',
-									title: '您已经不是新用户了，无法帮Ta点亮，请督促Ta多多观测自己的身体素质吧！',
-									duration: 2000
-								});
-							}
-						},
-						err => {}
-					);
-				}
-			});
 		},
-		getScore() {
-			getScore().then(
-				result => {
-					const { score, synthesis_lable, create_at } = result;
-					this.score = score;
-					this.synthesis_lable = synthesis_lable;
-					this.create_at = create_at;
-					this.percent = (parseFloat(score) + 0.2 * (100 - parseFloat(score))).toFixed(1);
-				},
-				err => {}
-			);
+		onReachBottom() {
+			this.getListData('up');
 		},
-		getStep() {
-			getStep().then(
-				result => {
-					const { integral_num_str, no_deposit_str } = result;
-					this.integral_num_str = integral_num_str;
-					this.no_deposit_str = no_deposit_str;
-				},
-				err => {}
-			);
-		},
-		getListData(direction) {
-			if (direction == 'down') {
-				this.params.page = 1;
-			} else {
-				if (this.product.length >= this.total) {
-					return false;
-				}
-				this.params.page += 1;
-			}
-			getProduct({ ...this.params }).then(
-				result => {
-					const { list, total } = result;
-					const arr = list.filter(item => item.is_home == 1);
-					if (direction == 'down') {
-						this.product = arr;
-						this.total = arr.length;
-					} else {
-						this.product = this.product.concat(arr);
-						this.total += arr.length;
+		methods: {
+			signIn(user_id) {
+				const _this = this;
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						signIn({
+							code: loginRes.code,
+							trans_pond_user_id: user_id
+						}).then(
+							result => {
+								_this.isNew = result.is_news;
+								if (!result.is_news) {
+									uni.showToast({
+										icon: 'none',
+										title: '您已经不是新用户了，无法帮Ta点亮，请督促Ta多多观测自己的身体素质吧！',
+										duration: 2000
+									});
+								}
+							},
+							err => {}
+						);
 					}
-					uni.stopPullDownRefresh();
-				},
-				err => {}
-			);
-		},
-		getUserInfo(e) {
-			const _this = this;
-			uni.login({
-				provider: 'weixin',
-				success: function(loginRes) {
-					console.log(loginRes);
-					// 获取用户信息
-					uni.getUserInfo({
-						provider: 'weixin',
-						success: function(infoRes) {
-							login({ code: loginRes.code, iv: infoRes.iv, encryptedData: infoRes.encryptedData, signature: infoRes.signature }).then(
-								result => {
-									uni.setStorageSync('token', result.token);
-									uni.setStorageSync('expires_time', result.expires_time);
-									uni.setStorageSync('user_id', result.userInfo.uid);
-									_this.isLogin = true;
-									_this.getScore();
-									_this.getStep();
-									_this.getListData('down');
-									if (_this.isNew) {
-										uni.showToast({
-											icon: 'none',
-											title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
-										});
-									}
-								},
-								err => {}
-							);
-						}
-					});
+				});
+			},
+			getScore() {
+				getScore().then(
+					result => {
+						const {
+							score,
+							synthesis_lable,
+							create_at
+						} = result;
+						this.score = score;
+						this.synthesis_lable = synthesis_lable;
+						this.create_at = create_at;
+						this.percent = (parseFloat(score) + 0.2 * (100 - parseFloat(score))).toFixed(1);
+					},
+					err => {}
+				);
+			},
+			getStep() {
+				getStep().then(
+					result => {
+						const {
+							integral_num_str,
+							no_deposit_str
+						} = result;
+						this.integral_num_str = integral_num_str;
+						this.no_deposit_str = no_deposit_str;
+					},
+					err => {}
+				);
+			},
+			getListData(direction) {
+				if (direction == 'down') {
+					this.params.page = 1;
+				} else {
+					if (this.product.length >= this.total) {
+						return false;
+					}
+					this.params.page += 1;
 				}
-			});
-		},
-		initGaugeChartOption() {
-			this.gagugeOption = {
-				series: [
-					{
+				getProduct({ ...this.params
+				}).then(
+					result => {
+						const {
+							list,
+							total
+						} = result;
+						const arr = list.filter(item => item.is_home == 1);
+						if (direction == 'down') {
+							this.product = arr;
+							this.total = arr.length;
+						} else {
+							this.product = this.product.concat(arr);
+							this.total += arr.length;
+						}
+						uni.stopPullDownRefresh();
+					},
+					err => {}
+				);
+			},
+			getUserInfo(e) {
+				const _this = this;
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						console.log(loginRes);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'weixin',
+							success: function(infoRes) {
+								login({
+									code: loginRes.code,
+									iv: infoRes.iv,
+									encryptedData: infoRes.encryptedData,
+									signature: infoRes.signature
+								}).then(
+									result => {
+										uni.setStorageSync('token', result.token);
+										uni.setStorageSync('expires_time', result.expires_time);
+										uni.setStorageSync('user_id', result.userInfo.uid);
+										_this.isLogin = true;
+										_this.getScore();
+										_this.getStep();
+										_this.getListData('down');
+										if (_this.isNew) {
+											uni.showToast({
+												icon: 'none',
+												title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
+											});
+										}
+									},
+									err => {}
+								);
+							}
+						});
+					}
+				});
+			},
+			initGaugeChartOption() {
+				this.gagugeOption = {
+					series: [{
 						name: '',
 						type: 'gauge',
 						radius: '140%',
@@ -292,484 +318,543 @@ export default {
 						detail: {
 							show: false
 						}
-					}
-				]
-			};
-			if (this.$refs.gaugeChart) {
-				this.$refs.gaugeChart.init();
+					}]
+				};
+				if (this.$refs.gaugeChart) {
+					this.$refs.gaugeChart.init();
+				}
+			},
+			initGaugeChart(e) {
+				let {
+					canvas,
+					width,
+					height
+				} = e;
+				echarts.setCanvasCreator(() => canvas);
+				const chart = echarts.init(canvas, null, {
+					width: width,
+					height: height
+				});
+				canvas.setChart(chart);
+				if (this.gagugeOption) {
+					chart.setOption(this.gagugeOption);
+				}
+				return chart;
+			},
+			switchTab() {
+				uni.switchTab({
+					url: '/pages/mall/mall'
+				});
+			},
+			navigateTo(url) {
+				uni.navigateTo({
+					url
+				});
 			}
-		},
-		initGaugeChart(e) {
-			let { canvas, width, height } = e;
-			echarts.setCanvasCreator(() => canvas);
-			const chart = echarts.init(canvas, null, {
-				width: width,
-				height: height
-			});
-			canvas.setChart(chart);
-			if (this.gagugeOption) {
-				chart.setOption(this.gagugeOption);
-			}
-			return chart;
-		},
-		switchTab() {
-			uni.switchTab({
-				url: '/pages/mall/mall'
-			});
-		},
-		navigateTo(url) {
-			uni.navigateTo({
-				url
-			});
 		}
-	}
-};
+	};
 </script>
 
 <style lang="less">
-page {
-	background-color: #f2f2f7;
-	padding-bottom: 128rpx;
-}
-.page-home {
-	.overview-content {
-		display: flex;
-		align-items: flex-end;
-		height: 420rpx;
-		margin: 4vw 4.8vw;
-		.score-item {
-			position: relative;
-			width: 406rpx;
+	page {
+		background-color: #f2f2f7;
+		padding-bottom: 128rpx;
+	}
+
+	.page-home {
+		.overview-content {
+			display: flex;
+			align-items: flex-end;
 			height: 420rpx;
-			margin-left: -2rpx;
-			box-shadow: 0px 10rpx 20rpx 0px rgba(8, 53, 85, 0.2);
-			border-radius: 12rpx 50rpx 50rpx 12rpx;
-			z-index: 1;
-			.background {
-				position: absolute;
-				top: 0;
-				left: 0;
+			margin: 4vw 4.8vw;
+
+			.score-item {
+				position: relative;
 				width: 406rpx;
 				height: 420rpx;
-				z-index: -1;
-			}
-			.icon {
-				position: absolute;
-				top: 40rpx;
-				left: 32rpx;
-				width: 28rpx;
-				height: 30rpx;
-			}
-			.title {
-				padding: 32rpx 0 0 74rpx;
-				font-size: 32rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #ffffff;
-				line-height: 46rpx;
-			}
-			.date {
-				position: absolute;
-				top: 44rpx;
-				right: 32rpx;
-				font-size: 20rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: rgba(255, 255, 255, 0.7);
-				line-height: 28rpx;
-			}
-			.chart {
-				position: relative;
-				height: 158rpx;
-				.gauge {
+				margin-left: -2rpx;
+				box-shadow: 0px 10rpx 20rpx 0px rgba(8, 53, 85, 0.2);
+				border-radius: 12rpx 50rpx 50rpx 12rpx;
+				z-index: 1;
+
+				.background {
 					position: absolute;
-					top: 20rpx;
+					top: 0;
 					left: 0;
-					right: 0;
-					height: 158rpx;
+					width: 406rpx;
+					height: 420rpx;
+					z-index: -1;
 				}
-				.score {
+
+				.icon {
 					position: absolute;
-					top: 66rpx;
+					top: 40rpx;
+					left: 32rpx;
+					width: 28rpx;
+					height: 30rpx;
+				}
+
+				.title {
+					padding: 32rpx 0 0 74rpx;
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #ffffff;
+					line-height: 46rpx;
+				}
+
+				.date {
+					position: absolute;
+					top: 44rpx;
+					right: 32rpx;
+					font-size: 20rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: rgba(255, 255, 255, 0.7);
+					line-height: 28rpx;
+				}
+
+				.chart {
+					position: relative;
+					height: 158rpx;
+
+					.gauge {
+						position: absolute;
+						top: 20rpx;
+						left: 0;
+						right: 0;
+						height: 158rpx;
+					}
+
+					.score {
+						position: absolute;
+						top: 66rpx;
+						left: 0;
+						right: 0;
+						font-size: 60rpx;
+						font-family: PingFangSC-Semibold, PingFang SC;
+						font-weight: 600;
+						color: #ffffff;
+						line-height: 84rpx;
+						text-align: center;
+					}
+				}
+
+				.tag {
+					width: 100rpx;
+					height: 30rpx;
+					margin-left: 158rpx;
+					background: rgba(255, 255, 255, 0.15);
+					border-radius: 16rpx;
+					font-size: 18rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #ffffff;
+					line-height: 30rpx;
+					text-align: center;
+				}
+
+				.text {
+					margin: 18rpx 0 20rpx 0;
+					font-size: 24rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: rgba(255, 255, 255, 0.4);
+					line-height: 34rpx;
+					text-align: center;
+				}
+
+				.btn {
+					position: absolute;
+					left: 124rpx;
+					bottom: 34rpx;
+					width: 160rpx;
+					height: 50rpx;
+					background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+					box-shadow: 0px 10rpx 10rpx 0px rgba(2, 15, 64, 0.1);
+					border-radius: 26rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #2879ea;
+					line-height: 50rpx;
+					text-align: center;
+				}
+			}
+
+			.bank-item {
+				position: absolute;
+				right: 36rpx;
+				width: 326rpx;
+				height: 330rpx;
+				padding-left: 50rpx;
+				box-shadow: 0px 10rpx 20rpx 0px rgba(64, 38, 2, 0.2);
+				border-radius: 0px 12rpx 12rpx 0px;
+				box-sizing: border-box;
+
+				.background {
+					position: absolute;
+					top: 0;
 					left: 0;
-					right: 0;
+					width: 326rpx;
+					height: 330rpx;
+					z-index: -1;
+				}
+
+				.icon {
+					position: absolute;
+					top: 28rpx;
+					left: 88rpx;
+					width: 32rpx;
+					height: 32rpx;
+				}
+
+				.title {
+					padding-top: 22rpx;
+					margin-bottom: 10rpx;
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #ffffff;
+					line-height: 46rpx;
+					text-align: center;
+				}
+
+				.step {
 					font-size: 60rpx;
 					font-family: PingFangSC-Semibold, PingFang SC;
 					font-weight: 600;
 					color: #ffffff;
 					line-height: 84rpx;
 					text-align: center;
+					// &::after {
+					// 	content: '步';
+					// 	margin-left: 12rpx;
+					// 	font-size: 24rpx;
+					// 	font-family: PingFangSC-Semibold, PingFang SC;
+					// 	font-weight: 600;
+					// 	color: rgba(255, 255, 255, 0.5);
+					// 	line-height: 34rpx;
+					// }
+				}
+
+				.text {
+					font-size: 24rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: rgba(255, 255, 255, 0.5);
+					line-height: 34rpx;
+					text-align: center;
+				}
+
+				.btn {
+					position: absolute;
+					left: 50rpx;
+					right: 0;
+					bottom: 34rpx;
+					width: 160rpx;
+					height: 50rpx;
+					margin: auto;
+					background: #ffffff;
+					box-shadow: 0px 10rpx 10rpx 0px rgba(64, 2, 2, 0.1);
+					border-radius: 26rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #df5420;
+					line-height: 50rpx;
+					text-align: center;
 				}
 			}
-			.tag {
-				width: 100rpx;
-				height: 30rpx;
-				margin-left: 158rpx;
-				background: rgba(255, 255, 255, 0.15);
-				border-radius: 16rpx;
-				font-size: 18rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #ffffff;
-				line-height: 30rpx;
-				text-align: center;
-			}
-			.text {
-				margin: 18rpx 0 20rpx 0;
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: rgba(255, 255, 255, 0.4);
-				line-height: 34rpx;
-				text-align: center;
-			}
-			.btn {
-				position: absolute;
-				left: 124rpx;
-				bottom: 34rpx;
-				width: 160rpx;
-				height: 50rpx;
-				background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
-				box-shadow: 0px 10rpx 10rpx 0px rgba(2, 15, 64, 0.1);
-				border-radius: 26rpx;
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #2879ea;
-				line-height: 50rpx;
-				text-align: center;
-			}
 		}
-		.bank-item {
-			position: absolute;
-			right: 36rpx;
-			width: 326rpx;
-			height: 330rpx;
-			padding-left: 50rpx;
-			box-shadow: 0px 10rpx 20rpx 0px rgba(64, 38, 2, 0.2);
-			border-radius: 0px 12rpx 12rpx 0px;
-			box-sizing: border-box;
-			.background {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 326rpx;
-				height: 330rpx;
-				z-index: -1;
-			}
-			.icon {
-				position: absolute;
-				top: 28rpx;
-				left: 88rpx;
-				width: 32rpx;
-				height: 32rpx;
-			}
-			.title {
-				padding-top: 22rpx;
-				margin-bottom: 10rpx;
-				font-size: 32rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #ffffff;
-				line-height: 46rpx;
-				text-align: center;
-			}
-			.step {
-				font-size: 60rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #ffffff;
-				line-height: 84rpx;
-				text-align: center;
-				// &::after {
-				// 	content: '步';
-				// 	margin-left: 12rpx;
-				// 	font-size: 24rpx;
-				// 	font-family: PingFangSC-Semibold, PingFang SC;
-				// 	font-weight: 600;
-				// 	color: rgba(255, 255, 255, 0.5);
-				// 	line-height: 34rpx;
-				// }
-			}
-			.text {
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: rgba(255, 255, 255, 0.5);
-				line-height: 34rpx;
-				text-align: center;
-			}
-			.btn {
-				position: absolute;
-				left: 50rpx;
-				right: 0;
-				bottom: 34rpx;
-				width: 160rpx;
-				height: 50rpx;
-				margin: auto;
-				background: #ffffff;
-				box-shadow: 0px 10rpx 10rpx 0px rgba(64, 2, 2, 0.1);
-				border-radius: 26rpx;
-				font-size: 24rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #df5420;
-				line-height: 50rpx;
-				text-align: center;
-			}
-		}
-	}
-	.grid-content {
-		display: flex;
-		flex-wrap: wrap;
-		margin: 0 0.8vw;
-		.grid-item {
-			width: 43.2vw;
-			height: 320rpx;
-			margin-left: 4vw;
-			margin-bottom: 4vw;
-			background-color: #fff;
-			vertical-align: top;
-			border-radius: 12rpx;
-			.icon {
-				display: block;
-			}
-			.title {
-				font-size: 30rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #000000;
-				line-height: 42rpx;
-				text-align: center;
-			}
-			.text {
-				font-size: 22rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #92a0b6;
-				line-height: 30rpx;
-				text-align: center;
-			}
-			.btn {
-				width: 148rpx;
-				height: 48rpx;
-				margin: 0 auto;
-				border-radius: 24rpx;
-				border: 2rpx solid #9fc7ff;
-				box-sizing: border-box;
-				font-size: 22rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #0f72ff;
-				line-height: 44rpx;
-				text-align: center;
-			}
-		}
-		.grid-item.plan {
-			.icon {
-				width: 56rpx;
-				height: 64rpx;
-				margin: 48rpx auto 0 auto;
-			}
-			.title {
-				margin: 34rpx 0 50rpx 0;
-			}
-		}
-		.grid-item.mall {
-			.icon {
-				width: 48rpx;
-				height: 64rpx;
-				margin: 48rpx auto 0 auto;
-			}
-			.title {
-				margin: 34rpx 0 40rpx 0;
-			}
-		}
-		.grid-item.diet {
-			.icon {
-				width: 54rpx;
-				height: 64rpx;
-				margin: 48rpx auto 0 auto;
-			}
-			.title {
-				margin: 50rpx 0 34rpx 0;
-			}
-		}
-		.grid-item.video {
-			.icon {
-				width: 64rpx;
-				height: 64rpx;
-				margin: 48rpx auto 0 auto;
-			}
-			.title {
-				margin: 50rpx 0 24rpx 0;
-			}
-		}
-		.grid-item.ranking {
+
+		.grid-content {
 			display: flex;
-			align-items: center;
-			width: 90.4vw;
-			height: 130rpx;
-			margin-bottom: 0;
-			.icon {
-				width: 80rpx;
-				height: 76rpx;
-				margin: 28rpx 78rpx 28rpx 70rpx;
+			flex-wrap: wrap;
+			margin: 0 0.8vw;
+
+			.grid-item {
+				width: 43.2vw;
+				height: 320rpx;
+				margin-left: 4vw;
+				margin-bottom: 4vw;
+				background-color: #fff;
+				vertical-align: top;
+				border-radius: 12rpx;
+
+				.icon {
+					display: block;
+				}
+
+				.title {
+					font-size: 30rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #000000;
+					line-height: 42rpx;
+					text-align: center;
+				}
+
+				.text {
+					font-size: 22rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #92a0b6;
+					line-height: 30rpx;
+					text-align: center;
+				}
+
+				.btn {
+					width: 148rpx;
+					height: 48rpx;
+					margin: 0 auto;
+					border-radius: 24rpx;
+					border: 2rpx solid #9fc7ff;
+					box-sizing: border-box;
+					font-size: 22rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #0f72ff;
+					line-height: 44rpx;
+					text-align: center;
+				}
 			}
-			.title {
-				margin-bottom: 20rpx;
+
+			.grid-item.plan {
+				.icon {
+					width: 56rpx;
+					height: 64rpx;
+					margin: 48rpx auto 0 auto;
+				}
+
+				.title {
+					margin: 34rpx 0 50rpx 0;
+				}
+			}
+
+			.grid-item.mall {
+				.icon {
+					width: 48rpx;
+					height: 64rpx;
+					margin: 48rpx auto 0 auto;
+				}
+
+				.title {
+					margin: 34rpx 0 40rpx 0;
+				}
+			}
+
+			.grid-item.diet {
+				.icon {
+					width: 54rpx;
+					height: 64rpx;
+					margin: 48rpx auto 0 auto;
+				}
+
+				.title {
+					margin: 50rpx 0 34rpx 0;
+				}
+			}
+
+			.grid-item.video {
+				.icon {
+					width: 64rpx;
+					height: 64rpx;
+					margin: 48rpx auto 0 auto;
+				}
+
+				.title {
+					margin: 50rpx 0 24rpx 0;
+				}
+			}
+
+			.grid-item.ranking {
+				display: flex;
+				align-items: center;
+				width: 90.4vw;
+				height: 130rpx;
+				margin-bottom: 0;
+
+				.icon {
+					width: 80rpx;
+					height: 76rpx;
+					margin: 28rpx 78rpx 28rpx 70rpx;
+				}
+
+				.title {
+					margin-bottom: 20rpx;
+					font-size: 28rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #000000;
+					line-height: 40rpx;
+					text-align: left;
+				}
+
+				.text {
+					font-size: 20rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #92a0b6;
+					line-height: 28rpx;
+					text-align: left;
+				}
+			}
+		}
+
+		.list-content {
+			margin: 4vw 4.8vw;
+			border-radius: 12rpx;
+
+			&>.title {
+				margin: 0 0 12rpx 38rpx;
 				font-size: 28rpx;
 				font-family: PingFangSC-Semibold, PingFang SC;
 				font-weight: 600;
 				color: #000000;
 				line-height: 40rpx;
-				text-align: left;
 			}
-			.text {
-				font-size: 20rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #92a0b6;
-				line-height: 28rpx;
-				text-align: left;
+
+			&>.title+.list-item {
+				border-radius: 12rpx 12rpx 0 0;
+			}
+
+			.list-item {
+				display: flex;
+				align-items: center;
+				position: relative;
+				height: 210rpx;
+				padding: 30rpx 40rpx;
+				background-color: #fff;
+				box-sizing: border-box;
+
+				&::after {
+					position: absolute;
+					left: 40rpx;
+					right: 40rpx;
+					bottom: 0;
+					content: '';
+					height: 2rpx;
+					background-color: #eeeeee;
+				}
+
+				&:last-child {
+					border-radius: 0 0 12rpx 12rpx;
+
+					&::after {
+						display: none;
+					}
+				}
+
+				.pic {
+					flex-shrink: 0;
+					width: 150rpx;
+					height: 150rpx;
+					margin-right: 30rpx;
+					background: #d8d8d8;
+					border-radius: 20rpx;
+				}
+
+				.content {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					height: 150rpx;
+				}
+
+				.title {
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #000000;
+					line-height: 46rpx;
+					word-break: break-all;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
+				}
+
+				.price {
+					margin: 24rpx 0 4rpx 0;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #92a0b6;
+					line-height: 34rpx;
+					text-decoration: line-through;
+				}
+
+				.step {
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #fc6262;
+					line-height: 46rpx;
+
+					&::after {
+						content: '步';
+						font-size: 18rpx;
+						font-family: PingFangSC-Regular, PingFang SC;
+						font-weight: 400;
+						color: #fc6262;
+						line-height: 26rpx;
+					}
+				}
+
+				.text {
+					font-size: 32rpx;
+					font-family: PingFangSC-Semibold, PingFang SC;
+					font-weight: 600;
+					color: #fc6262;
+					line-height: 46rpx;
+				}
 			}
 		}
-	}
-	.list-content {
-		margin: 4vw 4.8vw;
-		border-radius: 12rpx;
-		& > .title {
-			margin: 0 0 12rpx 38rpx;
-			font-size: 28rpx;
-			font-family: PingFangSC-Semibold, PingFang SC;
-			font-weight: 600;
-			color: #000000;
-			line-height: 40rpx;
-		}
-		& > .title + .list-item {
-			border-radius: 12rpx 12rpx 0 0;
-		}
-		.list-item {
-			display: flex;
-			align-items: center;
-			position: relative;
-			height: 210rpx;
-			padding: 30rpx 40rpx;
+
+		.login-content {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 			background-color: #fff;
-			box-sizing: border-box;
-			&::after {
-				position: absolute;
-				left: 40rpx;
-				right: 40rpx;
-				bottom: 0;
-				content: '';
-				height: 2rpx;
-				background-color: #eeeeee;
+
+			.logo {
+				display: block;
+				margin: 200rpx auto 40rpx auto;
+				width: 150rpx;
+				height: 150rpx;
 			}
-			&:last-child {
-				border-radius: 0 0 12rpx 12rpx;
+
+			.title {
+				font-size: 36rpx;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 600;
+				color: #000;
+				text-align: center;
+			}
+
+			.btn {
+				position: fixed;
+				left: 0;
+				right: 0;
+				bottom: 450rpx;
+				width: 320rpx;
+				margin: 0 auto;
+				background: linear-gradient(to right, #53a6dc, #05caab);
+				border-radius: 50rpx;
+				box-shadow: 0px 14rpx 30rpx 0px #7e9da2;
+				font-size: 36rpx;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 700;
+				color: #fff;
+
 				&::after {
 					display: none;
 				}
 			}
-			.pic {
-				flex-shrink: 0;
-				width: 150rpx;
-				height: 150rpx;
-				margin-right: 30rpx;
-				background: #d8d8d8;
-				border-radius: 20rpx;
-			}
-			.content {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				height: 150rpx;
-			}
-			.title {
-				font-size: 32rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #000000;
-				line-height: 46rpx;
-				word-break: break-all;
-				text-overflow: ellipsis;
-				display: -webkit-box;
-				-webkit-box-orient: vertical;
-				-webkit-line-clamp: 2;
-				overflow: hidden;
-			}
-			.price {
-				margin: 24rpx 0 4rpx 0;
-				font-size: 24rpx;
-				font-family: PingFangSC-Regular, PingFang SC;
-				font-weight: 400;
-				color: #92a0b6;
-				line-height: 34rpx;
-				text-decoration: line-through;
-			}
-			.step {
-				font-size: 32rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #fc6262;
-				line-height: 46rpx;
-				&::after {
-					content: '步';
-					font-size: 18rpx;
-					font-family: PingFangSC-Regular, PingFang SC;
-					font-weight: 400;
-					color: #fc6262;
-					line-height: 26rpx;
-				}
-			}
-			.text {
-				font-size: 32rpx;
-				font-family: PingFangSC-Semibold, PingFang SC;
-				font-weight: 600;
-				color: #fc6262;
-				line-height: 46rpx;
-			}
 		}
 	}
-	.login-content {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: #fff;
-		.logo {
-			display: block;
-			margin: 200rpx auto 40rpx auto;
-			width: 150rpx;
-			height: 150rpx;
-		}
-		.title {
-			font-size: 36rpx;
-			font-family: PingFangSC-Semibold, PingFang SC;
-			font-weight: 600;
-			color: #000;
-			text-align: center;
-		}
-		.btn {
-			position: fixed;
-			left: 0;
-			right: 0;
-			bottom: 450rpx;
-			width: 320rpx;
-			margin: 0 auto;
-			background: linear-gradient(to right, #53a6dc, #05caab);
-			border-radius: 50rpx;
-			box-shadow: 0px 14rpx 30rpx 0px #7e9da2;
-			font-size: 36rpx;
-			font-family: PingFangSC-Semibold, PingFang SC;
-			font-weight: 700;
-			color: #fff;
-			&::after {
-				display: none;
-			}
-		}
-	}
-}
 </style>
