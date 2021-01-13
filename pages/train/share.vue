@@ -75,14 +75,7 @@
 				params.activity_id = option.id;
 				params.user_id = user_id
 			}
-			getActivityDetail({
-				...params
-			}).then(
-				result => {
-					this.activity = result;
-				},
-				err => {}
-			);
+			this.getActivityDetail(params)
 		},
 		onShareAppMessage() {
 			const user_id = uni.getStorageSync('user_id');
@@ -92,6 +85,16 @@
 			};
 		},
 		methods: {
+			getActivityDetail(params) {
+				getActivityDetail({
+					...params
+				}).then(
+					result => {
+						this.activity = result;
+					},
+					err => {}
+				);
+			},
 			handleClick() {
 				const user_id = uni.getStorageSync('user_id');
 				joinActivity({
@@ -103,6 +106,11 @@
 							icon: 'none',
 							title: '参与成功'
 						});
+						const params = {
+							activity_id: this.activity.id
+							user_id
+						}
+						this.getActivityDetail(params)
 					},
 					err => {
 						uni.showToast({
