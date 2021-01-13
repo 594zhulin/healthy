@@ -18,6 +18,7 @@
 			</view>
 			<view class="status">{{ activity.day }}</view>
 		</view>
+		<view class="remark-content">{{activity.remark}}</view>
 		<view class="map-content">
 			<view class="title">活动地点</view>
 			<map class="map" :latitude="activity.latitude" :longitude="activity.longitude" @click="openLocation"></map>
@@ -261,6 +262,15 @@
 				color: #bfbfbf;
 				line-height: 34rpx;
 			}
+		}
+
+		.remark-content {
+			margin: 36rpx 28rpx 42rpx 40rpx;
+			font-size: 12px;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #a3a7b9;
+			line-height: 34rpx;
 		}
 
 		.map-content {
