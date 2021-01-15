@@ -18,7 +18,7 @@
 			</view>
 			<view class="status">{{ activity.day }}</view>
 		</view>
-		<view class="remark-content">{{activity.remark}}</view>
+		<view class="remark-content">{{ activity.remark }}</view>
 		<view class="map-content">
 			<view class="title">活动地点</view>
 			<map class="map" :latitude="activity.latitude" :longitude="activity.longitude" @click="openLocation"></map>
@@ -35,9 +35,7 @@
 			</view>
 			<view class="text">已参与</view>
 			<view class="member-list">
-				<view class="member-item" v-for="item in activity.join" :key="item.nickName">
-					<image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image>
-				</view>
+				<view class="member-item" v-for="item in activity.join" :key="item.nickName"><image class="avatar" :src="item.avatarUrl" mode="aspectFit"></image></view>
 				<!-- <view class="member-item">
 					<view class="more">
 						<view class="dot"></view>
@@ -53,219 +51,220 @@
 </template>
 
 <script>
-	import {
-		getActivityDetail,
-		joinActivity
-	} from '@/api/train.js';
-	export default {
-		data() {
-			return {
-				activity: null
-			};
+import { getActivityDetail, joinActivity } from '@/api/train.js';
+export default {
+	data() {
+		return {
+			activity: null
+		};
+	},
+	onLoad(option) {
+		const params = {
+			activity_id: option.id,
+			user_id: option.user_id
+		};
+		this.getActivityDetail(params);
+	},
+	onShareAppMessage() {
+		const user_id = uni.getStorageSync('user_id');
+		return {
+			title: '快来跟我一起组队运动吧',
+			path: '/pages/train/share?id=' + this.activity.id + '&user_id=' + user_id
+		};
+	},
+	methods: {
+		getActivityDetail(params) {
+			getActivityDetail({
+				...params
+			}).then(
+				result => {
+					this.activity = result;
+				},
+				err => {}
+			);
 		},
-		onLoad(option) {
-			const params = {
-				activity_id: '',
-				user_id: ''
-			}
-			if (option.user_id) {
-				params.activity_id = option.id;
-				params.user_id = option.user_id
-			} else {
-				const user_id = uni.getStorageSync('user_id');
-				params.activity_id = option.id;
-				params.user_id = user_id
-			}
-			this.getActivityDetail(params)
-		},
-		onShareAppMessage() {
+		handleClick() {
 			const user_id = uni.getStorageSync('user_id');
-			return {
-				title: '快来跟我一起组队运动吧',
-				path: '/pages/train/share?id=' + this.activity.id + '&user_id=' + user_id
-			};
+			joinActivity({
+				participator_user_id: user_id,
+				activity_id: this.activity.id
+			}).then(
+				result => {
+					uni.showToast({
+						icon: 'none',
+						title: '参与成功'
+					});
+					const params = {
+						activity_id: this.activity.id,
+						user_id
+					};
+					this.getActivityDetail(params);
+				},
+				err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.text
+					});
+				}
+			);
 		},
-		methods: {
-			getActivityDetail(params) {
-				getActivityDetail({
-					...params
-				}).then(
-					result => {
-						this.activity = result;
-					},
-					err => {}
-				);
-			},
-			handleClick() {
-				const user_id = uni.getStorageSync('user_id');
-				joinActivity({
-					participator_user_id: user_id,
-					activity_id: this.activity.id
-				}).then(
-					result => {
-						uni.showToast({
-							icon: 'none',
-							title: '参与成功'
-						});
-						const params = {
-							activity_id: this.activity.id,
-							user_id
-						}
-						this.getActivityDetail(params)
-					},
-					err => {
-						uni.showToast({
-							icon: 'none',
-							title: err.text
-						});
-					}
-				);
-			},
-			openLocation() {
-				wx.openLocation({
-					latitude: parseFloat(this.activity.latitude),
-					longitude: parseFloat(this.activity.longitude),
-					scale: 18
-				});
-			}
+		openLocation() {
+			wx.openLocation({
+				latitude: parseFloat(this.activity.latitude),
+				longitude: parseFloat(this.activity.longitude),
+				scale: 18
+			});
 		}
-	};
+	}
+};
 </script>
 
 <style lang="less">
-	page {
-		background-color: #f7f6f9;
+page {
+	background-color: #f7f6f9;
+}
+
+.page-share {
+	margin: 20rpx 32rpx;
+	padding-bottom: 54rpx;
+	background: #ffffff;
+	border-radius: 16rpx;
+
+	& > .btn {
+		width: 226rpx;
+		height: 72rpx;
+		margin: 0 auto;
+		background: #2975ff;
+		border-radius: 4rpx;
+		font-size: 28rpx;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		color: #ffffff;
+		line-height: 72rpx;
+		text-align: center;
 	}
 
-	.page-share {
-		margin: 20rpx 32rpx;
-		padding-bottom: 54rpx;
-		background: #ffffff;
-		border-radius: 16rpx;
+	.user-content {
+		position: relative;
+		height: 218rpx;
+		margin-bottom: 34rpx;
 
-		&>.btn {
-			width: 226rpx;
-			height: 72rpx;
-			margin: 0 auto;
-			background: #2975ff;
-			border-radius: 4rpx;
-			font-size: 28rpx;
-			font-family: PingFangSC-Semibold, PingFang SC;
-			font-weight: 600;
-			color: #ffffff;
-			line-height: 72rpx;
-			text-align: center;
+		.img {
+			position: absolute;
+			top: 18rpx;
+			right: 42rpx;
+			width: 262rpx;
+			height: 198rpx;
 		}
 
-		.user-content {
-			position: relative;
-			height: 218rpx;
-			margin-bottom: 34rpx;
+		.avatar {
+			position: absolute;
+			top: 54rpx;
+			left: 52rpx;
+			width: 84rpx;
+			height: 84rpx;
+			border: 2rpx solid #e0e0e0;
+			background-color: #eee;
+			border-radius: 50%;
+			box-sizing: border-box;
+		}
 
-			.img {
-				position: absolute;
-				top: 18rpx;
-				right: 42rpx;
-				width: 262rpx;
-				height: 198rpx;
-			}
+		.text {
+			padding: 72rpx 0 0 162rpx;
+			font-size: 18px;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #373d52;
+			line-height: 25px;
+		}
 
-			.avatar {
-				position: absolute;
-				top: 54rpx;
-				left: 52rpx;
-				width: 84rpx;
-				height: 84rpx;
-				border: 2rpx solid #e0e0e0;
-				background-color: #eee;
-				border-radius: 50%;
-				box-sizing: border-box;
-			}
+		.line {
+			position: absolute;
+			left: 70rpx;
+			bottom: 34rpx;
+			width: 40rpx;
+			height: 10rpx;
+		}
+	}
+
+	.activity-content {
+		position: relative;
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+
+		.title {
+			margin-left: 60rpx;
 
 			.text {
-				padding: 72rpx 0 0 162rpx;
-				font-size: 18px;
+				font-size: 24rpx;
 				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
 				font-weight: 400;
-				color: #373d52;
-				line-height: 25px;
+				color: #a3a7b9;
+				line-height: 34rpx;
 			}
 
-			.line {
-				position: absolute;
-				left: 70rpx;
-				bottom: 34rpx;
-				width: 40rpx;
-				height: 10rpx;
+			.name {
+				margin-top: 22rpx;
+				font-size: 25px;
+				font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+				font-weight: bold;
+				color: #373d52;
+				line-height: 35px;
 			}
 		}
 
-		.activity-content {
-			position: relative;
-			display: flex;
-			align-items: flex-start;
-			justify-content: space-between;
+		.date {
+			flex-shrink: 0;
+			margin: 0 40rpx;
 
-			.title {
-				margin-left: 60rpx;
-
-				.text {
-					font-size: 24rpx;
-					font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-					font-weight: 400;
-					color: #a3a7b9;
-					line-height: 34rpx;
-				}
-
-				.name {
-					margin-top: 22rpx;
-					font-size: 25px;
-					font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
-					font-weight: bold;
-					color: #373d52;
-					line-height: 35px;
-				}
+			.text {
+				font-size: 24rpx;
+				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+				font-weight: 400;
+				color: #a3a7b9;
+				line-height: 34rpx;
 			}
 
-			.date {
-				flex-shrink: 0;
-				margin: 0 40rpx;
-
-				.text {
-					font-size: 24rpx;
-					font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-					font-weight: 400;
-					color: #a3a7b9;
-					line-height: 34rpx;
-				}
-
-				.day {
-					margin: 20rpx 0 10rpx 0;
-				}
-
-				.day,
-				.time {
-					font-size: 24rpx;
-					font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
-					font-weight: bold;
-					color: #373d52;
-					line-height: 34rpx;
-				}
+			.day {
+				margin: 20rpx 0 10rpx 0;
 			}
 
-			.status {
-				flex-shrink: 0;
-				margin: 56rpx 56rpx 0 0;
+			.day,
+			.time {
 				font-size: 24rpx;
 				font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
 				font-weight: bold;
-				color: #bfbfbf;
+				color: #373d52;
 				line-height: 34rpx;
 			}
 		}
 
-		.remark-content {
-			margin: 36rpx 28rpx 42rpx 40rpx;
+		.status {
+			flex-shrink: 0;
+			margin: 56rpx 56rpx 0 0;
+			font-size: 24rpx;
+			font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+			font-weight: bold;
+			color: #bfbfbf;
+			line-height: 34rpx;
+		}
+	}
+
+	.remark-content {
+		margin: 36rpx 28rpx 42rpx 40rpx;
+		font-size: 12px;
+		font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+		font-weight: 400;
+		color: #a3a7b9;
+		line-height: 34rpx;
+	}
+
+	.map-content {
+		margin: 36rpx 28rpx 42rpx 40rpx;
+
+		.title {
+			margin: 0 0 18rpx 20rpx;
 			font-size: 12px;
 			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
 			font-weight: 400;
@@ -273,146 +272,134 @@
 			line-height: 34rpx;
 		}
 
-		.map-content {
-			margin: 36rpx 28rpx 42rpx 40rpx;
+		.map {
+			width: 100%;
+			height: 226rpx;
+		}
+	}
 
-			.title {
-				margin: 0 0 18rpx 20rpx;
-				font-size: 12px;
-				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-				font-weight: 400;
-				color: #a3a7b9;
-				line-height: 34rpx;
+	.detail-content {
+		position: relative;
+		margin: 0 26rpx 76rpx 42rpx;
+
+		& > .text {
+			margin: 24rpx 0 18rpx 24rpx;
+			font-size: 12px;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #a3a7b9;
+			line-height: 17px;
+		}
+
+		.name {
+			display: flex;
+			align-items: center;
+			padding-right: 200rpx;
+
+			.icon {
+				width: 32rpx;
+				height: 32rpx;
+				flex-shrink: 0;
 			}
 
-			.map {
-				width: 100%;
-				height: 226rpx;
+			.text {
+				margin-left: 18rpx;
+				font-size: 24rpx;
+				font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
+				font-weight: bold;
+				color: #373d52;
+				line-height: 34rpx;
 			}
 		}
 
-		.detail-content {
-			position: relative;
-			margin: 0 26rpx 76rpx 42rpx;
+		.btn {
+			position: absolute;
+			top: 0;
+			right: 0;
+			display: flex;
+			align-items: center;
+			width: 180rpx;
+			height: 60rpx;
+			padding: 0;
+			background: #ffffff;
+			border-radius: 8rpx;
+			border: 2rpx solid #8cb5ff;
+			box-sizing: border-box;
 
-			&>.text {
-				margin: 24rpx 0 18rpx 24rpx;
-				font-size: 12px;
-				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-				font-weight: 400;
-				color: #a3a7b9;
-				line-height: 17px;
+			&::after {
+				display: none;
 			}
 
-			.name {
-				display: flex;
-				align-items: center;
-				padding-right: 200rpx;
-
-				.icon {
-					width: 32rpx;
-					height: 32rpx;
-					flex-shrink: 0;
-				}
-
-				.text {
-					margin-left: 18rpx;
-					font-size: 24rpx;
-					font-family: AlibabaPuHuiTi-Bold, AlibabaPuHuiTi;
-					font-weight: bold;
-					color: #373d52;
-					line-height: 34rpx;
-				}
+			.icon {
+				width: 24rpx;
+				height: 24rpx;
+				margin: 0 16rpx 0 24rpx;
 			}
 
-			.btn {
-				position: absolute;
-				top: 0;
-				right: 0;
-				display: flex;
-				align-items: center;
-				width: 180rpx;
-				height: 60rpx;
-				padding: 0;
-				background: #ffffff;
-				border-radius: 8rpx;
-				border: 2rpx solid #8cb5ff;
-				box-sizing: border-box;
-
-				&::after {
-					display: none;
-				}
-
-				.icon {
-					width: 24rpx;
-					height: 24rpx;
-					margin: 0 16rpx 0 24rpx;
-				}
-
-				.text {
-					font-size: 24rpx;
-					font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
-					font-weight: 400;
-					color: #2975ff;
-					line-height: 34rpx;
-				}
-			}
-
-			.btn.share {
-				z-index: 1;
-				background: none;
-				padding: 0;
-
-				&::after {
-					display: none;
-				}
-			}
-
-			.member-list {
-				display: flex;
-				align-items: center;
-				margin-left: 54rpx;
-
-				.member-item {
-					margin-left: -30rpx;
-
-					.avatar,
-					.more {
-						width: 84rpx;
-						height: 84rpx;
-						border: 2rpx solid #e0e0e0;
-						background-color: #eee;
-						border-radius: 50%;
-						box-sizing: border-box;
-					}
-
-					.more {
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-						padding: 0 14rpx;
-						background-color: #fff;
-
-						.dot {
-							width: 12rpx;
-							height: 12rpx;
-							background: #d8d8d8;
-							border-radius: 50%;
-						}
-					}
-				}
-			}
-
-			.total {
-				position: absolute;
-				right: 22rpx;
-				bottom: 24rpx;
+			.text {
 				font-size: 24rpx;
 				font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
 				font-weight: 400;
-				color: #000000;
+				color: #2975ff;
 				line-height: 34rpx;
 			}
 		}
+
+		.btn.share {
+			z-index: 1;
+			background: none;
+			padding: 0;
+
+			&::after {
+				display: none;
+			}
+		}
+
+		.member-list {
+			display: flex;
+			align-items: center;
+			margin-left: 54rpx;
+
+			.member-item {
+				margin-left: -30rpx;
+
+				.avatar,
+				.more {
+					width: 84rpx;
+					height: 84rpx;
+					border: 2rpx solid #e0e0e0;
+					background-color: #eee;
+					border-radius: 50%;
+					box-sizing: border-box;
+				}
+
+				.more {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					padding: 0 14rpx;
+					background-color: #fff;
+
+					.dot {
+						width: 12rpx;
+						height: 12rpx;
+						background: #d8d8d8;
+						border-radius: 50%;
+					}
+				}
+			}
+		}
+
+		.total {
+			position: absolute;
+			right: 22rpx;
+			bottom: 24rpx;
+			font-size: 24rpx;
+			font-family: AlibabaPuHuiTi-Regular, AlibabaPuHuiTi;
+			font-weight: 400;
+			color: #000000;
+			line-height: 34rpx;
+		}
 	}
+}
 </style>

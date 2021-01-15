@@ -25,7 +25,8 @@ export default {
 				page: 1,
 				limit: 20
 			},
-			step: []
+			step: [],
+			total: 0
 		};
 	},
 	onLoad(option) {
@@ -40,11 +41,16 @@ export default {
 			if (direction == 'down') {
 				this.params.page = 1;
 			} else {
+				if (this.step.length >= this.total) {
+					return false;
+				}
 				this.params.page += 1;
 			}
 			getStep({ ...this.params }).then(
 				result => {
-					this.step = direction == 'down' ? result : this.step.concat(result);
+					const { list, total } = result;
+					this.step = direction == 'down' ? list : this.step.concat(list);
+					this.total = total;
 				},
 				err => {}
 			);

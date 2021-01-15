@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getUser, getStep, getFire, getLastTime, cacheStep, setStep } from '@/api/bank.js';
+import { getUser, getStep, getFire, cacheStep, setStep } from '@/api/bank.js';
 import { timestampToTime } from '@/utils/utils.js';
 export default {
 	data() {
@@ -83,7 +83,6 @@ export default {
 			no_deposit_num: 0,
 			no_deposit_str: '0万步',
 			flame_num: 0,
-			lastTime: '',
 			step: [],
 			params: {
 				pageNo: 1,
@@ -131,7 +130,6 @@ export default {
 			}
 		});
 		_this.getUser();
-		_this.getLastTime();
 		_this.getListData('down');
 	},
 	onReachBottom() {
@@ -145,7 +143,7 @@ export default {
 		};
 	},
 	methods: {
-		getUser(set) {
+		getUser() {
 			uni.showLoading();
 			getUser().then(
 				result => {
@@ -157,27 +155,11 @@ export default {
 					this.no_deposit_num = no_deposit_num;
 					this.no_deposit_str = no_deposit_str;
 					this.flame_num = flame_num;
-					if (set) {
-						this.setStep(parseFloat((no_deposit_num / 10000).toFixed(2)));
-					}
 					uni.hideLoading();
 				},
 				err => {
 					uni.hideLoading();
 				}
-			);
-		},
-		getLastTime() {
-			getLastTime({
-				pageNo: 1,
-				pageSize: 1
-			}).then(
-				result => {
-					if (result.length > 0) {
-						this.lastTime = result[0].create_at.slice(0, 10);
-					}
-				},
-				err => {}
 			);
 		},
 		handleClick() {
@@ -188,57 +170,19 @@ export default {
 					duration: 2000
 				});
 			} else {
-				const startDate = this.getCurrentDate();
-				const lastTime = this.lastTime;
-				if (lastTime == '') {
-					const step = this.getSum(this.step);
-					const timestamp = new Date(startDate).getTime() / 1000;
-					this.cacheStep(step, timestamp);
-				} else {
-					const day = 24 * 60 * 60 * 1000;
-					let diff = (new Date(startDate).getTime() - new Date(lastTime).getTime()) / day;
-					if (diff > 7) {
-						const step = this.getSum(this.step);
-						const timestamp = new Date(startDate).getTime() / 1000;
-						this.cacheStep(step, timestamp);
-					}
-					if (diff > 0 && diff < 7) {
-						const arr = JSON.parse(JSON.stringify(this.step))
-							.reverse()
-							.slice(0, diff);
-						const step = this.getSum(arr);
-						const timestamp = new Date(startDate).getTime() / 1000;
-						this.cacheStep(step, timestamp);
-					}
-					if (diff == 0) {
-						uni.showToast({
-							icon: 'none',
-							title: '可存步数为0'
-						});
-					}
-				}
+				this.setStep();
 			}
 		},
-		cacheStep(deposit_num, timestamp) {
-			const _this = this;
-			cacheStep({
-				deposit_num,
-				timestamp
-			}).then(
-				result => {
-					_this.getUser('set');
-				},
-				err => {
-					uni.showToast({
-						icon: 'none',
-						title: err.text
-					});
-				}
-			);
-		},
-		setStep(deposit_num) {
+		setStep() {
+			if (parseInt((this.no_deposit_num / 10000).toFixed(2)) == 0) {
+				uni.showToast({
+					icon: 'none',
+					title: '可存步数为0'
+				});
+				return;
+			}
 			setStep({
-				deposit_num
+				deposit_num: parseInt((this.no_deposit_num / 10000).toFixed(2))
 			}).then(
 				result => {
 					uni.showToast({
@@ -246,7 +190,6 @@ export default {
 						title: '恭喜您使用一枚火苗成功存入步数！'
 					});
 					this.getUser();
-					this.getLastTime();
 					this.getListData();
 				},
 				err => {
@@ -256,20 +199,6 @@ export default {
 					});
 				}
 			);
-		},
-		getCurrentDate() {
-			const date = new Date();
-			const YYYY = date.getFullYear();
-			const MM = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-			const DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-			return YYYY + '-' + MM + '-' + DD;
-		},
-		getSum(arr) {
-			let sum = 0;
-			arr.map(item => {
-				sum += item.step;
-			});
-			return sum;
 		},
 		getListData(direction) {
 			if (direction == 'down') {

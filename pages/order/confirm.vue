@@ -35,7 +35,8 @@
 				</view>
 				<view class="row">
 					<view class="label">快递运费</view>
-					<view class="text">￥{{ order.priceGroup.storeFreePostage < parseFloat(order.priceGroup.totalPrice) ? '包邮' : order.priceGroup.storePostage }}</view>
+					<view class="text" v-if="order.priceGroup.storeFreePostage < parseFloat(order.priceGroup.totalPrice)">包邮</view>
+					<view class="text" v-else>￥{{ order.priceGroup.storePostage }}</view>
 				</view>
 				<!-- <view class="row">
 					<view class="label">扣除步数</view>
@@ -50,7 +51,7 @@
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
 				<view class="text">合计:</view>
-				<view class="value">￥{{ price }}</view>
+				<view class="value">￥{{ price || '0.00' }}</view>
 			</view>
 			<view class="btn" @click="handleSubmit">提交订单</view>
 		</view>
@@ -99,6 +100,7 @@ export default {
 						this.price = parseFloat(result.priceGroup.totalPrice);
 					}
 				}
+				console.log(this.price);
 				if (address) {
 					this.address = JSON.parse(address);
 				} else {
@@ -162,7 +164,13 @@ export default {
 				this.order.orderKey
 			).then(
 				result => {
-					this.wxpay(result.jsConfig, result.orderId);
+					if (parseFloat(this.price) > 0) {
+						this.wxpay(result.jsConfig, result.orderId);
+					} else {
+						uni.reLaunch({
+							url: '/pages/order/result?id=' + result.orderId + '&type=success'
+						});
+					}
 				},
 				err => {
 					uni.showToast({

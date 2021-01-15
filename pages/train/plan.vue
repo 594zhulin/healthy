@@ -7,7 +7,7 @@
 		<view class="train-content">
 			<view class="today-item">
 				<view class="title">今日</view>
-				<view class="step">{{ (yesterday_step_num / 10000).toFixed(2) }}万</view>
+				<view class="step">{{ parseInt(yesterday_step_num / 10000).toFixed(2) }}万</view>
 				<view class="text">训练记录</view>
 				<view class="record">
 					<view class="fire">

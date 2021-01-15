@@ -149,6 +149,7 @@ page {
 			}
 
 			.title {
+				position: relative;
 				margin-left: 36rpx;
 				font-size: 36rpx;
 				font-family: PingFangSC-Medium, PingFang SC;
