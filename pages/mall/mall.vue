@@ -18,8 +18,8 @@
 			<view class="overview">
 				<view class="balance">
 					<view class="text">余额</view>
-					<view class="step">{{ userInfo.integral }}万</view>
-					<view class="text">步</view>
+					<view class="step">{{ userInfo.integral }}</view>
+					<view class="text">万步</view>
 				</view>
 				<view class="exchange">已兑换书籍：{{ userInfo.complete_count || 0 }}本</view>
 			</view>
@@ -79,8 +79,8 @@ export default {
 	onShow() {
 		getUser().then(
 			result => {
-				const { avatar, nickname, integral, complete_count } = result;
-				this.userInfo = { ...this.userInfo, avatar, nickname, integral, complete_count };
+				const { avatar, nickname, integral, orderStatusNum } = result;
+				this.userInfo = { ...this.userInfo, avatar, nickname, integral, complete_count: orderStatusNum.evaluated_count };
 			},
 			err => {}
 		);

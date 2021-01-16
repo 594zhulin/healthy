@@ -43,7 +43,7 @@
 					</template>
 					<template v-if="item._status._type == 2">
 						<view class="btn" @click.stop="navigateTo('/pages/order/logistics?id=' + item.order_id)">查看物流</view>
-						<view class="btn" @click.stop="confirmOrder(item.order_id)">确认收货</view>
+						<view class="btn" @click.stop="takeOrder(item.order_id)">确认收货</view>
 					</template>
 					<template v-if="item._status._type == 3">
 						<view class="btn" @click.stop="navigateTo('/pages/order/refund?id=' + item.order_id)">申请售后</view>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { getOrder, cancelOrder, payOrder, alertOrder, confirmOrder, deleteOrder, payOrderCallback } from '@/api/order.js';
+import { getOrder, cancelOrder, payOrder, alertOrder, takeOrder, deleteOrder, payOrderCallback } from '@/api/order.js';
 export default {
 	data() {
 		return {
@@ -181,13 +181,13 @@ export default {
 				}
 			);
 		},
-		confirmOrder(id) {
+		takeOrder(id) {
 			const _this = this;
 			uni.showModal({
 				content: '确认收到商品？',
 				success: function(res) {
 					if (res.confirm) {
-						confirmOrder({
+						takeOrder({
 							uni: id
 						}).then(
 							result => {

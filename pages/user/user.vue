@@ -45,7 +45,7 @@
 		<view class="balance-content">
 			<view class="title">我的余额</view>
 			<view class="link" @click="navigateTo('/pages/personal/step?integral=' + user.integral)">余额明细></view>
-			<view class="step">{{ user.integral }}万</view>
+			<view class="step">{{ user.integral }}</view>
 			<view class="btn" @click="switchTab">去使用</view>
 		</view>
 		<view class="address-content">
@@ -460,7 +460,7 @@ page {
 			line-height: 60rpx;
 
 			&::after {
-				content: '步';
+				content: '万步';
 				margin-left: 4rpx;
 				font-size: 24rpx;
 				font-family: PingFangSC-Regular, PingFang SC;

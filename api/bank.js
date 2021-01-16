@@ -148,7 +148,7 @@ const cacheStep = data => {
 				resolve(result.data)
 			} else {
 				reject({
-					text: result.msg
+					text: result.message
 				})
 			}
 		}, reject)
@@ -165,7 +165,7 @@ const setStep = data => {
 				resolve(result.data)
 			} else {
 				reject({
-					text: result.msg
+					text: result.message
 				})
 			}
 		}, reject)

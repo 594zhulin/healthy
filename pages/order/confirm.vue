@@ -133,8 +133,8 @@ export default {
 					couponId: '',
 					payType: 'weixin',
 					useIntegral: this.order.cartInfo[0].productInfo.is_model,
-					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits),
-					deductionPrice: parseFloat(this.order.priceGroup.totalPrice)
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cartNum,
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cartNum
 				},
 				this.order.orderKey
 			).then(
@@ -156,8 +156,8 @@ export default {
 					couponId: '',
 					payType: 'weixin',
 					useIntegral: this.order.cartInfo[0].productInfo.is_model,
-					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits),
-					deductionPrice: parseFloat(this.order.priceGroup.totalPrice),
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cartNum,
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cartNum,
 					mark: this.desc,
 					from: 'routine'
 				},
@@ -293,7 +293,7 @@ page {
 				height: 120rpx;
 				padding-right: 40rpx;
 				.name {
-					width: 90%;
+					width: 80%;
 					font-size: 28rpx;
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;

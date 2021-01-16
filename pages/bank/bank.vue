@@ -174,7 +174,7 @@ export default {
 			}
 		},
 		setStep() {
-			if (parseInt((this.no_deposit_num / 10000).toFixed(2)) == 0) {
+			if (this.no_deposit_num == 0) {
 				uni.showToast({
 					icon: 'none',
 					title: '可存步数为0'
@@ -182,7 +182,7 @@ export default {
 				return;
 			}
 			setStep({
-				deposit_num: parseInt((this.no_deposit_num / 10000).toFixed(2))
+				deposit_num: this.no_deposit_num
 			}).then(
 				result => {
 					uni.showToast({

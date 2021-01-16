@@ -20,7 +20,7 @@
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
-					<view class="step">{{ no_deposit_str }}</view>
+					<view class="step">{{ no_deposit_str || no_deposit_num }}</view>
 					<view class="text total">共累计{{ integral_num_str }}</view>
 					<view class="btn">点我存入</view>
 				</view>
@@ -308,7 +308,18 @@ export default {
 			arr.map(item => {
 				sum += item.step;
 			});
-			return sum;
+			return this.formatStep(sum);
+		},
+		formatStep(count) {
+			let step = JSON.stringify(count / 10000);
+			//没有小数补齐这个0
+			if (step.indexOf('.') == '-1') {
+				step = step + '.00';
+			} else {
+				//有小数截取前二位小数
+				step = step.substring(0, step.indexOf('.') + 3);
+			}
+			return step;
 		},
 		getUserInfo(e) {
 			const _this = this;
