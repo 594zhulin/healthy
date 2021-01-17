@@ -20,8 +20,8 @@
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
 					<view class="text">待存入</view>
-					<view class="step">{{ no_deposit_str || no_deposit_num }}</view>
-					<view class="text total">共累计{{ integral_num_str }}</view>
+					<view class="step">{{ no_deposit_num }}万步</view>
+					<view class="text total">共累计{{ integral_num }}万步</view>
 					<view class="btn">点我存入</view>
 				</view>
 			</view>
@@ -97,6 +97,8 @@ export default {
 			percent: 0,
 			synthesis_lable: '',
 			create_at: '',
+			integral_num: 0,
+			no_deposit_num: 0,
 			integral_num_str: '0万步',
 			no_deposit_str: '0万步',
 			params: {
@@ -203,9 +205,11 @@ export default {
 		getUserStep() {
 			getUserStep().then(
 				result => {
-					const { integral_num_str, no_deposit_str } = result;
+					const { integral_num_str, no_deposit_str, no_deposit_num, integral_num } = result;
 					this.integral_num_str = integral_num_str;
 					this.no_deposit_str = no_deposit_str;
+					this.integral_num = integral_num;
+					this.no_deposit_num = no_deposit_num;
 				},
 				err => {}
 			);
@@ -242,7 +246,7 @@ export default {
 			}).then(
 				result => {
 					if (result.length > 0) {
-						this.lastTime = result[0].create_at.slice(0, 10);
+						this.lastTime = result[0].timestamp;
 					}
 				},
 				err => {}
@@ -250,14 +254,14 @@ export default {
 		},
 		getCacheStep() {
 			const startDate = this.getCurrentDate();
-			const lastTime = this.lastTime;
+			const lastTime = this.lastTime * 1000;
 			if (lastTime == '') {
 				const step = this.getSum(this.step);
 				const timestamp = new Date(startDate).getTime() / 1000;
 				this.cacheStep(step, timestamp);
 			} else {
 				const day = 24 * 60 * 60 * 1000;
-				let diff = (new Date(startDate).getTime() - new Date(lastTime).getTime()) / day;
+				let diff = (new Date(startDate).getTime() - lastTime) / day;
 				if (diff > 7) {
 					const step = this.getSum(this.step);
 					const timestamp = new Date(startDate).getTime() / 1000;

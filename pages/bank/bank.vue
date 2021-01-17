@@ -7,8 +7,8 @@
 		<view class="overview-content" @click="handleClick">
 			<image class="background" src="../../static/bank/bank-bg-01.svg" mode="scaleToFill"></image>
 			<view class="title">余额</view>
-			<view class="step">{{ integral_num_str }}</view>
-			<view class="text">待存步数：{{ no_deposit_str }}</view>
+			<view class="step">{{ integral_num }}万步</view>
+			<view class="text">待存步数：{{ no_deposit_num }}万步</view>
 			<view class="tip">未存入的步数，7天后自动过期</view>
 			<image class="btn" src="../../static/bank/bank-img-01.svg" mode="aspectFit"></image>
 		</view>
@@ -174,7 +174,8 @@ export default {
 			}
 		},
 		setStep() {
-			if (this.no_deposit_num == 0) {
+			const _this = this;
+			if (_this.no_deposit_num == 0) {
 				uni.showToast({
 					icon: 'none',
 					title: '可存步数为0'
@@ -182,15 +183,17 @@ export default {
 				return;
 			}
 			setStep({
-				deposit_num: this.no_deposit_num
+				deposit_num: _this.no_deposit_num
 			}).then(
 				result => {
 					uni.showToast({
 						icon: 'none',
 						title: '恭喜您使用一枚火苗成功存入步数！'
 					});
-					this.getUser();
-					this.getListData();
+					setTimeout(() => {
+						_this.getUser();
+						_this.getListData();
+					}, 2000);
 				},
 				err => {
 					uni.showToast({

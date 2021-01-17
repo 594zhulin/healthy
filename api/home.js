@@ -6,7 +6,7 @@ const api = {
 	getScore: '/index/index',
 	getUserStep: '/pedometer/user_info',
 	getProduct: '/products',
-	getLastTime: '/pedometer/integral_list',
+	getLastTime: '/pedometer/cache_deposit_list',
 	getStep: '/wechat/wxDecode',
 	cacheStep: '/pedometer/cache_step_num',
 }
