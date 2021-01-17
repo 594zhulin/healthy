@@ -4,8 +4,11 @@ const api = {
 	login: '/wechat/mp_auth',
 	signIn: '/login/getOpenid',
 	getScore: '/index/index',
-	getStep: '/pedometer/user_info',
-	getProduct: '/products'
+	getUserStep: '/pedometer/user_info',
+	getProduct: '/products',
+	getLastTime: '/pedometer/integral_list',
+	getStep: '/wechat/wxDecode',
+	cacheStep: '/pedometer/cache_step_num',
 }
 
 const login = data => {
@@ -59,10 +62,28 @@ const getScore = () => {
 	})
 }
 
-const getStep = () => {
+const getUserStep = () => {
 	return new Promise((resolve, reject) => {
 		service.http_({
-			url: api.getStep
+			url: api.getUserStep
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const getStep = data => {
+	return new Promise((resolve, reject) => {
+		service.request({
+			url: api.getStep,
+			data,
+			method: 'POST'
 		}).then(result => {
 			if (result.status === 200) {
 				resolve(result.data)
@@ -94,10 +115,47 @@ const getProduct = () => {
 	})
 }
 
+const getLastTime = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getLastTime,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+const cacheStep = data => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.cacheStep,
+			data
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	login,
 	signIn,
 	getScore,
+	getUserStep,
 	getStep,
-	getProduct
+	getProduct,
+	getLastTime,
+	cacheStep
 }

@@ -1,7 +1,7 @@
 <template>
 	<view class="page-record">
 		<view class="list-content">
-			<view class="list-item" v-for="item in activity" :key="item.id" @click="navigateTo('/pages/train/share?id=' + item.id)">
+			<view class="list-item" v-for="item in activity" :key="item.id" @click="navigateTo('/pages/train/share?id=' + item.id+'&user_id='+item.user_id)">
 				<view class="title">
 					<view class="text">{{ item.title }}</view>
 					<view class="date">{{ item.create_at }}</view>
