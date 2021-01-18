@@ -364,11 +364,13 @@ export default {
 			font-family: PingFangSC-Regular, PingFang SC;
 			font-weight: 400;
 			color: rgba(255, 255, 255, 1);
+			white-space: nowrap;
 		}
 		.btn-share {
 			display: flex;
 			align-items: center;
 			padding-top: 52rpx;
+			flex-shrink: 0;
 			.icon {
 				width: 41rpx;
 				height: 44rpx;

@@ -72,7 +72,7 @@
 			}
 		},
 		{
-			"path": "pages/launch/launch",
+			"path": "pages/start/start",
 			"style": {
 				"navigationStyle": "custom"
 			}
