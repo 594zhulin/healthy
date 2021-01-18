@@ -14,7 +14,8 @@ const api = {
 	takeOrder: '/order/take',
 	remindOrder: '/order/remind',
 	getRefundReason: '/order/refund/reason',
-	refundOrder: '/order/refund/verify'
+	refundOrder: '/order/refund/verify',
+	getUser: '/pedometer/user_info',
 }
 
 const getProduct = data => {
@@ -340,6 +341,22 @@ const refundOrder = data => {
 	})
 }
 
+const getUser = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getUser
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getProduct,
 	getProductDetail,
@@ -358,5 +375,6 @@ module.exports = {
 	payOrderCallback,
 	getRefundReason,
 	refundOrder,
-	getExpress
+	getExpress,
+	getUser
 }

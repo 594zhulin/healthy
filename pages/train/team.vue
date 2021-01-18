@@ -129,8 +129,9 @@ export default {
 			}
 			addActivity({ ...this.form, remark: this.remark }).then(
 				result => {
+					const user_id = uni.getStorageSync('user_id');
 					uni.redirectTo({
-						url: '/pages/train/share?id=' + result
+						url: '/pages/train/share?id=' + result + '&user_id=' + user_id
 					});
 				},
 				err => {}
