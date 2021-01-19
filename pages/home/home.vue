@@ -131,6 +131,7 @@
 				_this.signIn(option.user_id);
 			}
 			if (_this.isLogin) {
+				_this.getLastTime();
 				uni.login({
 					provider: "weixin",
 					success: function(loginRes) {
@@ -280,22 +281,25 @@
 				);
 			},
 			getCacheStep() {
-				const startDate = this.getCurrentDate();
-				const lastTime = this.lastTime * 1000;
-				if (lastTime == "") {
-					const step = this.getSum(this.step);
-					const timestamp = new Date(startDate).getTime() / 1000;
-					this.cacheStep(step, timestamp);
+				const startDate = this.getCurrentDate(); // 当前时间年-月-日
+				const lastTime = this.lastTime * 1000; // lastTime是从 https://stamina.yulongtianzi.com/api/pedometer/cache_deposit_list这个接口里面获取的timestamp字段
+				if (lastTime == "") { // 用户从来没有存过步数，lastTime就是空值，直接取近7天的步数总和
+					const step = this.getSum(this.step); // getSum函数是求和的工具函数
+					const timestamp = new Date(startDate).getTime() / 1000; //当前时间戳
+					this.cacheStep(step, timestamp); // cacheStep函数就是缓存步数
 				} else {
-					const day = 24 * 60 * 60 * 1000;
+					// 用户以前存过步数，就走下面的逻辑
+					const day = 24 * 60 * 60 * 1000; 
 					let diff =
-						(new Date(startDate).getTime() - lastTime) / day;
+						(new Date(startDate).getTime() - lastTime) / day; // diff就是相差天数
 					if (diff > 7) {
+						// diff大于7,比如今天19号，上一次是1号，那就只存【12，13，14，15，16，17，18】这几天步数的总和
 						const step = this.getSum(this.step);
 						const timestamp = new Date(startDate).getTime() / 1000;
 						this.cacheStep(step, timestamp);
 					}
 					if (diff > 0 && diff < 7) {
+						//diff小于7，比如今天19号，上一次是18号，diff就等于1，那就只存18号的步数
 						const arr = JSON.parse(JSON.stringify(this.step))
 							.reverse()
 							.slice(0, diff);
@@ -304,6 +308,7 @@
 						this.cacheStep(step, timestamp);
 					}
 					if (diff == 0) {
+						//diff等于0，比如今天19号，上一次是19号，那就是已经存过了，就不会再存了
 						// uni.showToast({
 						// 	icon: 'none',
 						// 	title: '可存步数为0'
