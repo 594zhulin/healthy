@@ -63,6 +63,15 @@
 			"es6": false
 		},
 		"usingComponents": true,
+		"optimization": {
+			"subPackages": true
+		},
+		"plugins": {
+			"tx_player_plugin": {
+				"version": "0.0.3",
+				"provider": "wx116d0dd5e6a39ac7"
+			}
+		},
 		"requiredBackgroundModes": ["location"],
 		"permission": {
 			"scope.userLocation": {

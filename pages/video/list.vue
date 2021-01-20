@@ -5,6 +5,7 @@
 				<video class="video" :direction="0" :id="item.id" :ref="item.id" :src="item.video_url_clouds" :autoplay="true"
 				 :loop="true" :controls="false" :show-play-btn="false" :show-fullscreen-btn="false" :show-center-play-btn="true"
 				 object-fit="fill"></video>
+				<player appid="1256411062" fileid="5285890782826011810" playerid="video" :src="src" controls :title="title"></player>
 				<view class="content" @touchend="getListData">
 					<view class="row">
 						<view class="category" @click.stop="navigateTo('/pages/video/detail?cat_id=' + item.cat_id)">
