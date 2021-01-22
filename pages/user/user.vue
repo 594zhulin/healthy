@@ -40,7 +40,7 @@
 							bad: item.score_label.indexOf('中风险') != -1 || item.score_label.indexOf('高风险') != -1
 						}"
 					>
-						{{ item.score_label }}
+						{{ item.score_label.slice(0, 3) }}
 					</view>
 					<view class="text">{{ item.name }}</view>
 				</view>
