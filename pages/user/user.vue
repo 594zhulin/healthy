@@ -34,7 +34,11 @@
 				<view class="risk-item" v-for="item in user.risk" :key="item.risk_report_id">
 					<view
 						class="tag"
-						:class="{ perfect: item.score_label == '健康', good: item.score_label == '低风险', bad: item.score_label == '中风险' || item.score_label == '高风险' }"
+						:class="{
+							perfect: item.score_label.indexOf('健康') != -1,
+							good: item.score_label.indexOf('低风险') != -1,
+							bad: item.score_label.indexOf('中风险') != -1 || item.score_label.indexOf('高风险') != -1
+						}"
 					>
 						{{ item.score_label }}
 					</view>
