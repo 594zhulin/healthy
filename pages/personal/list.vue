@@ -69,7 +69,7 @@ export default {
 		this.getListData('up');
 	},
 	onUnload() {
-		uni.clearStorageSync('tempAddress');
+		uni.removeStorageSync('tempAddress');
 	},
 	methods: {
 		getListData(direction) {
