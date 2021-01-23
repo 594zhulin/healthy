@@ -79,7 +79,7 @@
 		<view class="list-content">
 			<view class="title">动作库</view>
 			<view class="list-item" v-for="item in items" :key="item.id" @click="handleClick(item.id)">
-				<image class="video" :src="item.video_content_clouds" mode="aspectFit"></image>
+				<image class="video" :src="item.video_content_clouds" mode="scaleToFill"></image>
 				<view class="content">
 					<view class="title">{{ item.motion_name }}</view>
 					<view class="text">目标：{{ item.cate_name }}</view>
