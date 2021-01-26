@@ -157,7 +157,6 @@
 		},
 		onShow() {
 			const _this = this;
-			_this.isLogin = getApp().globalData.isLogin;
 			_this.initGaugeChartOption();
 			if (_this.isLogin) {
 				_this.getScore();
@@ -298,6 +297,7 @@
 						this.no_deposit_num = this.getSum(arr);
 					}
 					if (diff == 0) {
+						this.no_deposit_num = 0
 						//diff等于0，比如今天19号，上一次是19号，那就是已经存过了，就不会再存了
 						// uni.showToast({
 						// 	icon: 'none',
