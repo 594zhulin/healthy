@@ -100,8 +100,9 @@
 				total: 0,
 			};
 		},
-		onLoad() {
+		onLoad(option) {
 			const _this = this;
+			_this.no_deposit_num = option.step
 			uni.login({
 				provider: "weixin",
 				success: function(loginRes) {
@@ -168,7 +169,7 @@
 						this.nickName = nickName;
 						this.integral_num = integral_num;
 						this.integral_num_str = integral_num_str;
-						this.no_deposit_num = no_deposit_num;
+						// this.no_deposit_num = no_deposit_num;
 						this.no_deposit_str = no_deposit_str;
 						this.flame_num = flame_num;
 						uni.hideLoading();
@@ -207,6 +208,7 @@
 
 						setTimeout(function() {
 							_this.getUser();
+							_this.no_deposit_num = 0
 							_this.getListData("down");
 						}, 100);
 					},
