@@ -13,10 +13,10 @@
 		<view class="title-content"><view class="text">商品详情</view></view>
 		<view class="desc-content"><rich-text :nodes="product.description"></rich-text></view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
-			<view class="btn" v-if="product.stock > 0 && integral > product.buy_credits" @click="handleOpen">{{ product.is_model == 1 ? '立即兑换' : '立即购买' }}</view>
+			<view class="btn" v-if="product.stock > 0 && integral_num > product.buy_credits" @click="handleOpen">{{ product.is_model == 1 ? '立即兑换' : '立即购买' }}</view>
 			<block v-else>
 				<view class="btn disabled" v-if="product.stock <= 0">库存不足</view>
-				<view class="btn disabled" v-if="integral < product.buy_credits">步数不足</view>
+				<view class="btn disabled" v-if="integral_num < product.buy_credits">步数不足</view>
 			</block>
 		</view>
 		<custom-modal ref="specsModal" direction="bottom" maskClick>
@@ -75,7 +75,7 @@ export default {
 			},
 			sku: null,
 			cartNum: 1,
-			integral: 0
+			integral_num: 0
 		};
 	},
 	onLoad(option) {
@@ -118,8 +118,8 @@ export default {
 		);
 		getUser().then(
 			result => {
-				const { integral } = result;
-				this.integral = integral;
+				const { integral_num } = result;
+				this.integral_num = integral_num;
 			},
 			err => {}
 		);
