@@ -168,7 +168,7 @@ export default {
 			height: 160rpx;
 
 			.name {
-				width: 90%;
+				width: 80%;
 				font-size: 28rpx;
 				font-family: PingFangSC-Regular, PingFang SC;
 				font-weight: 400;

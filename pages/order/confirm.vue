@@ -46,7 +46,7 @@
 			<view class="desc">
 				<view class="text">备注信息</view>
 				<textarea class="textarea" v-model="desc" placeholder="请添加备注(150字以内)" />
-			</view>
+				</view>
 		</view>
 		<view id="bottom" class="btn-content" :style="{ paddingBottom: isIphoneX ? paddingBottom : '20rpx' }">
 			<view class="price">
@@ -133,8 +133,8 @@ export default {
 					couponId: '',
 					payType: 'weixin',
 					useIntegral: this.order.cartInfo[0].productInfo.is_model,
-					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cartNum,
-					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cartNum
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cart_num,
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cart_num
 				},
 				this.order.orderKey
 			).then(
@@ -156,8 +156,8 @@ export default {
 					couponId: '',
 					payType: 'weixin',
 					useIntegral: this.order.cartInfo[0].productInfo.is_model,
-					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cartNum,
-					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cartNum,
+					integral_num: parseFloat(this.order.cartInfo[0].productInfo.buy_credits) * this.order.cartInfo[0].cart_num,
+					deductionPrice: parseFloat(this.order.priceGroup.totalPrice) * this.order.cartInfo[0].cart_num,
 					mark: this.desc,
 					from: 'routine'
 				},

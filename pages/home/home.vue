@@ -15,7 +15,7 @@
 					<view class="text">超过{{ percent }}%的用户</view>
 					<view class="btn">数据报告</view>
 				</view>
-				<view class="bank-item" @click="navigateTo('/pages/bank/bank?step='+no_deposit_num)">
+				<view class="bank-item" @click="navigateTo('/pages/bank/bank?step='+no_deposit_num+'&total='+integral_num)">
 					<image class="background" src="../../static/home/home-bg-02.svg" mode="aspectFit"></image>
 					<image class="icon" src="../../static/home/home-icon-02.svg" mode="aspectFit"></image>
 					<view class="title">步数银行</view>
@@ -219,15 +219,12 @@
 				getUserStep().then(
 					result => {
 						const {
-							integral_num_str,
-							no_deposit_str,
-							no_deposit_num,
-							integral_num
+							integral
 						} = result;
-						this.integral_num_str = integral_num_str;
-						this.no_deposit_str = no_deposit_str;
-						// this.no_deposit_num = no_deposit_num;
-						this.integral_num = integral_num;
+						// this.integral_num_str = integral_num_str;
+						// this.no_deposit_str = no_deposit_str;
+						// // this.no_deposit_num = no_deposit_num;
+						this.integral_num = integral;
 					},
 					err => {}
 				);

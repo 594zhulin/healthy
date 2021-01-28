@@ -118,8 +118,8 @@ export default {
 		);
 		getUser().then(
 			result => {
-				const { integral_num } = result;
-				this.integral_num = integral_num;
+				const { integral } = result;
+				this.integral_num = integral;
 			},
 			err => {}
 		);

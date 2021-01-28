@@ -4,9 +4,9 @@ const api = {
 	login: '/wechat/mp_auth',
 	signIn: '/login/getOpenid',
 	getScore: '/index/index',
-	getUserStep: '/pedometer/user_info',
+	getUserStep: '/user',
 	getProduct: '/products',
-	getLastTime: '/pedometer/flame_list',
+	getLastTime: '/pedometer/integral_list',
 	getStep: '/wechat/wxDecode',
 	cacheStep: '/pedometer/cache_step_num',
 }
@@ -64,7 +64,7 @@ const getScore = () => {
 
 const getUserStep = () => {
 	return new Promise((resolve, reject) => {
-		service.http_({
+		service.request({
 			url: api.getUserStep
 		}).then(result => {
 			if (result.status === 200) {

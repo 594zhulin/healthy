@@ -102,7 +102,8 @@
 		},
 		onLoad(option) {
 			const _this = this;
-			_this.no_deposit_num = option.step
+			_this.no_deposit_num = option.step;
+			_this.integral_num = option.total
 			uni.login({
 				provider: "weixin",
 				success: function(loginRes) {
@@ -159,18 +160,10 @@
 						const {
 							avatarUrl,
 							nickName,
-							integral_num,
-							no_deposit_num,
-							integral_num_str,
-							no_deposit_str,
 							flame_num,
 						} = result;
 						this.avatarUrl = avatarUrl;
 						this.nickName = nickName;
-						this.integral_num = integral_num;
-						this.integral_num_str = integral_num_str;
-						// this.no_deposit_num = no_deposit_num;
-						this.no_deposit_str = no_deposit_str;
 						this.flame_num = flame_num;
 						uni.hideLoading();
 					},

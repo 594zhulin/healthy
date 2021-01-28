@@ -15,7 +15,7 @@ const api = {
 	remindOrder: '/order/remind',
 	getRefundReason: '/order/refund/reason',
 	refundOrder: '/order/refund/verify',
-	getUser: '/pedometer/user_info',
+	getUser: '/user',
 }
 
 const getProduct = data => {
@@ -343,7 +343,7 @@ const refundOrder = data => {
 
 const getUser = () => {
 	return new Promise((resolve, reject) => {
-		service.http_({
+		service.request({
 			url: api.getUser
 		}).then(result => {
 			if (result.status === 200) {
