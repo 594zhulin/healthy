@@ -25,9 +25,6 @@
 			const token = uni.getStorageSync('token');
 			const expiresTime = uni.getStorageSync('expires_time');
 			const currentTime = new Date().getTime();
-			if (token) {
-				_this.globalData.isLogin = true;
-			}
 			if (expiresTime * 1000 < currentTime) {
 				uni.login({
 					provider: 'weixin',
@@ -55,6 +52,10 @@
 						});
 					}
 				});
+			} else {
+				if (token) {
+					_this.globalData.isLogin = true;
+				}
 			}
 		}
 	};

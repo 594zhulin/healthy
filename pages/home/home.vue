@@ -124,6 +124,7 @@
 		onLoad(option) {
 			const _this = this;
 			_this.isLogin = getApp().globalData.isLogin;
+			console.log(_this.isLogin)
 			uni.hideTabBar();
 			if (option.user_id) {
 				_this.signIn(option.user_id);
@@ -160,15 +161,15 @@
 			_this.initGaugeChartOption();
 			if (_this.isLogin) {
 				_this.getScore();
-				_this.getUserStep();
 				_this.getLastTime();
+				_this.getUserStep();
 				_this.getListData('down');
 			}
 		},
 		onPullDownRefresh() {
 			this.getScore();
-			this.getUserStep();
 			this.getLastTime();
+			this.getUserStep();
 			this.getListData('down');
 		},
 		onReachBottom() {
@@ -330,7 +331,6 @@
 			},
 			getUserInfo(e) {
 				const _this = this;
-				_this.getLastTime();
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
@@ -352,8 +352,8 @@
 										getApp().globalData.isLogin = true;
 										_this.isLogin = true;
 										_this.getScore();
-										_this.getUserStep();
 										_this.getLastTime();
+										_this.getUserStep();
 										_this.getListData('down');
 										if (_this.isNew) {
 											uni.showToast({
