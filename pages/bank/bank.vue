@@ -189,7 +189,7 @@ export default {
 
 					setTimeout(function() {
 						_this.getUser();
-						_this.integral_num = parseFloat(_this.integral_num) + parseFloat(_this.no_deposit_num);
+						_this.integral_num = (parseFloat(_this.integral_num) + parseFloat(_this.no_deposit_num)).toFixed(2);
 						_this.no_deposit_num = 0;
 						_this.getListData('down');
 					}, 100);

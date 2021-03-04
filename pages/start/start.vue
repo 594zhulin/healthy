@@ -147,8 +147,8 @@ export default {
 			origin: 1.5 * Math.PI,
 			finish: -0.5 * Math.PI,
 			timer: null,
-			seconds: 120,
-			countdown: 120,
+			seconds: 90,
+			countdown: 90,
 			coupon: ''
 		};
 	},
@@ -433,7 +433,8 @@ export default {
 			);
 		},
 		animation() {
-			if (this.step <= this.seconds) {
+			console.log(this.step, this.seconds);
+			if (this.step < this.seconds) {
 				this.finish = this.finish + (2 * Math.PI) / this.seconds;
 				this.ringMove(this.origin, this.finish);
 				this.step = this.step + 1;
