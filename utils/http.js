@@ -44,7 +44,21 @@ const service = {
 		return new Promise((resolve, reject) => {
 			options.success = res => {
 				if (res.statusCode == 200) {
-					resolve(res.data)
+					uni.getSetting({
+						success(result) {
+							if (!result.authSetting['scope.userInfo']) {
+								uni.setStorageSync('isLogin', false)
+							} else {
+								if (res.data.status == 410000) {
+									uni.setStorageSync('isExpire', true)
+								} else {
+									uni.setStorageSync('isExpire', false)
+									resolve(res.data)
+								}
+							}
+						}
+					})
+
 				} else {
 					reject({
 						url: options.url,
@@ -55,7 +69,8 @@ const service = {
 			};
 			const token = uni.getStorageSync('token');
 			options.method = options.method || 'GET';
-			options.url = baseUrl + options.url;
+			options.url = baseUrl +
+				options.url;
 			if (token) {
 				options.header = {
 					'Authori-zation': 'Bearer ' + token

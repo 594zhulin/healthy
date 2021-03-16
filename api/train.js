@@ -25,6 +25,7 @@ const getStep = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}

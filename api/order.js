@@ -28,6 +28,7 @@ const getProduct = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -45,6 +46,7 @@ const getProductDetail = (id, data) => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -63,6 +65,7 @@ const addCart = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -79,6 +82,7 @@ const getAddress = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -98,6 +102,7 @@ const confirmOrder = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -156,6 +161,7 @@ const getOrder = data => {
 				})
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -172,6 +178,7 @@ const getOrderDetail = id => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -284,6 +291,7 @@ const payOrderCallback = (id) => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -300,6 +308,7 @@ const getRefundReason = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -316,6 +325,7 @@ const getExpress = (id) => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -334,6 +344,7 @@ const refundOrder = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -350,6 +361,7 @@ const getUser = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}

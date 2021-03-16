@@ -68,6 +68,7 @@ const getCategory = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -84,6 +85,7 @@ const getCookbook = id => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -100,6 +102,7 @@ const getCookbookDetail = id => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}

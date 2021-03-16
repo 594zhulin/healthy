@@ -1,6 +1,6 @@
 <template>
 	<view class="page-home">
-		<template v-if="isLogin">
+		<template>
 			<view class="overview-content">
 				<view class="score-item" @click="navigateTo('/pages/measure/index')">
 					<image class="background" src="../../static/home/home-bg-01.svg" mode="aspectFit"></image>
@@ -70,13 +70,7 @@
 			</view>
 			<custom-tabbar :currentId="0"></custom-tabbar>
 		</template>
-		<template v-else>
-			<view class="login-content">
-				<image class="logo" src="../../static/home/home-image-01.png" mode="aspectFit"></image>
-				<view class="title">给自己的体能建立档案</view>
-				<button class="btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo">立即行动</button>
-			</view>
-		</template>
+		<button v-if="!isLogin" class="login-btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo"></button>
 	</view>
 </template>
 
@@ -123,14 +117,83 @@
 		},
 		onLoad(option) {
 			const _this = this;
-			_this.isLogin = getApp().globalData.isLogin;
+			_this.isLogin = uni.getStorageSync('isLogin')
 			console.log(_this.isLogin)
 			uni.hideTabBar();
 			if (option.user_id) {
 				_this.signIn(option.user_id);
 			}
-			if (_this.isLogin) {
-				_this.getLastTime();
+			// if (_this.isLogin) {
+			// 	_this.getLastTime();
+			// 	uni.login({
+			// 		provider: 'weixin',
+			// 		success: function(loginRes) {
+			// 			console.log(loginRes);
+			// 			wx.getWeRunData({
+			// 				success(infoRes) {
+			// 					console.log(infoRes);
+			// 					getStep({
+			// 						code: loginRes.code,
+			// 						iv: infoRes.iv,
+			// 						encryptedData: infoRes.encryptedData
+			// 					}).then(
+			// 						result => {
+			// 							const arr = result.stepInfoList.slice(23, 30);
+			// 							_this.step = arr;
+			// 							_this.getCacheStep();
+			// 						},
+			// 						err => {}
+			// 					);
+			// 				}
+			// 			});
+			// 		}
+			// 	});
+			// }
+		},
+		onShow() {
+			const _this = this;
+			_this.initGaugeChartOption();
+			const isExpire = uni.getStorageSync('isExpire');
+
+			if (isExpire) {
+				console.log(111, !isExpire)
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						console.log(loginRes);
+						// 获取用户信息
+						uni.getUserInfo({
+							provider: 'weixin',
+							success: function(infoRes) {
+								login({
+									code: loginRes.code,
+									iv: infoRes.iv,
+									encryptedData: infoRes.encryptedData,
+									signature: infoRes.signature
+								}).then(
+									result => {
+										uni.setStorageSync('token', result.token);
+										uni.setStorageSync('expires_time', result.expires_time);
+										uni.setStorageSync('user_id', result.userInfo.uid);
+										uni.setStorageSync('isLogin', true)
+										_this.isLogin = true;
+										_this.getScore();
+										_this.getLastTime();
+										_this.getUserStep();
+										_this.getListData('down');
+										if (_this.isNew) {
+											uni.showToast({
+												icon: 'none',
+												title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
+											});
+										}
+									},
+									err => {}
+								);
+							}
+						});
+					}
+				});
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
@@ -154,12 +217,8 @@
 						});
 					}
 				});
-			}
-		},
-		onShow() {
-			const _this = this;
-			_this.initGaugeChartOption();
-			if (_this.isLogin) {
+			} else {
+				console.log(222, !isExpire)
 				_this.getScore();
 				_this.getLastTime();
 				_this.getUserStep();
@@ -349,7 +408,7 @@
 										uni.setStorageSync('token', result.token);
 										uni.setStorageSync('expires_time', result.expires_time);
 										uni.setStorageSync('user_id', result.userInfo.uid);
-										getApp().globalData.isLogin = true;
+										uni.setStorageSync('isLogin', true)
 										_this.isLogin = true;
 										_this.getScore();
 										_this.getLastTime();
@@ -989,6 +1048,16 @@
 					display: none;
 				}
 			}
+		}
+
+		.login-btn {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			opacity: 0;
+			z-index: 9999;
 		}
 	}
 </style>

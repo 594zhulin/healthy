@@ -16,6 +16,7 @@ const getUser = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -32,6 +33,7 @@ const getCategory = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -52,6 +54,7 @@ const getProduct = data => {
 				})
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -72,6 +75,7 @@ const getRecommend = data => {
 				})
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}

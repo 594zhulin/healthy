@@ -19,6 +19,7 @@ const getUser = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -36,6 +37,7 @@ const getAddress = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -52,6 +54,7 @@ const getAddressDetail = id => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -70,6 +73,7 @@ const editAddress = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -88,6 +92,7 @@ const delAddress = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -106,6 +111,7 @@ const setDefaultAddress = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -126,6 +132,7 @@ const getStep = data => {
 				})
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}

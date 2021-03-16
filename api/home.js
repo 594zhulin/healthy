@@ -22,6 +22,7 @@ const login = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -71,6 +72,7 @@ const getUserStep = () => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -89,6 +91,7 @@ const getStep = data => {
 				resolve(result.data)
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
@@ -108,6 +111,7 @@ const getProduct = () => {
 				})
 			} else {
 				reject({
+					code: result.status,
 					text: result.msg
 				})
 			}
