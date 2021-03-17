@@ -70,7 +70,7 @@
 			</view>
 			<custom-tabbar :currentId="0"></custom-tabbar>
 		</template>
-		<button v-if="!isLogin" class="login-btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo"></button>
+		<auth-modal ref="authModal" @refresh="refresh"></auth-modal>
 	</view>
 </template>
 
@@ -116,84 +116,103 @@
 			};
 		},
 		onLoad(option) {
-			const _this = this;
-			_this.isLogin = uni.getStorageSync('isLogin')
-			console.log(_this.isLogin)
 			uni.hideTabBar();
 			if (option.user_id) {
-				_this.signIn(option.user_id);
+				this.signIn(option.user_id);
 			}
-			// if (_this.isLogin) {
-			// 	_this.getLastTime();
-			// 	uni.login({
-			// 		provider: 'weixin',
-			// 		success: function(loginRes) {
-			// 			console.log(loginRes);
-			// 			wx.getWeRunData({
-			// 				success(infoRes) {
-			// 					console.log(infoRes);
-			// 					getStep({
-			// 						code: loginRes.code,
-			// 						iv: infoRes.iv,
-			// 						encryptedData: infoRes.encryptedData
-			// 					}).then(
-			// 						result => {
-			// 							const arr = result.stepInfoList.slice(23, 30);
-			// 							_this.step = arr;
-			// 							_this.getCacheStep();
-			// 						},
-			// 						err => {}
-			// 					);
-			// 				}
-			// 			});
-			// 		}
-			// 	});
-			// }
 		},
 		onShow() {
 			const _this = this;
+			_this.isLogin = uni.getStorageSync('isLogin')
+			const isAuth = uni.getStorageSync('isAuth')
+			console.log(_this.isLogin)
 			_this.initGaugeChartOption();
-			const isExpire = uni.getStorageSync('isExpire');
+			// 登录未过期
+			if (_this.isLogin) {
+				_this.getWeRunData()
+				_this.getScore();
+				_this.getLastTime();
+				_this.getUserStep();
+				_this.getListData('down');
+				return
+			}
+			// 是否授权
+			if (!isAuth) {
+				_this.$refs['authModal'].open()
+				return
+			}
 
-			if (isExpire) {
-				console.log(111, !isExpire)
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						console.log(loginRes);
-						// 获取用户信息
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								login({
-									code: loginRes.code,
-									iv: infoRes.iv,
-									encryptedData: infoRes.encryptedData,
-									signature: infoRes.signature
-								}).then(
-									result => {
-										uni.setStorageSync('token', result.token);
-										uni.setStorageSync('expires_time', result.expires_time);
-										uni.setStorageSync('user_id', result.userInfo.uid);
-										uni.setStorageSync('isLogin', true)
-										_this.isLogin = true;
-										_this.getScore();
-										_this.getLastTime();
-										_this.getUserStep();
-										_this.getListData('down');
-										if (_this.isNew) {
-											uni.showToast({
-												icon: 'none',
-												title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
-											});
-										}
-									},
-									err => {}
-								);
-							}
-						});
-					}
-				});
+			// 登录已过期
+			uni.showLoading({
+				title: '登录中...'
+			})
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					console.log(loginRes);
+					// 获取用户信息
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							login({
+								code: loginRes.code,
+								iv: infoRes.iv,
+								encryptedData: infoRes.encryptedData,
+								signature: infoRes.signature
+							}).then(
+								result => {
+									uni.hideLoading()
+									uni.setStorageSync('token', result.token);
+									uni.setStorageSync('expires_time', result.expires_time);
+									uni.setStorageSync('user_id', result.userInfo.uid);
+									uni.setStorageSync('isLogin', true)
+									_this.isLogin = true;
+									_this.getScore();
+									_this.getLastTime();
+									_this.getUserStep();
+									_this.getListData('down');
+									if (_this.isNew) {
+										uni.showToast({
+											icon: 'none',
+											title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
+										});
+									}
+								},
+								err => {}
+							);
+						}
+					});
+				}
+			});
+			_this.getWeRunData()
+		},
+		onPullDownRefresh() {
+			this.getScore();
+			this.getLastTime();
+			this.getUserStep();
+			this.getListData('down');
+		},
+		onReachBottom() {
+			this.getListData('up');
+		},
+		methods: {
+			refresh() {
+				const _this = this
+				_this.isLogin = true;
+				_this.getScore();
+				_this.getLastTime();
+				_this.getUserStep();
+				_this.getListData('down');
+				if (_this.isNew) {
+					uni.showToast({
+						icon: 'none',
+						title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
+					});
+				}
+				_this.getWeRunData()
+			},
+			getWeRunData() {
+				const _this = this;
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
@@ -217,24 +236,7 @@
 						});
 					}
 				});
-			} else {
-				console.log(222, !isExpire)
-				_this.getScore();
-				_this.getLastTime();
-				_this.getUserStep();
-				_this.getListData('down');
-			}
-		},
-		onPullDownRefresh() {
-			this.getScore();
-			this.getLastTime();
-			this.getUserStep();
-			this.getListData('down');
-		},
-		onReachBottom() {
-			this.getListData('up');
-		},
-		methods: {
+			},
 			signIn(user_id) {
 				const _this = this;
 				uni.login({
@@ -388,69 +390,6 @@
 				}
 				return step;
 			},
-			getUserInfo(e) {
-				const _this = this;
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						console.log(loginRes);
-						// 获取用户信息
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								login({
-									code: loginRes.code,
-									iv: infoRes.iv,
-									encryptedData: infoRes.encryptedData,
-									signature: infoRes.signature
-								}).then(
-									result => {
-										uni.setStorageSync('token', result.token);
-										uni.setStorageSync('expires_time', result.expires_time);
-										uni.setStorageSync('user_id', result.userInfo.uid);
-										uni.setStorageSync('isLogin', true)
-										_this.isLogin = true;
-										_this.getScore();
-										_this.getLastTime();
-										_this.getUserStep();
-										_this.getListData('down');
-										if (_this.isNew) {
-											uni.showToast({
-												icon: 'none',
-												title: '非常感谢，我已经点亮一个小火苗，你也快来吧，存步数兑礼品，还可以让身体更健康哦！'
-											});
-										}
-									},
-									err => {}
-								);
-							}
-						});
-					}
-				});
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						console.log(loginRes);
-						wx.getWeRunData({
-							success(infoRes) {
-								console.log(infoRes);
-								getStep({
-									code: loginRes.code,
-									iv: infoRes.iv,
-									encryptedData: infoRes.encryptedData
-								}).then(
-									result => {
-										const arr = result.stepInfoList.slice(23, 30);
-										_this.step = arr;
-										_this.getCacheStep();
-									},
-									err => {}
-								);
-							}
-						});
-					}
-				});
-			},
 			initGaugeChartOption() {
 				this.gagugeOption = {
 					series: [{
@@ -540,6 +479,11 @@
 				});
 			},
 			navigateTo(url) {
+				const isAuth = uni.getStorageSync('isAuth')
+				if (!isAuth) {
+					this.$refs['authModal'].open()
+					return
+				}
 				uni.navigateTo({
 					url
 				});

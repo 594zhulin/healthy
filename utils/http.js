@@ -47,14 +47,21 @@ const service = {
 					uni.getSetting({
 						success(result) {
 							if (!result.authSetting['scope.userInfo']) {
-								uni.setStorageSync('isLogin', false)
+								uni.setStorageSync('isAuth', false)
 							} else {
-								if (res.data.status == 410000) {
-									uni.setStorageSync('isExpire', true)
+								uni.setStorageSync('isAuth', true)
+								if (result.status == 410000 || result.status == 410001) {
+									uni.setStorageSync('isLogin', false)
 								} else {
-									uni.setStorageSync('isExpire', false)
-									resolve(res.data)
+									uni.setStorageSync('isLogin', true)
 								}
+								resolve(res.data)
+								// if (res.data.status == 410001||res.data.status==410000) {
+								// 	uni.setStorageSync('isExpire', true)
+								// } else {
+								// 	uni.setStorageSync('isExpire', false)
+								// 	resolve(res.data)
+								// }
 							}
 						}
 					})

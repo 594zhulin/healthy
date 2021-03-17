@@ -90,7 +90,7 @@
 			</view>
 		</view>
 		<custom-tabbar :currentId="4"></custom-tabbar>
-		<button v-if="!isLogin" class="login-btn" type="default" open-type="getUserInfo" @getuserinfo="getUserInfo"></button>
+		<auth-modal ref="authModal" @refresh="init"></auth-modal>
 	</view>
 </template>
 
@@ -129,12 +129,57 @@
 			};
 		},
 		onShow() {
-			this.init()
+			const _this = this;
+			const isAuth = uni.getStorageSync('isAuth')
+			_this.isLogin = uni.getStorageSync('isLogin')
+			// 登录未过期
+			if (_this.isLogin) {
+				_this.init();
+				return
+			}
+			// 是否授权
+			if (!isAuth) {
+				_this.$refs['authModal'].open()
+				return
+			}
+
+			// 登录已过期
+			uni.showLoading({
+				title: '登录中...'
+			})
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					console.log(loginRes);
+					// 获取用户信息
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							login({
+								code: loginRes.code,
+								iv: infoRes.iv,
+								encryptedData: infoRes.encryptedData,
+								signature: infoRes.signature
+							}).then(
+								result => {
+									uni.hideLoading()
+									uni.setStorageSync('token', result.token);
+									uni.setStorageSync('expires_time', result.expires_time);
+									uni.setStorageSync('user_id', result.userInfo.uid);
+									uni.setStorageSync('isLogin', true)
+									_this.init()
+								},
+								err => {}
+							);
+						}
+					});
+				}
+			});
 		},
 		methods: {
 			init() {
-				const _this = this;
-				_this.isLogin = uni.getStorageSync('isLogin')
+				const _this = this
+				_this.isLogin = true;
 				getUser().then(
 					result => {
 						const {
@@ -207,38 +252,12 @@
 					err => {}
 				);
 			},
-			getUserInfo(e) {
-				const _this = this;
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						console.log(loginRes);
-						// 获取用户信息
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								login({
-									code: loginRes.code,
-									iv: infoRes.iv,
-									encryptedData: infoRes.encryptedData,
-									signature: infoRes.signature
-								}).then(
-									result => {
-										uni.setStorageSync('token', result.token);
-										uni.setStorageSync('expires_time', result.expires_time);
-										uni.setStorageSync('user_id', result.userInfo.uid);
-										uni.setStorageSync('isLogin', true)
-										_this.isLogin = true;
-										_this.init()
-									},
-									err => {}
-								);
-							}
-						});
-					}
-				});
-			},
 			navigateTo(url) {
+				const isAuth = uni.getStorageSync('isAuth')
+				if (!isAuth) {
+					this.$refs['authModal'].open()
+					return
+				}
 				uni.navigateTo({
 					url
 				});
