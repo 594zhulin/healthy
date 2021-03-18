@@ -9,7 +9,7 @@
 			<view class="user-item">
 				<image class="avatar" :src="user.avatar" mode="aspectFit"></image>
 				<view class="name">
-					<view class="text">{{ user.nickname||'请登录' }}</view>
+					<view class="text" @click="navigateTo('')">{{ user.nickname||'请登录' }}</view>
 					<image class="icon" src="../../static/user/user-icon-08.png" mode="aspectFit"></image>
 				</view>
 				<view class="score">
@@ -139,7 +139,7 @@
 			}
 			// 是否授权
 			if (!isAuth) {
-				_this.$refs['authModal'].open()
+				// this.$refs['authModal'].open()
 				return
 			}
 
@@ -256,6 +256,9 @@
 				const isAuth = uni.getStorageSync('isAuth')
 				if (!isAuth) {
 					this.$refs['authModal'].open()
+					return
+				}
+				if (!url) {
 					return
 				}
 				uni.navigateTo({

@@ -127,18 +127,18 @@
 			const isAuth = uni.getStorageSync('isAuth')
 			console.log(_this.isLogin)
 			_this.initGaugeChartOption();
+			_this.getListData('down');
 			// 登录未过期
 			if (_this.isLogin) {
 				_this.getWeRunData()
 				_this.getScore();
 				_this.getLastTime();
 				_this.getUserStep();
-				_this.getListData('down');
 				return
 			}
 			// 是否授权
 			if (!isAuth) {
-				_this.$refs['authModal'].open()
+				//_this.$refs['authModal'].open()
 				return
 			}
 
@@ -170,7 +170,6 @@
 									_this.getScore();
 									_this.getLastTime();
 									_this.getUserStep();
-									_this.getListData('down');
 									if (_this.isNew) {
 										uni.showToast({
 											icon: 'none',
@@ -202,7 +201,6 @@
 				_this.getScore();
 				_this.getLastTime();
 				_this.getUserStep();
-				_this.getListData('down');
 				if (_this.isNew) {
 					uni.showToast({
 						icon: 'none',

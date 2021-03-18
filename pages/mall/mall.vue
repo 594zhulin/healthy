@@ -9,7 +9,7 @@
 			<!-- <view class="btn">搜索</view> -->
 		</view>
 		<view class="user-content">
-			<view class="user">
+			<view class="user" @click="navigateTo('')">
 				<image class="avatar" :src="userInfo.avatar" mode="aspectFit"></image>
 				<view class="text">{{ userInfo.nickname||'请登录' }}</view>
 			</view>
@@ -90,6 +90,13 @@
 			const _this = this;
 			const isAuth = uni.getStorageSync('isAuth')
 			_this.isLogin = uni.getStorageSync('isLogin')
+			getCategory().then(
+				result => {
+					_this.category = result;
+					_this.getListData('down');
+				},
+				err => {}
+			);
 			// 登录未过期
 			if (_this.isLogin) {
 				_this.init();
@@ -97,7 +104,7 @@
 			}
 			// 是否授权
 			if (!isAuth) {
-				_this.$refs['authModal'].open()
+				// _this.$refs['authModal'].open()
 				return
 			}
 
@@ -158,13 +165,6 @@
 					},
 					err => {}
 				);
-				getCategory().then(
-					result => {
-						this.category = result;
-						this.getListData('down');
-					},
-					err => {}
-				);
 			},
 			bindCategoryChange(id) {
 				this.params.cid = id;
@@ -213,6 +213,9 @@
 				const isAuth = uni.getStorageSync('isAuth')
 				if (!isAuth) {
 					this.$refs['authModal'].open()
+					return
+				}
+				if (!url) {
 					return
 				}
 				uni.navigateTo({
