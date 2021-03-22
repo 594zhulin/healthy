@@ -21,6 +21,28 @@
 					}
 				}
 			});
+			uni.getSetting({
+				success(result) {
+					if (!result.authSetting['scope.userInfo']) {
+						uni.setStorageSync('isAuth', false)
+					} else {
+						uni.setStorageSync('isAuth', true)
+					}
+				}
+			})
+			const isLogin = uni.getStorageSync('isLogin');
+			const currentTime = new Date().getTime();
+			const expires_time = uni.getStorageSync('expires_time')
+			console.log(currentTime)
+			if (!isLogin) {
+				uni.setStorageSync('isLogin', false)
+			} else {
+				console.log(111)
+				if (currentTime > expires_time * 1000) {
+					console.log(222)
+					uni.setStorageSync('isLogin', false)
+				}
+			}
 		},
 	};
 </script>

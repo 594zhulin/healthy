@@ -44,26 +44,6 @@ const service = {
 		return new Promise((resolve, reject) => {
 			options.success = res => {
 				if (res.statusCode == 200) {
-					uni.getSetting({
-						success(result) {
-							if (!result.authSetting['scope.userInfo']) {
-								uni.setStorageSync('isAuth', false)
-							} else {
-								uni.setStorageSync('isAuth', true)
-								if (res.data.status == 410000 || res.data.status == 410001) {
-									uni.setStorageSync('isLogin', false)
-								} else {
-									uni.setStorageSync('isLogin', true)
-								}
-								// if (res.data.status == 410001||res.data.status==410000) {
-								// 	uni.setStorageSync('isExpire', true)
-								// } else {
-								// 	uni.setStorageSync('isExpire', false)
-								// 	resolve(res.data)
-								// }
-							}
-						}
-					})
 					resolve(res.data)
 				} else {
 					reject({
