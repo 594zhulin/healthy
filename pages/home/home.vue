@@ -166,6 +166,7 @@
 									uni.setStorageSync('expires_time', result.expires_time);
 									uni.setStorageSync('user_id', result.userInfo.uid);
 									uni.setStorageSync('isLogin', true)
+									uni.setStorageSync('isAuth', true)
 									_this.isLogin = true;
 									_this.getScore();
 									_this.getLastTime();
@@ -198,6 +199,7 @@
 			refresh() {
 				const _this = this
 				_this.isLogin = true;
+				uni.setStorageSync('isAuth', true)
 				_this.getScore();
 				_this.getLastTime();
 				_this.getUserStep();

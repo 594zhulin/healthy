@@ -132,6 +132,7 @@
 									uni.setStorageSync('expires_time', result.expires_time);
 									uni.setStorageSync('user_id', result.userInfo.uid);
 									uni.setStorageSync('isLogin', true)
+									uni.setStorageSync('isAuth', true)
 									_this.init()
 								},
 								err => {}
@@ -148,6 +149,7 @@
 		methods: {
 			init() {
 				this.isLogin = true;
+				uni.setStorageSync('isAuth', true)
 				getUser().then(
 					result => {
 						const {
