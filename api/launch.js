@@ -8,7 +8,7 @@ const api = {
 	setUserInfo: '/operate/user_perfect',
 	getLoginInfo: '/user/perfect',
 	getPhone: '/wx/wxDecode',
-	start: '/Operate/device_open',
+	start: '/Operate/device_tpns_open',
 	getFaultList: '/index/fault_cause',
 	repair: '/Operate/fault_cause',
 	getCoupon: '/device/get_device_coupon'
