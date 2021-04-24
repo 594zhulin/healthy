@@ -210,7 +210,7 @@
 <script>
 import * as echarts from 'echarts/echarts.min.js'; /*chart.min.js为在线定制*/
 import mpvueEcharts from 'mpvue-echarts/src/echarts.vue';
-import { getUser, getData, getRisk, deleteMeasure } from '@/api/measure.js';
+import { getUser, getData, getRisk, deleteMeasure, getUserData } from '@/api/measure.js';
 export default {
 	components: {
 		mpvueEcharts
@@ -231,8 +231,6 @@ export default {
 		getUser().then(
 			result => {
 				this.userId = result.uid;
-				this.avatar = result.avatar;
-				this.nickName = result.nickname;
 				if (option.user_id) {
 					this.getMeasureData(option.user_id);
 				} else {
@@ -246,6 +244,14 @@ export default {
 					title: err.text
 				});
 			}
+		);
+		getUserData().then(
+			result => {
+				const { avatarUrl, nickName } = result;
+				this.avatar = avatarUrl;
+				this.nickName = nickName;
+			},
+			err => {}
 		);
 	},
 	onShareAppMessage() {

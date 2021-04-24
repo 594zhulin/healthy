@@ -11,7 +11,8 @@ const api = {
 	getUserInfo: '/user/getWxInfo',
 	getRisk: '/risk/get_risk_info',
 	getMeasureDetail: '/user/measure_calbe_details',
-	deleteMeasure: '/log/del_measure_calbe'
+	deleteMeasure: '/log/del_measure_calbe',
+	getUserData: '/pedometer/user_info',
 }
 
 const getData = data => {
@@ -201,6 +202,23 @@ const deleteMeasure = data => {
 	})
 }
 
+const getUserData = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getUserData
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
+
 module.exports = {
 	getData,
 	getHistory,
@@ -212,5 +230,6 @@ module.exports = {
 	getUserInfo,
 	getMeasureDetail,
 	getRisk,
-	deleteMeasure
+	deleteMeasure,
+	getUserData
 }
