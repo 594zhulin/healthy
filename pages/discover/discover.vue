@@ -21,7 +21,7 @@ export default {
 			device: []
 		};
 	},
-	onLoad() {
+	onShow() {
 		const _this = this;
 		uni.getLocation({
 			type: 'wgs84',
@@ -32,10 +32,40 @@ export default {
 					},
 					err => {}
 				);
+			},
+			fail(err) {
+				uni.getSetting({
+					success(result) {
+						if (!result.authSetting['scope.userLocation']) {
+							_this.openConfirm();
+						} else {
+						}
+					}
+				});
 			}
 		});
 	},
 	methods: {
+		openConfirm() {
+			wx.showModal({
+				content: '检测到您没打开体能观测的定位权限，是否去设置打开？',
+				confirmText: '确认',
+				cancelText: '取消',
+				success: function(res) {
+					console.log(res);
+					//点击“确认”时打开设置页面
+					if (res.confirm) {
+						console.log('用户点击确认');
+						wx.openSetting({
+							success: res => {}
+						});
+					} else {
+						return false;
+						console.log('用户点击取消');
+					}
+				}
+			});
+		},
 		handleOpen(address) {
 			uni.openLocation({
 				latitude: address.latitude,
