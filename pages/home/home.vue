@@ -344,7 +344,7 @@
 					// 用户以前存过步数，就走下面的逻辑
 					const day = 24 * 60 * 60 * 1000;
 					let diff = (new Date(startDate).getTime() - new Date(lastTime).getTime()) / day; // diff就是相差天数
-					if (diff > 7) {
+					if (diff >= 7) {
 						// diff大于7,比如今天19号，上一次是1号，那就只存【12，13，14，15，16，17，18】这几天步数的总和
 						this.no_deposit_num = this.getSum(this.step);
 					}

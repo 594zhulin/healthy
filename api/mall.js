@@ -4,7 +4,8 @@ const api = {
 	getUser: '/user',
 	getCategory: '/category',
 	getProduct: '/products',
-	getRecommend: '/related'
+	getRecommend: '/related',
+	getUserInfo: '/pedometer/user_info',
 }
 
 const getUser = () => {
@@ -83,9 +84,26 @@ const getRecommend = data => {
 	})
 }
 
+const getUserInfo = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getUserInfo
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getUser,
 	getCategory,
 	getProduct,
-	getRecommend
+	getRecommend,
+	getUserInfo
 }

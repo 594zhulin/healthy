@@ -7,6 +7,7 @@ const api = {
 	getRisk: '/risk/get_risk_info',
 	getScoreList: '/log/measure_calbe_list',
 	getAddress: '/address/list',
+	getUserInfo: '/pedometer/user_info',
 }
 
 const getUser = data => {
@@ -109,11 +110,28 @@ const getAddress = data => {
 	})
 }
 
+const getUserInfo = () => {
+	return new Promise((resolve, reject) => {
+		service.http_({
+			url: api.getUserInfo
+		}).then(result => {
+			if (result.status === 200) {
+				resolve(result.data)
+			} else {
+				reject({
+					text: result.msg
+				})
+			}
+		}, reject)
+	})
+}
+
 module.exports = {
 	getUser,
 	getScore,
 	getScoreList,
 	getStep,
 	getRisk,
-	getAddress
+	getAddress,
+	getUserInfo
 }
